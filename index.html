@@ -426,6 +426,14 @@
             font-size: 1.3em;
         }
 
+        .destaque-campo {
+            background: #FFF9E6;
+            border: 2px solid #F59E0B;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 1.8em;
@@ -654,6 +662,12 @@
                     </div>
                 </div>
 
+                <!-- CAMPO RECEBIDO POR -->
+                <div class="form-group">
+                    <label><i class="fas fa-user-check"></i> <span class="destaque-campo">Nome do Colaborador (Recebedor):</span></label>
+                    <input type="text" id="recebidoPor" placeholder="Digite o nome do colaborador que vai receber esta correspondência" required>
+                </div>
+
                 <div class="form-group">
                     <label><i class="fas fa-align-left"></i> Descrição da Correspondência:</label>
                     <textarea id="descricaoRecebimento" rows="3" placeholder="Digite detalhes sobre a correspondência..." required></textarea>
@@ -699,7 +713,7 @@
                 <p>Buscando registros...</p>
             </div>
 
-            <!-- Tabela de Registros -->
+            <!-- Tabela de Registros (SEM coluna Recebido Por) -->
             <div class="table-container">
                 <h3 id="tituloTabelaRecebimento">📋 Correspondências Registradas Hoje</h3>
                 <table id="tabelaRecebimentos">
@@ -794,7 +808,8 @@
                 departamento: document.getElementById('departamentoRecebimento').value,
                 tipo: document.getElementById('tipoRecebimento').value,
                 descricao: document.getElementById('descricaoRecebimento').value,
-                quantidade: document.getElementById('quantidadeRecebimento').value
+                quantidade: document.getElementById('quantidadeRecebimento').value,
+                recebidoPor: document.getElementById('recebidoPor').value
             };
 
             try {
@@ -807,6 +822,7 @@
 
                 if (result.status === 'success') {
                     mostrarAlerta('alertSuccessRecebimento', 'alertErrorRecebimento');
+                    // Adiciona na tabela SEM o campo "Recebido Por"
                     adicionarLinhaTabela('bodyTabelaRecebimentos', [
                         data.data,
                         data.departamento,
@@ -863,6 +879,7 @@
                     
                     result.data.forEach(row => {
                         const tr = document.createElement('tr');
+                        // Mostra apenas as 5 primeiras colunas (sem "Recebido Por")
                         tr.innerHTML = `
                             <td>${formatarData(row[0])}</td>
                             <td>${row[1]}</td>
@@ -937,7 +954,7 @@
             const dataFiltro = document.getElementById('filtroDataEnvio').value;
             const hoje = new Date().toISOString().split('T')[0];
             const dataProtocolo = dataFiltro || hoje;
-            imprimirProtocolo('ENVIO', tbody, dataProtocolo, false);
+            imprimirProtocolo('ENVIO', tbody, dataProtocolo, 'Envios', false);
         }
 
         function imprimirProtocoloRecebimento() {
@@ -945,15 +962,31 @@
             const dataFiltro = document.getElementById('filtroDataRecebimento').value;
             const hoje = new Date().toISOString().split('T')[0];
             const dataProtocolo = dataFiltro || hoje;
-            imprimirProtocolo('RECEBIMENTO', tbody, dataProtocolo, true);
+            imprimirProtocolo('RECEBIMENTO', tbody, dataProtocolo, 'Recebimentos', true);
         }
 
-        function imprimirProtocolo(tipo, tbody, data, temCampoRecebedor) {
+        async function imprimirProtocolo(tipo, tbody, data, tipoAba, temRecebidoPor) {
             const rows = tbody.querySelectorAll('tr');
             
             if (rows.length === 0 || (rows.length === 1 && rows[0].cells.length === 1)) {
                 alert('Não há registros para imprimir!');
                 return;
+            }
+
+            // Busca os dados completos do servidor (incluindo "Recebido Por")
+            let dadosCompletos = [];
+            
+            if (temRecebidoPor) {
+                try {
+                    const response = await fetch(`${scriptURL}?acao=buscarPorData&tipo=${tipoAba}&data=${data}`);
+                    const result = await response.json();
+                    
+                    if (result.status === 'success' && result.data) {
+                        dadosCompletos = result.data;
+                    }
+                } catch (error) {
+                    console.error('Erro ao buscar dados completos:', error);
+                }
             }
 
             let html = `
@@ -963,15 +996,14 @@
                     <title>Protocolo de ${tipo}</title>
                     <style>
                         body { font-family: Arial, sans-serif; padding: 20px; }
-                        h1 { text-align: center; color: #0066CC; margin-bottom: 30px; }
+                        h1 { text-align: center; color: #0066CC; }
                         .info { margin: 20px 0; }
                         table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-                        th, td { border: 1px solid #0066CC; padding: 10px; text-align: left; }
+                        th, td { border: 1px solid #0066CC; padding: 10px; text-align: left; font-size: 12px; }
                         th { background: #0066CC; color: white; }
-                        .assinaturas { margin-top: 60px; display: flex; justify-content: space-between; }
-                        .assinatura-box { width: 45%; }
-                        .linha { border-top: 2px solid #0066CC; margin-top: 60px; padding-top: 5px; text-align: center; }
-                        .destaque { background: #FFF9E6; font-weight: bold; color: #0066CC; padding: 10px; border-radius: 5px; }
+                        .assinatura-col { background: #FFF9E6; width: 200px; }
+                        .nome-recebedor { font-weight: bold; color: #0066CC; }
+                        .linha-assinatura { border-top: 1px solid #000; margin-top: 40px; width: 100%; }
                     </style>
                 </head>
                 <body>
@@ -988,43 +1020,50 @@
                                 <th>Departamento</th>
                                 <th>Tipo</th>
                                 <th>Descrição</th>
-                                <th>Quantidade</th>
+                                <th>Qtd</th>
+            `;
+
+            if (temRecebidoPor) {
+                html += '<th class="assinatura-col">Recebedor / Assinatura</th>';
+            }
+
+            html += `
                             </tr>
                         </thead>
                         <tbody>
             `;
 
-            rows.forEach(row => {
-                if (row.cells.length > 1) {
+            if (temRecebidoPor && dadosCompletos.length > 0) {
+                // Usa os dados completos do servidor
+                dadosCompletos.forEach(row => {
                     html += '<tr>';
-                    for (let i = 0; i < row.cells.length; i++) {
-                        html += `<td>${row.cells[i].textContent}</td>`;
-                    }
+                    html += `<td>${formatarData(row[0])}</td>`;
+                    html += `<td>${row[1]}</td>`;
+                    html += `<td>${row[2]}</td>`;
+                    html += `<td>${row[3]}</td>`;
+                    html += `<td>${row[4]}</td>`;
+                    html += `<td class="assinatura-col">
+                                <div class="nome-recebedor">${row[5] || ''}</div>
+                                <div class="linha-assinatura"></div>
+                             </td>`;
                     html += '</tr>';
-                }
-            });
+                });
+            } else {
+                // Usa os dados da tabela visível
+                rows.forEach(row => {
+                    if (row.cells.length > 1) {
+                        html += '<tr>';
+                        for (let i = 0; i < row.cells.length; i++) {
+                            html += `<td>${row.cells[i].textContent}</td>`;
+                        }
+                        html += '</tr>';
+                    }
+                });
+            }
 
             html += `
                         </tbody>
                     </table>
-                    <div class="assinaturas">
-                        <div class="assinatura-box">
-                            <p><strong>Responsável dos Correios:</strong></p>
-                            <div class="linha"></div>
-                        </div>
-            `;
-
-            if (temCampoRecebedor) {
-                html += `
-                        <div class="assinatura-box">
-                            <p class="destaque"><strong>Recebedor:</strong></p>
-                            <div class="linha"></div>
-                        </div>
-                `;
-            }
-
-            html += `
-                    </div>
                 </body>
                 </html>
             `;
