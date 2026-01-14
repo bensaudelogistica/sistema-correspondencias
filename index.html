@@ -426,6 +426,14 @@
             font-size: 1.3em;
         }
 
+        .destaque-campo {
+            background: #FFF9E6;
+            border: 2px solid #F59E0B;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 1.8em;
@@ -654,6 +662,12 @@
                     </div>
                 </div>
 
+                <!-- CAMPO NOVO: RECEBIDO POR -->
+                <div class="form-group">
+                    <label><i class="fas fa-user-check"></i> <span class="destaque-campo">Recebido por (Nome do Colaborador):</span></label>
+                    <input type="text" id="recebidoPor" placeholder="Digite o nome completo do colaborador que está recebendo" required>
+                </div>
+
                 <div class="form-group">
                     <label><i class="fas fa-align-left"></i> Descrição da Correspondência:</label>
                     <textarea id="descricaoRecebimento" rows="3" placeholder="Digite detalhes sobre a correspondência..." required></textarea>
@@ -710,11 +724,12 @@
                             <th>Tipo</th>
                             <th>Descrição</th>
                             <th>Quantidade</th>
+                            <th>Recebido Por</th>
                         </tr>
                     </thead>
                     <tbody id="bodyTabelaRecebimentos">
                         <tr>
-                            <td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td>
+                            <td colspan="6" style="text-align: center;">Nenhum registro inserido ainda hoje</td>
                         </tr>
                     </tbody>
                 </table>
@@ -723,10 +738,9 @@
     </div>
 
     <script>
-        // URL do Google Apps Script - SUBSTITUA PELA SUA URL
+        // URL do Google Apps Script
         const scriptURL = 'https://script.google.com/macros/s/AKfycbyzAYgPkNNXRURK-kpGDMkvMKbpYFod2MmAd5VqctRdVWyxzWBsW6FfPUsw2s6OUynG/exec';
 
-        // Função para trocar de tela
         function showScreen(screenId) {
             const screens = document.querySelectorAll('.screen');
             screens.forEach(screen => screen.classList.remove('active'));
@@ -774,7 +788,7 @@
                         data.tipo,
                         data.descricao,
                         data.quantidade
-                    ]);
+                    ], false);
                     document.getElementById('formEnvio').reset();
                     setDataHoje('dataEnvio');
                 } else {
@@ -795,7 +809,8 @@
                 departamento: document.getElementById('departamentoRecebimento').value,
                 tipo: document.getElementById('tipoRecebimento').value,
                 descricao: document.getElementById('descricaoRecebimento').value,
-                quantidade: document.getElementById('quantidadeRecebimento').value
+                quantidade: document.getElementById('quantidadeRecebimento').value,
+                recebidoPor: document.getElementById('recebidoPor').value
             };
 
             try {
@@ -813,8 +828,9 @@
                         data.departamento,
                         data.tipo,
                         data.descricao,
-                        data.quantidade
-                    ]);
+                        data.quantidade,
+                        data.recebidoPor
+                    ], true);
                     document.getElementById('formRecebimento').reset();
                     setDataHoje('dataRecebimento');
                 } else {
@@ -832,7 +848,7 @@
                 alert('Por favor, selecione uma data!');
                 return;
             }
-            await buscarDadosPorData('Envios', data, 'bodyTabelaEnvios', 'loadingEnvio', 'tituloTabelaEnvio');
+            await buscarDadosPorData('Envios', data, 'bodyTabelaEnvios', 'loadingEnvio', 'tituloTabelaEnvio', false);
         }
 
         async function buscarRecebimentosPorData() {
@@ -841,16 +857,17 @@
                 alert('Por favor, selecione uma data!');
                 return;
             }
-            await buscarDadosPorData('Recebimentos', data, 'bodyTabelaRecebimentos', 'loadingRecebimento', 'tituloTabelaRecebimento');
+            await buscarDadosPorData('Recebimentos', data, 'bodyTabelaRecebimentos', 'loadingRecebimento', 'tituloTabelaRecebimento', true);
         }
 
-        async function buscarDadosPorData(tipo, data, tabelaId, loadingId, tituloId) {
+        async function buscarDadosPorData(tipo, data, tabelaId, loadingId, tituloId, temRecebidoPor) {
             const loading = document.getElementById(loadingId);
             const tbody = document.getElementById(tabelaId);
             const titulo = document.getElementById(tituloId);
             
             loading.classList.add('active');
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Buscando...</td></tr>';
+            const colspan = temRecebidoPor ? '6' : '5';
+            tbody.innerHTML = `<tr><td colspan="${colspan}" style="text-align: center;">Buscando...</td></tr>`;
 
             try {
                 const response = await fetch(`${scriptURL}?acao=buscarPorData&tipo=${tipo}&data=${data}`);
@@ -864,23 +881,34 @@
                     
                     result.data.forEach(row => {
                         const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>${formatarData(row[0])}</td>
-                            <td>${row[1]}</td>
-                            <td>${row[2]}</td>
-                            <td>${row[3]}</td>
-                            <td>${row[4]}</td>
-                        `;
+                        if (temRecebidoPor) {
+                            tr.innerHTML = `
+                                <td>${formatarData(row[0])}</td>
+                                <td>${row[1]}</td>
+                                <td>${row[2]}</td>
+                                <td>${row[3]}</td>
+                                <td>${row[4]}</td>
+                                <td><strong style="color: #0066CC;">${row[5]}</strong></td>
+                            `;
+                        } else {
+                            tr.innerHTML = `
+                                <td>${formatarData(row[0])}</td>
+                                <td>${row[1]}</td>
+                                <td>${row[2]}</td>
+                                <td>${row[3]}</td>
+                                <td>${row[4]}</td>
+                            `;
+                        }
                         tbody.appendChild(tr);
                     });
                 } else {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum registro encontrado para esta data</td></tr>';
+                    tbody.innerHTML = `<tr><td colspan="${colspan}" style="text-align: center;">Nenhum registro encontrado para esta data</td></tr>`;
                     titulo.textContent = `📋 Correspondências de ${formatarData(data)}`;
                 }
             } catch (error) {
                 console.error('Erro:', error);
                 loading.classList.remove('active');
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: red;">Erro ao buscar dados. Verifique sua conexão.</td></tr>';
+                tbody.innerHTML = `<tr><td colspan="${colspan}" style="text-align: center; color: red;">Erro ao buscar dados. Verifique sua conexão.</td></tr>`;
             }
         }
 
@@ -891,12 +919,12 @@
         }
 
         function limparBuscaRecebimento() {
-            document.getElementById('bodyTabelaRecebimentos').innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
+            document.getElementById('bodyTabelaRecebimentos').innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
             document.getElementById('tituloTabelaRecebimento').textContent = '📋 Correspondências Registradas Hoje';
             setDataHoje('filtroDataRecebimento');
         }
 
-        function adicionarLinhaTabela(tabelaId, dados) {
+        function adicionarLinhaTabela(tabelaId, dados, temRecebidoPor) {
             const tbody = document.getElementById(tabelaId);
             
             if (tbody.rows.length === 1 && tbody.rows[0].cells.length === 1) {
@@ -904,13 +932,24 @@
             }
             
             const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${formatarData(dados[0])}</td>
-                <td>${dados[1]}</td>
-                <td>${dados[2]}</td>
-                <td>${dados[3]}</td>
-                <td>${dados[4]}</td>
-            `;
+            if (temRecebidoPor) {
+                tr.innerHTML = `
+                    <td>${formatarData(dados[0])}</td>
+                    <td>${dados[1]}</td>
+                    <td>${dados[2]}</td>
+                    <td>${dados[3]}</td>
+                    <td>${dados[4]}</td>
+                    <td><strong style="color: #0066CC;">${dados[5]}</strong></td>
+                `;
+            } else {
+                tr.innerHTML = `
+                    <td>${formatarData(dados[0])}</td>
+                    <td>${dados[1]}</td>
+                    <td>${dados[2]}</td>
+                    <td>${dados[3]}</td>
+                    <td>${dados[4]}</td>
+                `;
+            }
             
             tbody.insertBefore(tr, tbody.firstChild);
         }
@@ -938,7 +977,7 @@
             const dataFiltro = document.getElementById('filtroDataEnvio').value;
             const hoje = new Date().toISOString().split('T')[0];
             const dataProtocolo = dataFiltro || hoje;
-            imprimirProtocolo('ENVIO', tbody, dataProtocolo);
+            imprimirProtocolo('ENVIO', tbody, dataProtocolo, false);
         }
 
         function imprimirProtocoloRecebimento() {
@@ -946,10 +985,10 @@
             const dataFiltro = document.getElementById('filtroDataRecebimento').value;
             const hoje = new Date().toISOString().split('T')[0];
             const dataProtocolo = dataFiltro || hoje;
-            imprimirProtocolo('RECEBIMENTO', tbody, dataProtocolo);
+            imprimirProtocolo('RECEBIMENTO', tbody, dataProtocolo, true);
         }
 
-        function imprimirProtocolo(tipo, tbody, data) {
+        function imprimirProtocolo(tipo, tbody, data, temRecebidoPor) {
             const rows = tbody.querySelectorAll('tr');
             
             if (rows.length === 0 || (rows.length === 1 && rows[0].cells.length === 1)) {
@@ -971,6 +1010,7 @@
                         th { background: #0066CC; color: white; }
                         .assinatura { margin-top: 50px; }
                         .linha { border-top: 2px solid #0066CC; width: 300px; margin-top: 50px; }
+                        .destaque { background: #FFF9E6; font-weight: bold; }
                     </style>
                 </head>
                 <body>
@@ -988,6 +1028,13 @@
                                 <th>Tipo</th>
                                 <th>Descrição</th>
                                 <th>Quantidade</th>
+            `;
+
+            if (temRecebidoPor) {
+                html += '<th class="destaque">Recebido Por</th>';
+            }
+
+            html += `
                             </tr>
                         </thead>
                         <tbody>
@@ -997,7 +1044,11 @@
                 if (row.cells.length > 1) {
                     html += '<tr>';
                     for (let i = 0; i < row.cells.length; i++) {
-                        html += `<td>${row.cells[i].textContent}</td>`;
+                        if (temRecebidoPor && i === row.cells.length - 1) {
+                            html += `<td class="destaque">${row.cells[i].textContent}</td>`;
+                        } else {
+                            html += `<td>${row.cells[i].textContent}</td>`;
+                        }
                     }
                     html += '</tr>';
                 }
