@@ -945,19 +945,10 @@
             const dataFiltro = document.getElementById('filtroDataRecebimento').value;
             const hoje = new Date().toISOString().split('T')[0];
             const dataProtocolo = dataFiltro || hoje;
-            
-            // Pede o nome do colaborador na hora de imprimir
-            const nomeColaborador = prompt('Digite o nome do colaborador que está recebendo:');
-            
-            if (!nomeColaborador || nomeColaborador.trim() === '') {
-                alert('É necessário informar o nome do colaborador para imprimir o protocolo!');
-                return;
-            }
-            
-            imprimirProtocolo('RECEBIMENTO', tbody, dataProtocolo, true, nomeColaborador);
+            imprimirProtocolo('RECEBIMENTO', tbody, dataProtocolo, true);
         }
 
-        function imprimirProtocolo(tipo, tbody, data, temRecebidoPor, nomeColaborador = '') {
+        function imprimirProtocolo(tipo, tbody, data, temCampoRecebedor) {
             const rows = tbody.querySelectorAll('tr');
             
             if (rows.length === 0 || (rows.length === 1 && rows[0].cells.length === 1)) {
@@ -972,14 +963,15 @@
                     <title>Protocolo de ${tipo}</title>
                     <style>
                         body { font-family: Arial, sans-serif; padding: 20px; }
-                        h1 { text-align: center; color: #0066CC; }
+                        h1 { text-align: center; color: #0066CC; margin-bottom: 30px; }
                         .info { margin: 20px 0; }
                         table { width: 100%; border-collapse: collapse; margin: 20px 0; }
                         th, td { border: 1px solid #0066CC; padding: 10px; text-align: left; }
                         th { background: #0066CC; color: white; }
-                        .assinatura { margin-top: 50px; }
-                        .linha { border-top: 2px solid #0066CC; width: 300px; margin-top: 50px; }
-                        .destaque { background: #FFF9E6; font-weight: bold; color: #0066CC; }
+                        .assinaturas { margin-top: 60px; display: flex; justify-content: space-between; }
+                        .assinatura-box { width: 45%; }
+                        .linha { border-top: 2px solid #0066CC; margin-top: 60px; padding-top: 5px; text-align: center; }
+                        .destaque { background: #FFF9E6; font-weight: bold; color: #0066CC; padding: 10px; border-radius: 5px; }
                     </style>
                 </head>
                 <body>
@@ -988,13 +980,6 @@
                         <p><strong>Bensaúde Logística</strong></p>
                         <p><strong>Data:</strong> ${formatarData(data)}</p>
                         <p><strong>Hora de impressão:</strong> ${new Date().toLocaleString('pt-BR')}</p>
-            `;
-
-            if (temRecebidoPor && nomeColaborador) {
-                html += `<p><strong>Recebido por:</strong> <span class="destaque">${nomeColaborador}</span></p>`;
-            }
-
-            html += `
                     </div>
                     <table>
                         <thead>
@@ -1022,9 +1007,23 @@
             html += `
                         </tbody>
                     </table>
-                    <div class="assinatura">
-                        <p><strong>Assinatura do Responsável dos Correios:</strong></p>
-                        <div class="linha"></div>
+                    <div class="assinaturas">
+                        <div class="assinatura-box">
+                            <p><strong>Responsável dos Correios:</strong></p>
+                            <div class="linha"></div>
+                        </div>
+            `;
+
+            if (temCampoRecebedor) {
+                html += `
+                        <div class="assinatura-box">
+                            <p class="destaque"><strong>Recebedor:</strong></p>
+                            <div class="linha"></div>
+                        </div>
+                `;
+            }
+
+            html += `
                     </div>
                 </body>
                 </html>
