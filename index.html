@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Controle de Correspondências</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container-custom {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .screen {
+            display: none;
+            padding: 40px;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .menu-inicial {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            padding: 20px;
+        }
+
+        .menu-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 40px 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .menu-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+
+        .menu-card i {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .menu-card h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn-custom {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary-custom {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary-custom:hover {
+            background: #5a6268;
+        }
+
+        .btn-success-custom {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success-custom:hover {
+            background: #218838;
+        }
+
+        .btn-info-custom {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-info-custom:hover {
+            background: #138496;
+        }
+
+        .btn-warning-custom {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-warning-custom:hover {
+            background: #e0a800;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .alert-custom {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .table-container {
+            margin-top: 30px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        table th,
+        table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .filter-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            border: 2px solid #667eea;
+        }
+
+        .filter-section h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printArea, #printArea * {
+                visibility: visible;
+            }
+            #printArea {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-custom">
+        <div class="header">
+            <h1><i class="fas fa-envelope"></i> Sistema de Correspondências</h1>
+            <p>Controle completo de envio e recebimento</p>
+        </div>
+
+        <!-- TELA INICIAL -->
+        <div id="telaInicial" class="screen active">
+            <div class="menu-inicial">
+                <div class="menu-card" onclick="showScreen('telaEnvio')">
+                    <i class="fas fa-paper-plane"></i>
+                    <h3>Envio</h3>
+                    <p>Registrar correspondências enviadas</p>
+                </div>
+                <div class="menu-card" onclick="showScreen('telaRecebimento')">
+                    <i class="fas fa-inbox"></i>
+                    <h3>Recebimento</h3>
+                    <p>Registrar correspondências recebidas</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TELA DE ENVIO -->
+        <div id="telaEnvio" class="screen">
+            <h2><i class="fas fa-paper-plane"></i> Envio de Correspondências</h2>
+            
+            <div class="alert-custom alert-success" id="alertSuccessEnvio">
+                ✅ Correspondência registrada com sucesso!
+            </div>
+            <div class="alert-custom alert-error" id="alertErrorEnvio">
+                ❌ Erro ao registrar. Tente novamente.
+            </div>
+
+            <form id="formEnvio" onsubmit="inserirEnvio(event)">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar"></i> Data do Envio:</label>
+                            <input type="date" id="dataEnvio" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><i class="fas fa-building"></i> Departamento:</label>
+                            <select id="departamentoEnvio" required>
+                                <option value="">Selecione...</option>
+                                <option value="Administrativo">Administrativo</option>
+                                <option value="Financeiro">Financeiro</option>
+                                <option value="Recursos Humanos">Recursos Humanos</option>
+                                <option value="Logística">Logística</option>
+                                <option value="Manutenção">Manutenção</option>
+                                <option value="TI">TI</option>
+                                <option value="Compras">Compras</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><i class="fas fa-envelope"></i> Tipo de Correspondência:</label>
+                            <select id="tipoEnvio" required>
+                                <option value="">Selecione...</option>
+                                <option value="Carta Simples">Carta Simples</option>
+                                <option value="Carta Registrada">Carta Registrada</option>
+                                <option value="SEDEX">SEDEX</option>
+                                <option value="PAC">PAC</option>
+                                <option value="Telegrama">Telegrama</option>
+                                <option value="Outros">Outros</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><i class="fas fa-sort-numeric-up"></i> Quantidade:</label>
+                            <input type="number" id="quantidadeEnvio" min="1" value="1" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-align-left"></i> Descrição da Correspondência:</label>
+                    <textarea id="descricaoEnvio" rows="3" placeholder="Digite detalhes sobre a correspondência..." required></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn-custom btn-primary-custom">
+                        <i class="fas fa-plus-circle"></i> Inserir
+                    </button>
+                    <button type="button" class="btn-custom btn-success-custom" onclick="imprimirProtocoloEnvio()">
+                        <i class="fas fa-print"></i> Imprimir Protocolo
+                    </button>
+                    <button type="button" class="btn-custom btn-secondary-custom" onclick="showScreen('telaInicial')">
+                        <i class="fas fa-arrow-left"></i> Retornar
+                    </button>
+                </div>
+            </form>
+
+            <!-- SEÇÃO DE BUSCA POR DATA -->
+            <div class="filter-section">
+                <h4><i class="fas fa-search"></i> Buscar Correspondências por Data</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Selecione a Data:</label>
+                            <input type="date" id="filtroDataEnvio">
+                        </div>
+                    </div>
+                    <div class="col-md-6" style="display: flex; align-items: flex-end; gap: 10px;">
+                        <button class="btn-custom btn-info-custom" onclick="buscarEnviosPorData()">
+                            <i class="fas fa-search"></i> Buscar Data
+                        </button>
+                        <button class="btn-custom btn-warning-custom" onclick="limparBuscaEnvio()">
+                            <i class="fas fa-calendar-day"></i> Ver Hoje
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading -->
+            <div class="loading" id="loadingEnvio">
+                <div class="spinner"></div>
+                <p>Buscando registros...</p>
+            </div>
+
+            <!-- Tabela de Registros -->
+            <div class="table-container">
+                <h3 id="tituloTabelaEnvio">📋 Correspondências Registradas Hoje</h3>
+                <table id="tabelaEnvios">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Departamento</th>
+                            <th>Tipo</th>
+                            <th>Descrição</th>
+                            <th>Quantidade</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyTabelaEnvios">
+                        <tr>
+                            <td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TELA DE RECEBIMENTO -->
+        <div id="telaRecebimento" class="screen">
+            <h2><i class="fas fa-inbox"></i> Recebimento de Correspondências</h2>
+            
+            <div class="alert-custom alert-success" id="alertSuccessRecebimento">
+                ✅ Correspondência registrada com sucesso!
+            </div>
+            <div class="alert-custom alert-error" id="alertErrorRecebimento">
+                ❌ Erro ao registrar. Tente novamente.
+            </div>
+
+            <form id="formRecebimento" onsubmit="inserirRecebimento(event)">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar"></i> Data do Recebimento:</label>
+                            <input type="date" id="dataRecebimento" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><i class="fas fa-building"></i> Departamento:</label>
+                            <select id="departamentoRecebimento" required>
+                                <option value="">Selecione...</option>
+                                <option value="Administrativo">Administrativo</option>
+                                <option value="Financeiro">Financeiro</option>
+                                <option value="Recursos Humanos">Recursos Humanos</option>
+                                <option value="Logística">Logística</option>
+                                <option value="Manutenção">Manutenção</option>
+                                <option value="TI">TI</option>
+                                <option value="Compras">Compras</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><i class="fas fa-envelope"></i> Tipo de Correspondência:</label>
+                            <select id="tipoRecebimento" required>
+                                <option value="">Selecione...</option>
+                                <option value="Carta Simples">Carta Simples</option>
+                                <option value="Carta Registrada">Carta Registrada</option>
+                                <option value="SEDEX">SEDEX</option>
+                                <option value="PAC">PAC</option>
+                                <option value="Telegrama">Telegrama</option>
+                                <option value="Outros">Outros</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><i class="fas fa-sort-numeric-up"></i> Quantidade:</label>
+                            <input type="number" id="quantidadeRecebimento" min="1" value="1" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-align-left"></i> Descrição da Correspondência:</label>
+                    <textarea id="descricaoRecebimento" rows="3" placeholder="Digite detalhes sobre a correspondência..." required></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn-custom btn-primary-custom">
+                        <i class="fas fa-plus-circle"></i> Inserir
+                    </button>
+                    <button type="button" class="btn-custom btn-success-custom" onclick="imprimirProtocoloRecebimento()">
+                        <i class="fas fa-print"></i> Imprimir Protocolo
+                    </button>
+                    <button type="button" class="btn-custom btn-secondary-custom" onclick="showScreen('telaInicial')">
+                        <i class="fas fa-arrow-left"></i> Retornar
+                    </button>
+                </div>
+            </form>
+
+            <!-- SEÇÃO DE BUSCA POR DATA -->
+            <div class="filter-section">
+                <h4><i class="fas fa-search"></i> Buscar Correspondências por Data</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Selecione a Data:</label>
+                            <input type="date" id="filtroDataRecebimento">
+                        </div>
+                    </div>
+                    <div class="col-md-6" style="display: flex; align-items: flex-end; gap: 10px;">
+                        <button class="btn-custom btn-info-custom" onclick="buscarRecebimentosPorData()">
+                            <i class="fas fa-search"></i> Buscar Data
+                        </button>
+                        <button class="btn-custom btn-warning-custom" onclick="limparBuscaRecebimento()">
+                            <i class="fas fa-calendar-day"></i> Ver Hoje
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading -->
+            <div class="loading" id="loadingRecebimento">
+                <div class="spinner"></div>
+                <p>Buscando registros...</p>
+            </div>
+
+            <!-- Tabela de Registros -->
+            <div class="table-container">
+                <h3 id="tituloTabelaRecebimento">📋 Correspondências Registradas Hoje</h3>
+                <table id="tabelaRecebimentos">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Departamento</th>
+                            <th>Tipo</th>
+                            <th>Descrição</th>
+                            <th>Quantidade</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyTabelaRecebimentos">
+                        <tr>
+                            <td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // URL do Google Apps Script - SUBSTITUA PELA SUA URL
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyTgW19nwjYR-wJbpUC23JhuekfzaDTHxEklPwMSf64VHLhBuKNvuYF5SwRq2igGNPU/exec';
+
+        // Função para trocar de tela
+        function showScreen(screenId) {
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(screen => screen.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+
+            // Definir data de hoje ao abrir tela
+            if (screenId === 'telaEnvio') {
+                setDataHoje('dataEnvio');
+                setDataHoje('filtroDataEnvio');
+            } else if (screenId === 'telaRecebimento') {
+                setDataHoje('dataRecebimento');
+                setDataHoje('filtroDataRecebimento');
+            }
+        }
+
+        // Definir data de hoje nos campos
+        function setDataHoje(inputId) {
+            const hoje = new Date().toISOString().split('T')[0];
+            document.getElementById(inputId).value = hoje;
+        }
+
+        // Inserir Envio
+        async function inserirEnvio(event) {
+            event.preventDefault();
+
+            const data = {
+                acao: 'inserirEnvio',
+                data: document.getElementById('dataEnvio').value,
+                departamento: document.getElementById('departamentoEnvio').value,
+                tipo: document.getElementById('tipoEnvio').value,
+                descricao: document.getElementById('descricaoEnvio').value,
+                quantidade: document.getElementById('quantidadeEnvio').value
+            };
+
+            try {
+                const response = await fetch(scriptURL, {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    mostrarAlerta('alertSuccessEnvio', 'alertErrorEnvio');
+                    
+                    // Adiciona o registro diretamente na tabela
+                    adicionarLinhaTabela('bodyTabelaEnvios', [
+                        data.data,
+                        data.departamento,
+                        data.tipo,
+                        data.descricao,
+                        data.quantidade
+                    ]);
+                    
+                    // Limpa o formulário
+                    document.getElementById('formEnvio').reset();
+                    setDataHoje('dataEnvio');
+                } else {
+                    mostrarAlerta('alertErrorEnvio', 'alertSuccessEnvio');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                mostrarAlerta('alertErrorEnvio', 'alertSuccessEnvio');
+            }
+        }
+
+        // Inserir Recebimento
+        async function inserirRecebimento(event) {
+            event.preventDefault();
+
+            const data = {
+                acao: 'inserirRecebimento',
+                data: document.getElementById('dataRecebimento').value,
+                departamento: document.getElementById('departamentoRecebimento').value,
+                tipo: document.getElementById('tipoRecebimento').value,
+                descricao: document.getElementById('descricaoRecebimento').value,
+                quantidade: document.getElementById('quantidadeRecebimento').value
+            };
+
+            try {
+                const response = await fetch(scriptURL, {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    mostrarAlerta('alertSuccessRecebimento', 'alertErrorRecebimento');
+                    
+                    // Adiciona o registro diretamente na tabela
+                    adicionarLinhaTabela('bodyTabelaRecebimentos', [
+                        data.data,
+                        data.departamento,
+                        data.tipo,
+                        data.descricao,
+                        data.quantidade
+                    ]);
+                    
+                    // Limpa o formulário
+                    document.getElementById('formRecebimento').reset();
+                    setDataHoje('dataRecebimento');
+                } else {
+                    mostrarAlerta('alertErrorRecebimento', 'alertSuccessRecebimento');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                mostrarAlerta('alertErrorRecebimento', 'alertSuccessRecebimento');
+            }
+        }
+
+        // Buscar envios por data específica
+        async function buscarEnviosPorData() {
+            const data = document.getElementById('filtroDataEnvio').value;
+            if (!data) {
+                alert('Por favor, selecione uma data!');
+                return;
+            }
+            await buscarDadosPorData('Envios', data, 'bodyTabelaEnvios', 'loadingEnvio', 'tituloTabelaEnvio');
+        }
+
+        // Buscar recebimentos por data específica
+        async function buscarRecebimentosPorData() {
+            const data = document.getElementById('filtroDataRecebimento').value;
+            if (!data) {
+                alert('Por favor, selecione uma data!');
+                return;
+            }
+            await buscarDadosPorData('Recebimentos', data, 'bodyTabelaRecebimentos', 'loadingRecebimento', 'tituloTabelaRecebimento');
+        }
+
+        // Função genérica para buscar dados por data
+        async function buscarDadosPorData(tipo, data, tabelaId, loadingId, tituloId) {
+            const loading = document.getElementById(loadingId);
+            const tbody = document.getElementById(tabelaId);
+            const titulo = document.getElementById(tituloId);
+            
+            loading.classList.add('active');
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Buscando...</td></tr>';
+
+            try {
+                const response = await fetch(`${scriptURL}?acao=buscarPorData&tipo=${tipo}&data=${data}`);
+                const result = await response.json();
+
+                loading.classList.remove('active');
+
+                if (result.status === 'success' && result.data && result.data.length > 0) {
+                    tbody.innerHTML = '';
+                    titulo.textContent = `📋 Correspondências de ${formatarData(data)} (${result.data.length} registro(s))`;
+                    
+                    result.data.forEach(row => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${formatarData(row[0])}</td>
+                            <td>${row[1]}</td>
+                            <td>${row[2]}</td>
+                            <td>${row[3]}</td>
+                            <td>${row[4]}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum registro encontrado para esta data</td></tr>';
+                    titulo.textContent = `📋 Correspondências de ${formatarData(data)}`;
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                loading.classList.remove('active');
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: red;">Erro ao buscar dados. Verifique sua conexão.</td></tr>';
+            }
+        }
+
+        // Limpar busca de envio e voltar para hoje
+        function limparBuscaEnvio() {
+            document.getElementById('bodyTabelaEnvios').innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
+            document.getElementById('tituloTabelaEnvio').textContent = '📋 Correspondências Registradas Hoje';
+            setDataHoje('filtroDataEnvio');
+        }
+
+        // Limpar busca de recebimento e voltar para hoje
+        function limparBuscaRecebimento() {
+            document.getElementById('bodyTabelaRecebimentos').innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
+            document.getElementById('tituloTabelaRecebimento').textContent = '📋 Correspondências Registradas Hoje';
+            setDataHoje('filtroDataRecebimento');
+        }
+
+        // Função para adicionar linha na tabela diretamente
+        function adicionarLinhaTabela(tabelaId, dados) {
+            const tbody = document.getElementById(tabelaId);
+            
+            // Remove a mensagem "Nenhum registro encontrado" se existir
+            if (tbody.rows.length === 1 && tbody.rows[0].cells.length === 1) {
+                tbody.innerHTML = '';
+            }
+            
+            // Cria nova linha
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${formatarData(dados[0])}</td>
+                <td>${dados[1]}</td>
+                <td>${dados[2]}</td>
+                <td>${dados[3]}</td>
+                <td>${dados[4]}</td>
+            `;
+            
+            // Adiciona no INÍCIO da tabela (mais recente primeiro)
+            tbody.insertBefore(tr, tbody.firstChild);
+        }
+
+        // Formatar data
+        function formatarData(data) {
+            if (!data) return '';
+            const partes = data.split('-');
+            if (partes.length === 3) {
+                return `${partes[2]}/${partes[1]}/${partes[0]}`;
+            }
+            return data;
+        }
+
+        // Mostrar alerta
+        function mostrarAlerta(mostrarId, esconderId) {
+            document.getElementById(esconderId).style.display = 'none';
+            const alerta = document.getElementById(mostrarId);
+            alerta.style.display = 'block';
+            setTimeout(() => {
+                alerta.style.display = 'none';
+            }, 3000);
+        }
+
+        // Imprimir protocolo de envio
+        function imprimirProtocoloEnvio() {
+            const tbody = document.getElementById('bodyTabelaEnvios');
+            const dataFiltro = document.getElementById('filtroDataEnvio').value;
+            const hoje = new Date().toISOString().split('T')[0];
+            const dataProtocolo = dataFiltro || hoje;
+            imprimirProtocolo('ENVIO', tbody, dataProtocolo);
+        }
+
+        // Imprimir protocolo de recebimento
+        function imprimirProtocoloRecebimento() {
+            const tbody = document.getElementById('bodyTabelaRecebimentos');
+            const dataFiltro = document.getElementById('filtroDataRecebimento').value;
+            const hoje = new Date().toISOString().split('T')[0];
+            const dataProtocolo = dataFiltro || hoje;
+            imprimirProtocolo('RECEBIMENTO', tbody, dataProtocolo);
+        }
+
+        // Função genérica para imprimir protocolo
+        function imprimirProtocolo(tipo, tbody, data) {
+            const rows = tbody.querySelectorAll('tr');
+            
+            if (rows.length === 0 || (rows.length === 1 && rows[0].cells.length === 1)) {
+                alert('Não há registros para imprimir!');
+                return;
+            }
+
+            let html = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Protocolo de ${tipo}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; }
+                        h1 { text-align: center; color: #333; }
+                        .info { margin: 20px 0; }
+                        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                        th, td { border: 1px solid #333; padding: 10px; text-align: left; }
+                        th { background: #667eea; color: white; }
+                        .assinatura { margin-top: 50px; }
+                        .linha { border-top: 1px solid #333; width: 300px; margin-top: 50px; }
+                    </style>
+                </head>
+                <body>
+                    <h1>PROTOCOLO DE ${tipo} DE CORRESPONDÊNCIAS</h1>
+                    <div class="info">
+                        <p><strong>Data:</strong> ${formatarData(data)}</p>
+                        <p><strong>Hora de impressão:</strong> ${new Date().toLocaleString('pt-BR')}</p>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Departamento</th>
+                                <th>Tipo</th>
+                                <th>Descrição</th>
+                                <th>Quantidade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            rows.forEach(row => {
+                if (row.cells.length > 1) {
+                    html += '<tr>';
+                    for (let i = 0; i < row.cells.length; i++) {
+                        html += `<td>${row.cells[i].textContent}</td>`;
+                    }
+                    html += '</tr>';
+                }
+            });
+
+            html += `
+                        </tbody>
+                    </table>
+                    <div class="assinatura">
+                        <p><strong>Assinatura do Responsável dos Correios:</strong></p>
+                        <div class="linha"></div>
+                    </div>
+                </body>
+                </html>
+            `;
+
+            const janela = window.open('', '_blank');
+            janela.document.write(html);
+            janela.document.close();
+            janela.print();
+        }
+
+        // Inicializar ao carregar a página
+        window.onload = function() {
+            setDataHoje('dataEnvio');
+            setDataHoje('dataRecebimento');
+            setDataHoje('filtroDataEnvio');
+            setDataHoje('filtroDataRecebimento');
+        };
+    </script>
+</body>
+</html>
