@@ -438,6 +438,7 @@
             opacity: 0.9;
             margin-bottom: 10px;
             font-weight: 600;
+            color: var(--branco);
         }
 
         .stat-card .number {
@@ -541,7 +542,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Período:</label>
-                            <select id="filtroPeriodo" onchange="atualizarDashboard()">
+                            <select id="filtroPeriodo" onchange="toggleDataPersonalizada()">
                                 <option value="hoje">Hoje</option>
                                 <option value="mes" selected>Este Mês</option>
                                 <option value="ano">Este Ano</option>
@@ -564,7 +565,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Tipo:</label>
-                            <select id="filtroTipo" onchange="atualizarDashboard()">
+                            <select id="filtroTipo">
                                 <option value="ambos">Envios e Recebimentos</option>
                                 <option value="envios">Apenas Envios</option>
                                 <option value="recebimentos">Apenas Recebimentos</option>
@@ -581,7 +582,26 @@
 
             <!-- Cards de Estatísticas -->
             <div class="stats-cards" id="statsCards">
-                <!-- Preenchido dinamicamente -->
+                <div class="stat-card">
+                    <h4>📦 TOTAL GERAL</h4>
+                    <div class="number">0</div>
+                    <div class="label">Correspondências</div>
+                </div>
+                <div class="stat-card">
+                    <h4>📤 ENVIOS</h4>
+                    <div class="number">0</div>
+                    <div class="label">Correspondências</div>
+                </div>
+                <div class="stat-card">
+                    <h4>📥 RECEBIMENTOS</h4>
+                    <div class="number">0</div>
+                    <div class="label">Correspondências</div>
+                </div>
+                <div class="stat-card">
+                    <h4>📊 QUANTIDADE TOTAL</h4>
+                    <div class="number">0</div>
+                    <div class="label">Unidades</div>
+                </div>
             </div>
 
             <!-- Gráficos -->
@@ -609,7 +629,7 @@
                     </thead>
                     <tbody id="bodyTabelaDetalhada">
                         <tr>
-                            <td colspan="3" style="text-align: center;">Carregando...</td>
+                            <td colspan="3" style="text-align: center;">Selecione um período e clique em Atualizar</td>
                         </tr>
                     </tbody>
                 </table>
@@ -622,11 +642,258 @@
             </div>
         </div>
 
-        <!-- TELAS DE ENVIO E RECEBIMENTO (mantidas iguais) -->
-        <!-- Copie aqui todo o código das telas de Envio e Recebimento que você já tem -->
-        
-    </div>
+        <!-- TELA DE ENVIO -->
+        <div id="telaEnvio" class="screen">
+            <h2><i class="fas fa-paper-plane"></i> Envio de Correspondências</h2>
+            
+            <div class="alert-custom alert-success" id="alertSuccessEnvio">
+                ✅ Correspondência registrada com sucesso!
+            </div>
+            <div class="alert-custom alert-error" id="alertErrorEnvio">
+                ❌ Erro ao registrar. Tente novamente.
+            </div>
 
+            <form id="formEnvio" onsubmit="inserirEnvio(event)">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar"></i> Data do Envio:</label>
+                            <input type="date" id="dataEnvio" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><i class="fas fa-building"></i> Departamento:</label>
+                            <select id="departamentoEnvio" required>
+                                <option value="">Selecione...</option>
+                                <option value="Administrativo">Administrativo</option>
+                                <option value="Financeiro">Financeiro</option>
+                                <option value="Recursos Humanos">Recursos Humanos</option>
+                                <option value="Logística">Logística</option>
+                                <option value="Manutenção">Manutenção</option>
+                                <option value="TI">TI</option>
+                                <option value="Compras">Compras</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><i class="fas fa-envelope"></i> Tipo de Correspondência:</label>
+                            <select id="tipoEnvio" required>
+                                <option value="">Selecione...</option>
+                                <option value="Carta Simples">Carta Simples</option>
+                                <option value="Carta Registrada">Carta Registrada</option>
+                                <option value="SEDEX">SEDEX</option>
+                                <option value="PAC">PAC</option>
+                                <option value="Telegrama">Telegrama</option>
+                                <option value="Outros">Outros</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><i class="fas fa-sort-numeric-up"></i> Quantidade:</label>
+                            <input type="number" id="quantidadeEnvio" min="1" value="1" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-align-left"></i> Descrição da Correspondência:</label>
+                    <textarea id="descricaoEnvio" rows="3" placeholder="Digite detalhes sobre a correspondência..." required></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn-custom btn-primary-custom">
+                        <i class="fas fa-plus-circle"></i> Inserir
+                    </button>
+                    <button type="button" class="btn-custom btn-success-custom" onclick="imprimirProtocoloEnvio()">
+                        <i class="fas fa-print"></i> Imprimir Protocolo
+                    </button>
+                    <button type="button" class="btn-custom btn-secondary-custom" onclick="showScreen('telaInicial')">
+                        <i class="fas fa-arrow-left"></i> Retornar
+                    </button>
+                </div>
+            </form>
+
+            <!-- SEÇÃO DE BUSCA POR DATA -->
+            <div class="filter-section">
+                <h4><i class="fas fa-search"></i> Buscar Correspondências por Data</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Selecione a Data:</label>
+                            <input type="date" id="filtroDataEnvio">
+                        </div>
+                    </div>
+                    <div class="col-md-6" style="display: flex; align-items: flex-end; gap: 10px;">
+                        <button class="btn-custom btn-info-custom" onclick="buscarEnviosPorData()">
+                            <i class="fas fa-search"></i> Buscar Data
+                        </button>
+                        <button class="btn-custom btn-warning-custom" onclick="limparBuscaEnvio()">
+                            <i class="fas fa-calendar-day"></i> Ver Hoje
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading -->
+            <div class="loading" id="loadingEnvio">
+                <div class="spinner"></div>
+                <p>Buscando registros...</p>
+            </div>
+
+            <!-- Tabela de Registros -->
+            <div class="table-container">
+                <h3 id="tituloTabelaEnvio">📋 Correspondências Registradas Hoje</h3>
+                <table id="tabelaEnvios">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Departamento</th>
+                            <th>Tipo</th>
+                            <th>Descrição</th>
+                            <th>Quantidade</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyTabelaEnvios">
+                        <tr>
+                            <td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TELA DE RECEBIMENTO -->
+        <div id="telaRecebimento" class="screen">
+            <h2><i class="fas fa-inbox"></i> Recebimento de Correspondências</h2>
+            
+            <div class="alert-custom alert-success" id="alertSuccessRecebimento">
+                ✅ Correspondência registrada com sucesso!
+            </div>
+            <div class="alert-custom alert-error" id="alertErrorRecebimento">
+                ❌ Erro ao registrar. Tente novamente.
+            </div>
+
+            <form id="formRecebimento" onsubmit="inserirRecebimento(event)">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar"></i> Data do Recebimento:</label>
+                            <input type="date" id="dataRecebimento" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><i class="fas fa-building"></i> Departamento:</label>
+                            <select id="departamentoRecebimento" required>
+                                <option value="">Selecione...</option>
+                                <option value="Administrativo">Administrativo</option>
+                                <option value="Financeiro">Financeiro</option>
+                                <option value="Recursos Humanos">Recursos Humanos</option>
+                                <option value="Logística">Logística</option>
+                                <option value="Manutenção">Manutenção</option>
+                                <option value="TI">TI</option>
+                                <option value="Compras">Compras</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><i class="fas fa-envelope"></i> Tipo de Correspondência:</label>
+                            <select id="tipoRecebimento" required>
+                                <option value="">Selecione...</option>
+                                <option value="Carta Simples">Carta Simples</option>
+                                <option value="Carta Registrada">Carta Registrada</option>
+                                <option value="SEDEX">SEDEX</option>
+                                <option value="PAC">PAC</option>
+                                <option value="Telegrama">Telegrama</option>
+                                <option value="Outros">Outros</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><i class="fas fa-sort-numeric-up"></i> Quantidade:</label>
+                            <input type="number" id="quantidadeRecebimento" min="1" value="1" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-align-left"></i> Descrição da Correspondência:</label>
+                    <textarea id="descricaoRecebimento" rows="3" placeholder="Digite detalhes sobre a correspondência..." required></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn-custom btn-primary-custom">
+                        <i class="fas fa-plus-circle"></i> Inserir
+                    </button>
+                    <button type="button" class="btn-custom btn-success-custom" onclick="imprimirProtocoloRecebimento()">
+                        <i class="fas fa-print"></i> Imprimir Protocolo
+                    </button>
+                    <button type="button" class="btn-custom btn-secondary-custom" onclick="showScreen('telaInicial')">
+                        <i class="fas fa-arrow-left"></i> Retornar
+                    </button>
+                </div>
+            </form>
+
+            <!-- SEÇÃO DE BUSCA POR DATA -->
+            <div class="filter-section">
+                <h4><i class="fas fa-search"></i> Buscar Correspondências por Data</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Selecione a Data:</label>
+                            <input type="date" id="filtroDataRecebimento">
+                        </div>
+                    </div>
+                    <div class="col-md-6" style="display: flex; align-items: flex-end; gap: 10px;">
+                        <button class="btn-custom btn-info-custom" onclick="buscarRecebimentosPorData()">
+                            <i class="fas fa-search"></i> Buscar Data
+                        </button>
+                        <button class="btn-custom btn-warning-custom" onclick="limparBuscaRecebimento()">
+                            <i class="fas fa-calendar-day"></i> Ver Hoje
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading -->
+            <div class="loading" id="loadingRecebimento">
+                <div class="spinner"></div>
+                <p>Buscando registros...</p>
+            </div>
+
+            <!-- Tabela de Registros -->
+            <div class="table-container">
+                <h3 id="tituloTabelaRecebimento">📋 Correspondências Registradas Hoje</h3>
+                <table id="tabelaRecebimentos">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Departamento</th>
+                            <th>Tipo</th>
+                            <th>Descrição</th>
+                            <th>Quantidade</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyTabelaRecebimentos">
+                        <tr>
+                            <td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
     <script>
         const scriptURL = 'https://script.google.com/macros/s/AKfycbyzAYgPkNNXRURK-kpGDMkvMKbpYFod2MmAd5VqctRdVWyxzWBsW6FfPUsw2s6OUynG/exec';
         
@@ -638,29 +905,222 @@
             screens.forEach(screen => screen.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
 
-            if (screenId === 'telaDashboard') {
+            if (screenId === 'telaEnvio') {
+                setDataHoje('dataEnvio');
+                setDataHoje('filtroDataEnvio');
+            } else if (screenId === 'telaRecebimento') {
+                setDataHoje('dataRecebimento');
+                setDataHoje('filtroDataRecebimento');
+            } else if (screenId === 'telaDashboard') {
                 atualizarDashboard();
             }
         }
 
-        // Monitorar mudança de período
-        document.addEventListener('DOMContentLoaded', function() {
-            const filtroPeriodo = document.getElementById('filtroPeriodo');
-            if (filtroPeriodo) {
-                filtroPeriodo.addEventListener('change', function() {
-                    const personalizado = this.value === 'personalizado';
-                    document.getElementById('dataInicioContainer').style.display = personalizado ? 'block' : 'none';
-                    document.getElementById('dataFimContainer').style.display = personalizado ? 'block' : 'none';
-                });
-            }
-        });
+        function setDataHoje(inputId) {
+            const hoje = new Date().toISOString().split('T')[0];
+            document.getElementById(inputId).value = hoje;
+        }
 
+        function toggleDataPersonalizada() {
+            const periodo = document.getElementById('filtroPeriodo').value;
+            const personalizado = periodo === 'personalizado';
+            document.getElementById('dataInicioContainer').style.display = personalizado ? 'block' : 'none';
+            document.getElementById('dataFimContainer').style.display = personalizado ? 'block' : 'none';
+        }
+
+        async function inserirEnvio(event) {
+            event.preventDefault();
+
+            const data = {
+                acao: 'inserirEnvio',
+                data: document.getElementById('dataEnvio').value,
+                departamento: document.getElementById('departamentoEnvio').value,
+                tipo: document.getElementById('tipoEnvio').value,
+                descricao: document.getElementById('descricaoEnvio').value,
+                quantidade: document.getElementById('quantidadeEnvio').value
+            };
+
+            try {
+                const response = await fetch(scriptURL, {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    mostrarAlerta('alertSuccessEnvio', 'alertErrorEnvio');
+                    adicionarLinhaTabela('bodyTabelaEnvios', [
+                        data.data,
+                        data.departamento,
+                        data.tipo,
+                        data.descricao,
+                        data.quantidade
+                    ]);
+                    document.getElementById('formEnvio').reset();
+                    setDataHoje('dataEnvio');
+                } else {
+                    mostrarAlerta('alertErrorEnvio', 'alertSuccessEnvio');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                mostrarAlerta('alertErrorEnvio', 'alertSuccessEnvio');
+            }
+        }
+
+        async function inserirRecebimento(event) {
+            event.preventDefault();
+
+            const data = {
+                acao: 'inserirRecebimento',
+                data: document.getElementById('dataRecebimento').value,
+                departamento: document.getElementById('departamentoRecebimento').value,
+                tipo: document.getElementById('tipoRecebimento').value,
+                descricao: document.getElementById('descricaoRecebimento').value,
+                quantidade: document.getElementById('quantidadeRecebimento').value
+            };
+
+            try {
+                const response = await fetch(scriptURL, {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    mostrarAlerta('alertSuccessRecebimento', 'alertErrorRecebimento');
+                    adicionarLinhaTabela('bodyTabelaRecebimentos', [
+                        data.data,
+                        data.departamento,
+                        data.tipo,
+                        data.descricao,
+                        data.quantidade
+                    ]);
+                    document.getElementById('formRecebimento').reset();
+                    setDataHoje('dataRecebimento');
+                } else {
+                    mostrarAlerta('alertErrorRecebimento', 'alertSuccessRecebimento');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                mostrarAlerta('alertErrorRecebimento', 'alertSuccessRecebimento');
+            }
+        }
+
+        async function buscarEnviosPorData() {
+            const data = document.getElementById('filtroDataEnvio').value;
+            if (!data) {
+                alert('Por favor, selecione uma data!');
+                return;
+            }
+            await buscarDadosPorData('Envios', data, 'bodyTabelaEnvios', 'loadingEnvio', 'tituloTabelaEnvio');
+        }
+
+        async function buscarRecebimentosPorData() {
+            const data = document.getElementById('filtroDataRecebimento').value;
+            if (!data) {
+                alert('Por favor, selecione uma data!');
+                return;
+            }
+            await buscarDadosPorData('Recebimentos', data, 'bodyTabelaRecebimentos', 'loadingRecebimento', 'tituloTabelaRecebimento');
+        }
+
+        async function buscarDadosPorData(tipo, data, tabelaId, loadingId, tituloId) {
+            const loading = document.getElementById(loadingId);
+            const tbody = document.getElementById(tabelaId);
+            const titulo = document.getElementById(tituloId);
+            
+            loading.classList.add('active');
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Buscando...</td></tr>';
+
+            try {
+                const response = await fetch(`${scriptURL}?acao=buscarPorData&tipo=${tipo}&data=${data}`);
+                const result = await response.json();
+
+                loading.classList.remove('active');
+
+                if (result.status === 'success' && result.data && result.data.length > 0) {
+                    tbody.innerHTML = '';
+                    titulo.textContent = `📋 Correspondências de ${formatarData(data)} (${result.data.length} registro(s))`;
+                    
+                    result.data.forEach(row => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${formatarData(row[0])}</td>
+                            <td>${row[1]}</td>
+                            <td>${row[2]}</td>
+                            <td>${row[3]}</td>
+                            <td>${row[4]}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum registro encontrado para esta data</td></tr>';
+                    titulo.textContent = `📋 Correspondências de ${formatarData(data)}`;
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                loading.classList.remove('active');
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: red;">Erro ao buscar dados. Verifique sua conexão.</td></tr>';
+            }
+        }
+
+        function limparBuscaEnvio() {
+            document.getElementById('bodyTabelaEnvios').innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
+            document.getElementById('tituloTabelaEnvio').textContent = '📋 Correspondências Registradas Hoje';
+            setDataHoje('filtroDataEnvio');
+        }
+
+        function limparBuscaRecebimento() {
+            document.getElementById('bodyTabelaRecebimentos').innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
+            document.getElementById('tituloTabelaRecebimento').textContent = '📋 Correspondências Registradas Hoje';
+            setDataHoje('filtroDataRecebimento');
+        }
+
+        function adicionarLinhaTabela(tabelaId, dados) {
+            const tbody = document.getElementById(tabelaId);
+            
+            if (tbody.rows.length === 1 && tbody.rows[0].cells.length === 1) {
+                tbody.innerHTML = '';
+            }
+            
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${formatarData(dados[0])}</td>
+                <td>${dados[1]}</td>
+                <td>${dados[2]}</td>
+                <td>${dados[3]}</td>
+                <td>${dados[4]}</td>
+            `;
+            
+            tbody.insertBefore(tr, tbody.firstChild);
+        }
+
+        function formatarData(data) {
+            if (!data) return '';
+            const partes = data.split('-');
+            if (partes.length === 3) {
+                return `${partes[2]}/${partes[1]}/${partes[0]}`;
+            }
+            return data;
+        }
+
+        function mostrarAlerta(mostrarId, esconderId) {
+            document.getElementById(esconderId).style.display = 'none';
+            const alerta = document.getElementById(mostrarId);
+            alerta.style.display = 'block';
+            setTimeout(() => {
+                alerta.style.display = 'none';
+            }, 3000);
+        }
+
+        // FUNÇÕES DO DASHBOARD
         async function atualizarDashboard() {
             const loading = document.getElementById('loadingDashboard');
             loading.classList.add('active');
 
             try {
-                // Buscar dados de Envios e Recebimentos
                 const periodo = document.getElementById('filtroPeriodo').value;
                 const tipo = document.getElementById('filtroTipo').value;
                 
@@ -678,9 +1138,14 @@
                 } else {
                     dataInicio = document.getElementById('dataInicio').value;
                     dataFim = document.getElementById('dataFim').value;
+                    
+                    if (!dataInicio || !dataFim) {
+                        alert('Por favor, selecione as datas de início e fim!');
+                        loading.classList.remove('active');
+                        return;
+                    }
                 }
 
-                // Buscar todos os dados
                 let dadosEnvios = [];
                 let dadosRecebimentos = [];
 
@@ -700,11 +1165,11 @@
                     }
                 }
 
-                // Processar estatísticas
                 processarEstatisticas(dadosEnvios, dadosRecebimentos, tipo);
                 
             } catch (error) {
                 console.error('Erro ao carregar dashboard:', error);
+                alert('Erro ao carregar estatísticas. Verifique sua conexão.');
             } finally {
                 loading.classList.remove('active');
             }
@@ -713,17 +1178,14 @@
         function processarEstatisticas(dadosEnvios, dadosRecebimentos, tipoFiltro) {
             const todosDados = [...dadosEnvios, ...dadosRecebimentos];
             
-            // Calcular totais
             const totalEnvios = dadosEnvios.length;
             const totalRecebimentos = dadosRecebimentos.length;
             const totalGeral = totalEnvios + totalRecebimentos;
 
-            // Somar quantidades
             const quantidadeEnvios = dadosEnvios.reduce((sum, row) => sum + (parseInt(row[4]) || 0), 0);
             const quantidadeRecebimentos = dadosRecebimentos.reduce((sum, row) => sum + (parseInt(row[4]) || 0), 0);
             const quantidadeTotal = quantidadeEnvios + quantidadeRecebimentos;
 
-            // Atualizar cards
             atualizarCards({
                 totalGeral,
                 totalEnvios,
@@ -731,23 +1193,20 @@
                 quantidadeTotal
             });
 
-            // Agrupar por tipo de correspondência
             const porTipo = {};
             todosDados.forEach(row => {
-                const tipo = row[2]; // Coluna Tipo
+                const tipo = row[2];
                 const qtd = parseInt(row[4]) || 0;
                 porTipo[tipo] = (porTipo[tipo] || 0) + qtd;
             });
 
-            // Agrupar por departamento
             const porDepartamento = {};
             todosDados.forEach(row => {
-                const depto = row[1]; // Coluna Departamento
+                const depto = row[1];
                 const qtd = parseInt(row[4]) || 0;
                 porDepartamento[depto] = (porDepartamento[depto] || 0) + qtd;
             });
 
-            // Criar tabela detalhada
             const detalhado = {};
             todosDados.forEach(row => {
                 const depto = row[1];
@@ -757,10 +1216,7 @@
                 detalhado[chave] = (detalhado[chave] || 0) + qtd;
             });
 
-            // Atualizar gráficos
             atualizarGraficos(porTipo, porDepartamento);
-            
-            // Atualizar tabela
             atualizarTabelaDetalhada(detalhado);
         }
 
@@ -808,7 +1264,8 @@
                             '#EF4444',
                             '#8B5CF6',
                             '#06B6D4'
-                        ]
+                        ],
+                        borderWidth: 0
                     }]
                 },
                 options: {
@@ -847,7 +1304,9 @@
                             '#8B5CF6',
                             '#06B6D4',
                             '#EC4899'
-                        ]
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#FFFFFF'
                     }]
                 },
                 options: {
@@ -866,13 +1325,12 @@
             const tbody = document.getElementById('bodyTabelaDetalhada');
             
             if (Object.keys(detalhado).length === 0) {
-                tbody.innerHTML = '<tr><td colspan="3" style="text-align: center;">Nenhum dado encontrado</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align: center;">Nenhum dado encontrado para o período selecionado</td></tr>';
                 return;
             }
 
             tbody.innerHTML = '';
             
-            // Ordenar por departamento e tipo
             const ordenado = Object.entries(detalhado).sort((a, b) => a[0].localeCompare(b[0]));
             
             ordenado.forEach(([chave, qtd]) => {
@@ -887,10 +1345,128 @@
             });
         }
 
-        // Inicializar ao carregar
+        // FUNÇÕES DE IMPRESSÃO
+        function imprimirProtocoloEnvio() {
+            const tbody = document.getElementById('bodyTabelaEnvios');
+            const dataFiltro = document.getElementById('filtroDataEnvio').value;
+            const hoje = new Date().toISOString().split('T')[0];
+            const dataProtocolo = dataFiltro || hoje;
+            imprimirProtocolo('ENVIO', tbody, dataProtocolo, false);
+        }
+
+        function imprimirProtocoloRecebimento() {
+            const tbody = document.getElementById('bodyTabelaRecebimentos');
+            const dataFiltro = document.getElementById('filtroDataRecebimento').value;
+            const hoje = new Date().toISOString().split('T')[0];
+            const dataProtocolo = dataFiltro || hoje;
+            imprimirProtocolo('RECEBIMENTO', tbody, dataProtocolo, true);
+        }
+
+        function imprimirProtocolo(tipo, tbody, data, temAssinatura) {
+            const rows = tbody.querySelectorAll('tr');
+            
+            if (rows.length === 0 || (rows.length === 1 && rows[0].cells.length === 1)) {
+                alert('Não há registros para imprimir!');
+                return;
+            }
+
+            let html = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Protocolo de ${tipo}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; }
+                        h1 { text-align: center; color: #0066CC; margin-bottom: 10px; }
+                        .info { margin: 20px 0; }
+                        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                        th, td { border: 1px solid #0066CC; padding: 12px 8px; text-align: left; font-size: 11px; }
+                        th { background: #0066CC; color: white; font-weight: bold; }
+                        .assinatura-col { 
+                            background: #FFF9E6; 
+                            width: 180px; 
+                            text-align: center;
+                            vertical-align: middle;
+                        }
+                        .linha-assinatura { 
+                            border-top: 1px solid #333; 
+                            margin-top: 50px; 
+                            width: 90%;
+                            margin-left: auto;
+                            margin-right: auto;
+                        }
+                        .label-recebedor {
+                            font-size: 10px;
+                            color: #0066CC;
+                            font-weight: bold;
+                            margin-bottom: 5px;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h1>PROTOCOLO DE ${tipo} DE CORRESPONDÊNCIAS</h1>
+                    <div class="info">
+                        <p><strong>Bensaúde Logística</strong></p>
+                        <p><strong>Data:</strong> ${formatarData(data)}</p>
+                        <p><strong>Hora de impressão:</strong> ${new Date().toLocaleString('pt-BR')}</p>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Departamento</th>
+                                <th>Tipo</th>
+                                <th>Descrição</th>
+                                <th style="width: 60px;">Qtd</th>
+            `;
+
+            if (temAssinatura) {
+                html += '<th class="assinatura-col">Recebedor / Assinatura</th>';
+            }
+
+            html += `
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            rows.forEach(row => {
+                if (row.cells.length > 1) {
+                    html += '<tr>';
+                    for (let i = 0; i < row.cells.length; i++) {
+                        html += `<td>${row.cells[i].textContent}</td>`;
+                    }
+                    if (temAssinatura) {
+                        html += `<td class="assinatura-col">
+                                    <div class="label-recebedor">RECEBEDOR:</div>
+                                    <div class="linha-assinatura"></div>
+                                 </td>`;
+                    }
+                    html += '</tr>';
+                }
+            });
+
+            html += `
+                        </tbody>
+                    </table>
+                </body>
+                </html>
+            `;
+
+            const janela = window.open('', '_blank');
+            janela.document.write(html);
+            janela.document.close();
+            janela.print();
+        }
+
         window.onload = function() {
-            // ... resto do código de inicialização
+            setDataHoje('dataEnvio');
+            setDataHoje('dataRecebimento');
+            setDataHoje('filtroDataEnvio');
+            setDataHoje('filtroDataRecebimento');
         };
     </script>
 </body>
 </html>
+    
+    
