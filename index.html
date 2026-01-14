@@ -662,7 +662,7 @@
                     </div>
                 </div>
 
-                <!-- CAMPO NOVO: RECEBIDO POR -->
+                <!-- CAMPO: RECEBIDO POR (para salvar no banco, mas não aparece na tabela da tela) -->
                 <div class="form-group">
                     <label><i class="fas fa-user-check"></i> <span class="destaque-campo">Recebido por (Nome do Colaborador):</span></label>
                     <input type="text" id="recebidoPor" placeholder="Digite o nome completo do colaborador que está recebendo" required>
@@ -713,7 +713,7 @@
                 <p>Buscando registros...</p>
             </div>
 
-            <!-- Tabela de Registros -->
+            <!-- Tabela de Registros (SEM COLUNA "RECEBIDO POR") -->
             <div class="table-container">
                 <h3 id="tituloTabelaRecebimento">📋 Correspondências Registradas Hoje</h3>
                 <table id="tabelaRecebimentos">
@@ -724,12 +724,11 @@
                             <th>Tipo</th>
                             <th>Descrição</th>
                             <th>Quantidade</th>
-                            <th>Recebido Por</th>
                         </tr>
                     </thead>
                     <tbody id="bodyTabelaRecebimentos">
                         <tr>
-                            <td colspan="6" style="text-align: center;">Nenhum registro inserido ainda hoje</td>
+                            <td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td>
                         </tr>
                     </tbody>
                 </table>
@@ -788,7 +787,7 @@
                         data.tipo,
                         data.descricao,
                         data.quantidade
-                    ], false);
+                    ]);
                     document.getElementById('formEnvio').reset();
                     setDataHoje('dataEnvio');
                 } else {
@@ -810,7 +809,7 @@
                 tipo: document.getElementById('tipoRecebimento').value,
                 descricao: document.getElementById('descricaoRecebimento').value,
                 quantidade: document.getElementById('quantidadeRecebimento').value,
-                recebidoPor: document.getElementById('recebidoPor').value
+                recebidoPor: document.getElementById('recebidoPor').value  // Salva no banco
             };
 
             try {
@@ -823,14 +822,14 @@
 
                 if (result.status === 'success') {
                     mostrarAlerta('alertSuccessRecebimento', 'alertErrorRecebimento');
+                    // Adiciona na tabela SEM o campo "Recebido Por"
                     adicionarLinhaTabela('bodyTabelaRecebimentos', [
                         data.data,
                         data.departamento,
                         data.tipo,
                         data.descricao,
-                        data.quantidade,
-                        data.recebidoPor
-                    ], true);
+                        data.quantidade
+                    ]);
                     document.getElementById('formRecebimento').reset();
                     setDataHoje('dataRecebimento');
                 } else {
@@ -848,7 +847,7 @@
                 alert('Por favor, selecione uma data!');
                 return;
             }
-            await buscarDadosPorData('Envios', data, 'bodyTabelaEnvios', 'loadingEnvio', 'tituloTabelaEnvio', false);
+            await buscarDadosPorData('Envios', data, 'bodyTabelaEnvios', 'loadingEnvio', 'tituloTabelaEnvio');
         }
 
         async function buscarRecebimentosPorData() {
@@ -857,17 +856,16 @@
                 alert('Por favor, selecione uma data!');
                 return;
             }
-            await buscarDadosPorData('Recebimentos', data, 'bodyTabelaRecebimentos', 'loadingRecebimento', 'tituloTabelaRecebimento', true);
+            await buscarDadosPorData('Recebimentos', data, 'bodyTabelaRecebimentos', 'loadingRecebimento', 'tituloTabelaRecebimento');
         }
 
-        async function buscarDadosPorData(tipo, data, tabelaId, loadingId, tituloId, temRecebidoPor) {
+        async function buscarDadosPorData(tipo, data, tabelaId, loadingId, tituloId) {
             const loading = document.getElementById(loadingId);
             const tbody = document.getElementById(tabelaId);
             const titulo = document.getElementById(tituloId);
             
             loading.classList.add('active');
-            const colspan = temRecebidoPor ? '6' : '5';
-            tbody.innerHTML = `<tr><td colspan="${colspan}" style="text-align: center;">Buscando...</td></tr>`;
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Buscando...</td></tr>';
 
             try {
                 const response = await fetch(`${scriptURL}?acao=buscarPorData&tipo=${tipo}&data=${data}`);
@@ -881,34 +879,24 @@
                     
                     result.data.forEach(row => {
                         const tr = document.createElement('tr');
-                        if (temRecebidoPor) {
-                            tr.innerHTML = `
-                                <td>${formatarData(row[0])}</td>
-                                <td>${row[1]}</td>
-                                <td>${row[2]}</td>
-                                <td>${row[3]}</td>
-                                <td>${row[4]}</td>
-                                <td><strong style="color: #0066CC;">${row[5]}</strong></td>
-                            `;
-                        } else {
-                            tr.innerHTML = `
-                                <td>${formatarData(row[0])}</td>
-                                <td>${row[1]}</td>
-                                <td>${row[2]}</td>
-                                <td>${row[3]}</td>
-                                <td>${row[4]}</td>
-                            `;
-                        }
+                        // Mostra apenas as 5 primeiras colunas (sem "Recebido Por")
+                        tr.innerHTML = `
+                            <td>${formatarData(row[0])}</td>
+                            <td>${row[1]}</td>
+                            <td>${row[2]}</td>
+                            <td>${row[3]}</td>
+                            <td>${row[4]}</td>
+                        `;
                         tbody.appendChild(tr);
                     });
                 } else {
-                    tbody.innerHTML = `<tr><td colspan="${colspan}" style="text-align: center;">Nenhum registro encontrado para esta data</td></tr>`;
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum registro encontrado para esta data</td></tr>';
                     titulo.textContent = `📋 Correspondências de ${formatarData(data)}`;
                 }
             } catch (error) {
                 console.error('Erro:', error);
                 loading.classList.remove('active');
-                tbody.innerHTML = `<tr><td colspan="${colspan}" style="text-align: center; color: red;">Erro ao buscar dados. Verifique sua conexão.</td></tr>`;
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: red;">Erro ao buscar dados. Verifique sua conexão.</td></tr>';
             }
         }
 
@@ -919,12 +907,12 @@
         }
 
         function limparBuscaRecebimento() {
-            document.getElementById('bodyTabelaRecebimentos').innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
+            document.getElementById('bodyTabelaRecebimentos').innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
             document.getElementById('tituloTabelaRecebimento').textContent = '📋 Correspondências Registradas Hoje';
             setDataHoje('filtroDataRecebimento');
         }
 
-        function adicionarLinhaTabela(tabelaId, dados, temRecebidoPor) {
+        function adicionarLinhaTabela(tabelaId, dados) {
             const tbody = document.getElementById(tabelaId);
             
             if (tbody.rows.length === 1 && tbody.rows[0].cells.length === 1) {
@@ -932,24 +920,13 @@
             }
             
             const tr = document.createElement('tr');
-            if (temRecebidoPor) {
-                tr.innerHTML = `
-                    <td>${formatarData(dados[0])}</td>
-                    <td>${dados[1]}</td>
-                    <td>${dados[2]}</td>
-                    <td>${dados[3]}</td>
-                    <td>${dados[4]}</td>
-                    <td><strong style="color: #0066CC;">${dados[5]}</strong></td>
-                `;
-            } else {
-                tr.innerHTML = `
-                    <td>${formatarData(dados[0])}</td>
-                    <td>${dados[1]}</td>
-                    <td>${dados[2]}</td>
-                    <td>${dados[3]}</td>
-                    <td>${dados[4]}</td>
-                `;
-            }
+            tr.innerHTML = `
+                <td>${formatarData(dados[0])}</td>
+                <td>${dados[1]}</td>
+                <td>${dados[2]}</td>
+                <td>${dados[3]}</td>
+                <td>${dados[4]}</td>
+            `;
             
             tbody.insertBefore(tr, tbody.firstChild);
         }
@@ -977,7 +954,7 @@
             const dataFiltro = document.getElementById('filtroDataEnvio').value;
             const hoje = new Date().toISOString().split('T')[0];
             const dataProtocolo = dataFiltro || hoje;
-            imprimirProtocolo('ENVIO', tbody, dataProtocolo, false);
+            imprimirProtocolo('ENVIO', tbody, dataProtocolo, 'Envios', false);
         }
 
         function imprimirProtocoloRecebimento() {
@@ -985,15 +962,31 @@
             const dataFiltro = document.getElementById('filtroDataRecebimento').value;
             const hoje = new Date().toISOString().split('T')[0];
             const dataProtocolo = dataFiltro || hoje;
-            imprimirProtocolo('RECEBIMENTO', tbody, dataProtocolo, true);
+            imprimirProtocolo('RECEBIMENTO', tbody, dataProtocolo, 'Recebimentos', true);
         }
 
-        function imprimirProtocolo(tipo, tbody, data, temRecebidoPor) {
+        async function imprimirProtocolo(tipo, tbody, data, tipoAba, temRecebidoPor) {
             const rows = tbody.querySelectorAll('tr');
             
             if (rows.length === 0 || (rows.length === 1 && rows[0].cells.length === 1)) {
                 alert('Não há registros para imprimir!');
                 return;
+            }
+
+            // Busca os dados completos do servidor (incluindo "Recebido Por")
+            let dadosCompletos = [];
+            
+            if (temRecebidoPor) {
+                try {
+                    const response = await fetch(`${scriptURL}?acao=buscarPorData&tipo=${tipoAba}&data=${data}`);
+                    const result = await response.json();
+                    
+                    if (result.status === 'success' && result.data) {
+                        dadosCompletos = result.data;
+                    }
+                } catch (error) {
+                    console.error('Erro ao buscar dados completos:', error);
+                }
             }
 
             let html = `
@@ -1010,7 +1003,7 @@
                         th { background: #0066CC; color: white; }
                         .assinatura { margin-top: 50px; }
                         .linha { border-top: 2px solid #0066CC; width: 300px; margin-top: 50px; }
-                        .destaque { background: #FFF9E6; font-weight: bold; }
+                        .destaque { background: #FFF9E6; font-weight: bold; color: #0066CC; }
                     </style>
                 </head>
                 <body>
@@ -1040,19 +1033,30 @@
                         <tbody>
             `;
 
-            rows.forEach(row => {
-                if (row.cells.length > 1) {
+            if (temRecebidoPor && dadosCompletos.length > 0) {
+                // Usa os dados completos do servidor
+                dadosCompletos.forEach(row => {
                     html += '<tr>';
-                    for (let i = 0; i < row.cells.length; i++) {
-                        if (temRecebidoPor && i === row.cells.length - 1) {
-                            html += `<td class="destaque">${row.cells[i].textContent}</td>`;
-                        } else {
+                    html += `<td>${formatarData(row[0])}</td>`;
+                    html += `<td>${row[1]}</td>`;
+                    html += `<td>${row[2]}</td>`;
+                    html += `<td>${row[3]}</td>`;
+                    html += `<td>${row[4]}</td>`;
+                    html += `<td class="destaque">${row[5] || ''}</td>`;
+                    html += '</tr>';
+                });
+            } else {
+                // Usa os dados da tabela visível
+                rows.forEach(row => {
+                    if (row.cells.length > 1) {
+                        html += '<tr>';
+                        for (let i = 0; i < row.cells.length; i++) {
                             html += `<td>${row.cells[i].textContent}</td>`;
                         }
+                        html += '</tr>';
                     }
-                    html += '</tr>';
-                }
-            });
+                });
+            }
 
             html += `
                         </tbody>
