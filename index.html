@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Controle de Correspondências</title>
+    <title>Sistema de Correspondências - Bensaúde</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -13,43 +13,84 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --azul-bensaude: #0066CC;
+            --azul-escuro: #004C99;
+            --azul-claro: #E6F2FF;
+            --branco: #FFFFFF;
+            --cinza-tech: #F8FAFC;
+            --cinza-borda: #E2E8F0;
+            --texto-escuro: #1E293B;
+            --texto-secundario: #64748B;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #E6F2FF 0%, #F8FAFC 100%);
             min-height: 100vh;
             padding: 20px;
+            color: var(--texto-escuro);
         }
 
         .container-custom {
             max-width: 1200px;
             margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            background: var(--branco);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 102, 204, 0.12);
             overflow: hidden;
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
+            background: linear-gradient(135deg, var(--azul-bensaude) 0%, var(--azul-escuro) 100%);
+            color: var(--branco);
+            padding: 40px 30px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 15s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.3; }
         }
 
         .header h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
-            font-weight: bold;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
         }
 
         .header p {
             font-size: 1.1em;
-            opacity: 0.9;
+            opacity: 0.95;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
         }
 
         .screen {
             display: none;
             padding: 40px;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .screen.active {
@@ -58,191 +99,272 @@
 
         .menu-inicial {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 30px;
             padding: 20px;
         }
 
         .menu-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 15px;
-            padding: 40px 30px;
+            background: var(--branco);
+            border: 2px solid var(--cinza-borda);
+            border-radius: 20px;
+            padding: 50px 30px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
-            color: white;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: var(--azul-bensaude);
+            box-shadow: 0 4px 20px rgba(0, 102, 204, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--azul-bensaude) 0%, var(--azul-escuro) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 0;
         }
 
         .menu-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 102, 204, 0.25);
+            border-color: var(--azul-bensaude);
+        }
+
+        .menu-card:hover::before {
+            opacity: 1;
+        }
+
+        .menu-card:hover i,
+        .menu-card:hover h3,
+        .menu-card:hover p {
+            color: var(--branco);
+            position: relative;
+            z-index: 1;
         }
 
         .menu-card i {
-            font-size: 4em;
+            font-size: 4.5em;
             margin-bottom: 20px;
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 1;
         }
 
         .menu-card h3 {
-            font-size: 1.5em;
+            font-size: 1.8em;
             margin-bottom: 10px;
+            font-weight: 700;
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .menu-card p {
+            color: var(--texto-secundario);
+            font-size: 1em;
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 1;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 600;
-            color: #333;
+            color: var(--texto-escuro);
+            font-size: 0.95em;
         }
 
         .form-group input,
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
+            padding: 14px 16px;
+            border: 2px solid var(--cinza-borda);
+            border-radius: 12px;
             font-size: 1em;
-            transition: border-color 0.3s;
+            transition: all 0.3s ease;
+            background: var(--cinza-tech);
+            color: var(--texto-escuro);
         }
 
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--azul-bensaude);
+            background: var(--branco);
+            box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1);
         }
 
         .btn-custom {
-            padding: 12px 30px;
+            padding: 14px 32px;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 1em;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             margin: 5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn-primary-custom {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(135deg, var(--azul-bensaude) 0%, var(--azul-escuro) 100%);
+            color: var(--branco);
         }
 
         .btn-primary-custom:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 102, 204, 0.35);
         }
 
         .btn-secondary-custom {
-            background: #6c757d;
-            color: white;
+            background: #64748B;
+            color: var(--branco);
         }
 
         .btn-secondary-custom:hover {
-            background: #5a6268;
+            background: #475569;
+            transform: translateY(-2px);
         }
 
         .btn-success-custom {
-            background: #28a745;
-            color: white;
+            background: #10B981;
+            color: var(--branco);
         }
 
         .btn-success-custom:hover {
-            background: #218838;
+            background: #059669;
+            transform: translateY(-2px);
         }
 
         .btn-info-custom {
-            background: #17a2b8;
-            color: white;
+            background: var(--azul-bensaude);
+            color: var(--branco);
         }
 
         .btn-info-custom:hover {
-            background: #138496;
+            background: var(--azul-escuro);
+            transform: translateY(-2px);
         }
 
         .btn-warning-custom {
-            background: #ffc107;
-            color: #333;
+            background: #F59E0B;
+            color: var(--branco);
         }
 
         .btn-warning-custom:hover {
-            background: #e0a800;
+            background: #D97706;
+            transform: translateY(-2px);
         }
 
         .button-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 12px;
+            margin-top: 24px;
         }
 
         .alert-custom {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
             display: none;
+            font-weight: 500;
+            border-left: 4px solid;
         }
 
         .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            background: #D1FAE5;
+            color: #065F46;
+            border-color: #10B981;
         }
 
         .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            background: #FEE2E2;
+            color: #991B1B;
+            border-color: #EF4444;
         }
 
         .table-container {
             margin-top: 30px;
             overflow-x: auto;
+            background: var(--branco);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 102, 204, 0.08);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            overflow: hidden;
         }
 
         table thead {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(135deg, var(--azul-bensaude) 0%, var(--azul-escuro) 100%);
+            color: var(--branco);
         }
 
-        table th,
-        table td {
-            padding: 15px;
+        table th {
+            padding: 18px 20px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            font-weight: 600;
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        table td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--cinza-borda);
+            color: var(--texto-escuro);
+        }
+
+        table tbody tr {
+            transition: background 0.2s ease;
         }
 
         table tbody tr:hover {
-            background: #f8f9fa;
+            background: var(--azul-claro);
+        }
+
+        table tbody tr:nth-child(even) {
+            background: var(--cinza-tech);
+        }
+
+        table tbody tr:nth-child(even):hover {
+            background: var(--azul-claro);
         }
 
         .filter-section {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
+            background: linear-gradient(135deg, var(--azul-claro) 0%, var(--branco) 100%);
+            padding: 28px;
+            border-radius: 16px;
             margin-top: 30px;
             margin-bottom: 20px;
-            border: 2px solid #667eea;
+            border: 2px solid var(--azul-bensaude);
+            box-shadow: 0 4px 20px rgba(0, 102, 204, 0.1);
         }
 
         .filter-section h4 {
-            color: #667eea;
-            margin-bottom: 15px;
+            color: var(--azul-bensaude);
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-size: 1.2em;
         }
 
         @media print {
@@ -263,7 +385,7 @@
         .loading {
             display: none;
             text-align: center;
-            padding: 20px;
+            padding: 30px;
         }
 
         .loading.active {
@@ -271,26 +393,64 @@
         }
 
         .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
+            border: 4px solid var(--azul-claro);
+            border-top: 4px solid var(--azul-bensaude);
             border-radius: 50%;
             width: 50px;
             height: 50px;
             animation: spin 1s linear infinite;
-            margin: 0 auto;
+            margin: 0 auto 15px;
         }
 
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        .loading p {
+            color: var(--azul-bensaude);
+            font-weight: 600;
+        }
+
+        h2 {
+            color: var(--azul-bensaude);
+            font-weight: 700;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        h3 {
+            color: var(--texto-escuro);
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .menu-card {
+                padding: 40px 20px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn-custom {
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container-custom">
         <div class="header">
-            <h1><i class="fas fa-envelope"></i> Sistema de Correspondências</h1>
-            <p>Controle completo de envio e recebimento</p>
+            <h1><i class="fas fa-box"></i> Sistema de Correspondências</h1>
+            <p>Bensaúde Logística - Controle Inteligente</p>
         </div>
 
         <!-- TELA INICIAL -->
@@ -572,7 +732,6 @@
             screens.forEach(screen => screen.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
 
-            // Definir data de hoje ao abrir tela
             if (screenId === 'telaEnvio') {
                 setDataHoje('dataEnvio');
                 setDataHoje('filtroDataEnvio');
@@ -582,13 +741,11 @@
             }
         }
 
-        // Definir data de hoje nos campos
         function setDataHoje(inputId) {
             const hoje = new Date().toISOString().split('T')[0];
             document.getElementById(inputId).value = hoje;
         }
 
-        // Inserir Envio
         async function inserirEnvio(event) {
             event.preventDefault();
 
@@ -611,8 +768,6 @@
 
                 if (result.status === 'success') {
                     mostrarAlerta('alertSuccessEnvio', 'alertErrorEnvio');
-                    
-                    // Adiciona o registro diretamente na tabela
                     adicionarLinhaTabela('bodyTabelaEnvios', [
                         data.data,
                         data.departamento,
@@ -620,8 +775,6 @@
                         data.descricao,
                         data.quantidade
                     ]);
-                    
-                    // Limpa o formulário
                     document.getElementById('formEnvio').reset();
                     setDataHoje('dataEnvio');
                 } else {
@@ -633,7 +786,6 @@
             }
         }
 
-        // Inserir Recebimento
         async function inserirRecebimento(event) {
             event.preventDefault();
 
@@ -656,8 +808,6 @@
 
                 if (result.status === 'success') {
                     mostrarAlerta('alertSuccessRecebimento', 'alertErrorRecebimento');
-                    
-                    // Adiciona o registro diretamente na tabela
                     adicionarLinhaTabela('bodyTabelaRecebimentos', [
                         data.data,
                         data.departamento,
@@ -665,8 +815,6 @@
                         data.descricao,
                         data.quantidade
                     ]);
-                    
-                    // Limpa o formulário
                     document.getElementById('formRecebimento').reset();
                     setDataHoje('dataRecebimento');
                 } else {
@@ -678,7 +826,6 @@
             }
         }
 
-        // Buscar envios por data específica
         async function buscarEnviosPorData() {
             const data = document.getElementById('filtroDataEnvio').value;
             if (!data) {
@@ -688,7 +835,6 @@
             await buscarDadosPorData('Envios', data, 'bodyTabelaEnvios', 'loadingEnvio', 'tituloTabelaEnvio');
         }
 
-        // Buscar recebimentos por data específica
         async function buscarRecebimentosPorData() {
             const data = document.getElementById('filtroDataRecebimento').value;
             if (!data) {
@@ -698,7 +844,6 @@
             await buscarDadosPorData('Recebimentos', data, 'bodyTabelaRecebimentos', 'loadingRecebimento', 'tituloTabelaRecebimento');
         }
 
-        // Função genérica para buscar dados por data
         async function buscarDadosPorData(tipo, data, tabelaId, loadingId, tituloId) {
             const loading = document.getElementById(loadingId);
             const tbody = document.getElementById(tabelaId);
@@ -739,30 +884,25 @@
             }
         }
 
-        // Limpar busca de envio e voltar para hoje
         function limparBuscaEnvio() {
             document.getElementById('bodyTabelaEnvios').innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
             document.getElementById('tituloTabelaEnvio').textContent = '📋 Correspondências Registradas Hoje';
             setDataHoje('filtroDataEnvio');
         }
 
-        // Limpar busca de recebimento e voltar para hoje
         function limparBuscaRecebimento() {
             document.getElementById('bodyTabelaRecebimentos').innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
             document.getElementById('tituloTabelaRecebimento').textContent = '📋 Correspondências Registradas Hoje';
             setDataHoje('filtroDataRecebimento');
         }
 
-        // Função para adicionar linha na tabela diretamente
         function adicionarLinhaTabela(tabelaId, dados) {
             const tbody = document.getElementById(tabelaId);
             
-            // Remove a mensagem "Nenhum registro encontrado" se existir
             if (tbody.rows.length === 1 && tbody.rows[0].cells.length === 1) {
                 tbody.innerHTML = '';
             }
             
-            // Cria nova linha
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>${formatarData(dados[0])}</td>
@@ -772,11 +912,9 @@
                 <td>${dados[4]}</td>
             `;
             
-            // Adiciona no INÍCIO da tabela (mais recente primeiro)
             tbody.insertBefore(tr, tbody.firstChild);
         }
 
-        // Formatar data
         function formatarData(data) {
             if (!data) return '';
             const partes = data.split('-');
@@ -786,7 +924,6 @@
             return data;
         }
 
-        // Mostrar alerta
         function mostrarAlerta(mostrarId, esconderId) {
             document.getElementById(esconderId).style.display = 'none';
             const alerta = document.getElementById(mostrarId);
@@ -796,7 +933,6 @@
             }, 3000);
         }
 
-        // Imprimir protocolo de envio
         function imprimirProtocoloEnvio() {
             const tbody = document.getElementById('bodyTabelaEnvios');
             const dataFiltro = document.getElementById('filtroDataEnvio').value;
@@ -805,7 +941,6 @@
             imprimirProtocolo('ENVIO', tbody, dataProtocolo);
         }
 
-        // Imprimir protocolo de recebimento
         function imprimirProtocoloRecebimento() {
             const tbody = document.getElementById('bodyTabelaRecebimentos');
             const dataFiltro = document.getElementById('filtroDataRecebimento').value;
@@ -814,7 +949,6 @@
             imprimirProtocolo('RECEBIMENTO', tbody, dataProtocolo);
         }
 
-        // Função genérica para imprimir protocolo
         function imprimirProtocolo(tipo, tbody, data) {
             const rows = tbody.querySelectorAll('tr');
             
@@ -830,18 +964,19 @@
                     <title>Protocolo de ${tipo}</title>
                     <style>
                         body { font-family: Arial, sans-serif; padding: 20px; }
-                        h1 { text-align: center; color: #333; }
+                        h1 { text-align: center; color: #0066CC; }
                         .info { margin: 20px 0; }
                         table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-                        th, td { border: 1px solid #333; padding: 10px; text-align: left; }
-                        th { background: #667eea; color: white; }
+                        th, td { border: 1px solid #0066CC; padding: 10px; text-align: left; }
+                        th { background: #0066CC; color: white; }
                         .assinatura { margin-top: 50px; }
-                        .linha { border-top: 1px solid #333; width: 300px; margin-top: 50px; }
+                        .linha { border-top: 2px solid #0066CC; width: 300px; margin-top: 50px; }
                     </style>
                 </head>
                 <body>
                     <h1>PROTOCOLO DE ${tipo} DE CORRESPONDÊNCIAS</h1>
                     <div class="info">
+                        <p><strong>Bensaúde Logística</strong></p>
                         <p><strong>Data:</strong> ${formatarData(data)}</p>
                         <p><strong>Hora de impressão:</strong> ${new Date().toLocaleString('pt-BR')}</p>
                     </div>
@@ -885,7 +1020,6 @@
             janela.print();
         }
 
-        // Inicializar ao carregar a página
         window.onload = function() {
             setDataHoje('dataEnvio');
             setDataHoje('dataRecebimento');
@@ -894,8 +1028,4 @@
         };
     </script>
 </body>
-
 </html>
-
-
-
