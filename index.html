@@ -525,10 +525,12 @@
 
         <div id="telaDashboard" class="screen">
             <h2><i class="fas fa-chart-line"></i> Dashboard - Estatísticas de Correspondências</h2>
+            
             <div class="loading" id="loadingDashboard">
                 <div class="spinner"></div>
                 <p>Carregando estatísticas...</p>
             </div>
+
             <div class="filter-section">
                 <h4><i class="fas fa-filter"></i> Filtros</h4>
                 <div class="row">
@@ -572,6 +574,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="stats-cards" id="statsCards">
                 <div class="stat-card">
                     <h4>📦 TOTAL GERAL</h4>
@@ -594,6 +597,7 @@
                     <div class="label">Unidades</div>
                 </div>
             </div>
+
             <div class="dashboard-grid">
                 <div class="chart-container">
                     <h3>📊 Por Tipo de Correspondência</h3>
@@ -604,6 +608,7 @@
                     <canvas id="chartDepartamento"></canvas>
                 </div>
             </div>
+
             <div class="table-container" style="margin-top: 30px;">
                 <h3 style="padding: 20px 20px 0;">📋 Detalhamento por Setor e Tipo</h3>
                 <table id="tabelaDetalhada">
@@ -621,7 +626,11 @@
                     </tbody>
                 </table>
             </div>
+
             <div class="button-group">
+                <button type="button" class="btn-custom btn-success-custom" onclick="imprimirRelatorioDashboard()">
+                    <i class="fas fa-print"></i> Imprimir Relatório
+                </button>
                 <button type="button" class="btn-custom btn-secondary-custom" onclick="showScreen('telaInicial')">
                     <i class="fas fa-arrow-left"></i> Retornar
                 </button>
@@ -845,16 +854,29 @@
         const scriptURL = 'https://script.google.com/macros/s/AKfycbyzAYgPkNNXRURK-kpGDMkvMKbpYFod2MmAd5VqctRdVWyxzWBsW6FfPUsw2s6OUynG/exec';
         let chartTipo = null;
         let chartDepartamento = null;
+        let dadosAtuaisDashboard = { envios: [], recebimentos: [], periodo: '', tipo: '' };
 
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
-            if (screenId === 'telaEnvio') { setDataHoje('dataEnvio'); setDataHoje('filtroDataEnvio'); }
-            else if (screenId === 'telaRecebimento') { setDataHoje('dataRecebimento'); setDataHoje('filtroDataRecebimento'); }
-            else if (screenId === 'telaDashboard') { atualizarDashboard(); }
+            if (screenId === 'telaEnvio') { 
+                setDataHoje('dataEnvio'); 
+                setDataHoje('filtroDataEnvio'); 
+            } else if (screenId === 'telaRecebimento') { 
+                setDataHoje('dataRecebimento'); 
+                setDataHoje('filtroDataRecebimento'); 
+            } else if (screenId === 'telaDashboard') { 
+                atualizarDashboard(); 
+            }
         }
 
-        function setDataHoje(id) { document.getElementById(id).value = new Date().toISOString().split('T')[0]; }
+        function setDataHoje(id) { 
+            const hoje = new Date();
+            const ano = hoje.getFullYear();
+            const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+            const dia = String(hoje.getDate()).padStart(2, '0');
+            document.getElementById(id).value = ano + '-' + mes + '-' + dia;
+        }
 
         function toggleDataPersonalizada() {
             const p = document.getElementById('filtroPeriodo').value === 'personalizado';
@@ -864,7 +886,14 @@
 
         async function inserirEnvio(e) {
             e.preventDefault();
-            const d = {acao:'inserirEnvio', data:document.getElementById('dataEnvio').value, departamento:document.getElementById('departamentoEnvio').value, tipo:document.getElementById('tipoEnvio').value, descricao:document.getElementById('descricaoEnvio').value, quantidade:document.getElementById('quantidadeEnvio').value};
+            const d = {
+                acao:'inserirEnvio', 
+                data:document.getElementById('dataEnvio').value, 
+                departamento:document.getElementById('departamentoEnvio').value, 
+                tipo:document.getElementById('tipoEnvio').value, 
+                descricao:document.getElementById('descricaoEnvio').value, 
+                quantidade:document.getElementById('quantidadeEnvio').value
+            };
             try {
                 const r = await fetch(scriptURL, {method:'POST', body:JSON.stringify(d)});
                 const res = await r.json();
@@ -873,13 +902,25 @@
                     adicionarLinhaTabela('bodyTabelaEnvios', [d.data, d.departamento, d.tipo, d.descricao, d.quantidade]);
                     document.getElementById('formEnvio').reset();
                     setDataHoje('dataEnvio');
-                } else mostrarAlerta('alertErrorEnvio', 'alertSuccessEnvio');
-            } catch (error) { mostrarAlerta('alertErrorEnvio', 'alertSuccessEnvio'); }
+                } else {
+                    mostrarAlerta('alertErrorEnvio', 'alertSuccessEnvio');
+                }
+            } catch (error) { 
+                console.error('Erro:', error);
+                mostrarAlerta('alertErrorEnvio', 'alertSuccessEnvio'); 
+            }
         }
 
         async function inserirRecebimento(e) {
             e.preventDefault();
-            const d = {acao:'inserirRecebimento', data:document.getElementById('dataRecebimento').value, departamento:document.getElementById('departamentoRecebimento').value, tipo:document.getElementById('tipoRecebimento').value, descricao:document.getElementById('descricaoRecebimento').value, quantidade:document.getElementById('quantidadeRecebimento').value};
+            const d = {
+                acao:'inserirRecebimento', 
+                data:document.getElementById('dataRecebimento').value, 
+                departamento:document.getElementById('departamentoRecebimento').value, 
+                tipo:document.getElementById('tipoRecebimento').value, 
+                descricao:document.getElementById('descricaoRecebimento').value, 
+                quantidade:document.getElementById('quantidadeRecebimento').value
+            };
             try {
                 const r = await fetch(scriptURL, {method:'POST', body:JSON.stringify(d)});
                 const res = await r.json();
@@ -888,8 +929,13 @@
                     adicionarLinhaTabela('bodyTabelaRecebimentos', [d.data, d.departamento, d.tipo, d.descricao, d.quantidade]);
                     document.getElementById('formRecebimento').reset();
                     setDataHoje('dataRecebimento');
-                } else mostrarAlerta('alertErrorRecebimento', 'alertSuccessRecebimento');
-            } catch (error) { mostrarAlerta('alertErrorRecebimento', 'alertSuccessRecebimento'); }
+                } else {
+                    mostrarAlerta('alertErrorRecebimento', 'alertSuccessRecebimento');
+                }
+            } catch (error) { 
+                console.error('Erro:', error);
+                mostrarAlerta('alertErrorRecebimento', 'alertSuccessRecebimento'); 
+            }
         }
 
         async function buscarEnviosPorData() {
@@ -911,22 +957,23 @@
             loading.classList.add('active');
             tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Buscando...</td></tr>';
             try {
-                const r = await fetch(`${scriptURL}?acao=buscarPorData&tipo=${tipo}&data=${data}`);
+                const r = await fetch(scriptURL + '?acao=buscarPorData&tipo=' + tipo + '&data=' + data);
                 const res = await r.json();
                 loading.classList.remove('active');
                 if (res.status === 'success' && res.data && res.data.length > 0) {
                     tbody.innerHTML = '';
-                    titulo.textContent = `📋 Correspondências de ${formatarData(data)} (${res.data.length} registro(s))`;
+                    titulo.textContent = '📋 Correspondências de ' + formatarData(data) + ' (' + res.data.length + ' registro(s))';
                     res.data.forEach(row => {
                         const tr = document.createElement('tr');
-                        tr.innerHTML = `<td>${formatarData(row[0])}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td><td>${row[4]}</td>`;
+                        tr.innerHTML = '<td>' + formatarData(row[0]) + '</td><td>' + row[1] + '</td><td>' + row[2] + '</td><td>' + row[3] + '</td><td>' + row[4] + '</td>';
                         tbody.appendChild(tr);
                     });
                 } else {
                     tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum registro encontrado</td></tr>';
-                    titulo.textContent = `📋 Correspondências de ${formatarData(data)}`;
+                    titulo.textContent = '📋 Correspondências de ' + formatarData(data);
                 }
             } catch (error) {
+                console.error('Erro:', error);
                 loading.classList.remove('active');
                 tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: red;">Erro ao buscar dados</td></tr>';
             }
@@ -948,59 +995,89 @@
             const tbody = document.getElementById(tabelaId);
             if (tbody.rows.length === 1 && tbody.rows[0].cells.length === 1) tbody.innerHTML = '';
             const tr = document.createElement('tr');
-            tr.innerHTML = `<td>${formatarData(dados[0])}</td><td>${dados[1]}</td><td>${dados[2]}</td><td>${dados[3]}</td><td>${dados[4]}</td>`;
+            tr.innerHTML = '<td>' + formatarData(dados[0]) + '</td><td>' + dados[1] + '</td><td>' + dados[2] + '</td><td>' + dados[3] + '</td><td>' + dados[4] + '</td>';
             tbody.insertBefore(tr, tbody.firstChild);
         }
 
         function formatarData(data) {
             if (!data) return '';
             const p = data.split('-');
-            return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : data;
+            return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : data;
         }
 
         function mostrarAlerta(mostrarId, esconderId) {
             document.getElementById(esconderId).style.display = 'none';
             const a = document.getElementById(mostrarId);
             a.style.display = 'block';
-            setTimeout(() => a.style.display = 'none', 3000);
+            setTimeout(function() { a.style.display = 'none'; }, 3000);
         }
 
         async function atualizarDashboard() {
             const loading = document.getElementById('loadingDashboard');
             loading.classList.add('active');
+
             try {
                 const periodo = document.getElementById('filtroPeriodo').value;
                 const tipo = document.getElementById('filtroTipo').value;
                 let dataInicio, dataFim;
                 const hoje = new Date();
-                if (periodo === 'hoje') { dataInicio = dataFim = hoje.toISOString().split('T')[0]; }
-                else if (periodo === 'mes') {
-                    dataInicio = new Date(hoje.getFullYear(), hoje.getMonth(), 1).toISOString().split('T')[0];
-                    dataFim = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0).toISOString().split('T')[0];
-                }
-                else if (periodo === 'ano') {
-                    dataInicio = new Date(hoje.getFullYear(), 0, 1).toISOString().split('T')[0];
-                    dataFim = new Date(hoje.getFullYear(), 11, 31).toISOString().split('T')[0];
-                }
-                else {
+                const ano = hoje.getFullYear();
+                const mes = hoje.getMonth();
+                const dia = hoje.getDate();
+                
+                if (periodo === 'hoje') {
+                    const mesStr = String(mes + 1).padStart(2, '0');
+                    const diaStr = String(dia).padStart(2, '0');
+                    dataInicio = dataFim = ano + '-' + mesStr + '-' + diaStr;
+                } else if (periodo === 'mes') {
+                    const mesStr = String(mes + 1).padStart(2, '0');
+                    dataInicio = ano + '-' + mesStr + '-01';
+                    const ultimoDia = new Date(ano, mes + 1, 0).getDate();
+                    dataFim = ano + '-' + mesStr + '-' + String(ultimoDia).padStart(2, '0');
+                } else if (periodo === 'ano') {
+                    dataInicio = ano + '-01-01';
+                    dataFim = ano + '-12-31';
+                } else {
                     dataInicio = document.getElementById('dataInicio').value;
                     dataFim = document.getElementById('dataFim').value;
-                    if (!dataInicio || !dataFim) { alert('Selecione as datas!'); loading.classList.remove('active'); return; }
+                    if (!dataInicio || !dataFim) { 
+                        alert('Selecione as datas!'); 
+                        loading.classList.remove('active'); 
+                        return; 
+                    }
                 }
-                let dadosEnvios = [], dadosRecebimentos = [];
+
+                dadosAtuaisDashboard.periodo = periodo;
+                dadosAtuaisDashboard.tipo = tipo;
+                dadosAtuaisDashboard.dataInicio = dataInicio;
+                dadosAtuaisDashboard.dataFim = dataFim;
+
+                let dadosEnvios = [];
+                let dadosRecebimentos = [];
+
                 if (tipo === 'ambos' || tipo === 'envios') {
-                    const r = await fetch(`${scriptURL}?acao=buscarEstatisticas&tipo=Envios&dataInicio=${dataInicio}&dataFim=${dataFim}`);
+                    const r = await fetch(scriptURL + '?acao=buscarEstatisticas&tipo=Envios&dataInicio=' + dataInicio + '&dataFim=' + dataFim);
                     const res = await r.json();
                     if (res.status === 'success' && res.data) dadosEnvios = res.data;
                 }
+
                 if (tipo === 'ambos' || tipo === 'recebimentos') {
-                    const r = await fetch(`${scriptURL}?acao=buscarEstatisticas&tipo=Recebimentos&dataInicio=${dataInicio}&dataFim=${dataFim}`);
+                    const r = await fetch(scriptURL + '?acao=buscarEstatisticas&tipo=Recebimentos&dataInicio=' + dataInicio + '&dataFim=' + dataFim);
                     const res = await r.json();
                     if (res.status === 'success' && res.data) dadosRecebimentos = res.data;
                 }
+
+                dadosAtuaisDashboard.envios = dadosEnvios;
+                dadosAtuaisDashboard.recebimentos = dadosRecebimentos;
+
                 processarEstatisticas(dadosEnvios, dadosRecebimentos, tipo);
-            } catch (error) { alert('Erro ao carregar estatísticas'); }
-            finally { loading.classList.remove('active'); }
+                
+            } catch (error) { 
+                console.error('Erro:', error);
+                alert('Erro ao carregar estatísticas'); 
+            } finally { 
+                loading.classList.remove('active'); 
+            }
         }
 
         function processarEstatisticas(dadosEnvios, dadosRecebimentos, tipoFiltro) {
@@ -1008,27 +1085,45 @@
             const totalEnvios = dadosEnvios.length;
             const totalRecebimentos = dadosRecebimentos.length;
             const totalGeral = totalEnvios + totalRecebimentos;
-            const quantidadeEnvios = dadosEnvios.reduce((sum, row) => sum + (parseInt(row[4]) || 0), 0);
-            const quantidadeRecebimentos = dadosRecebimentos.reduce((sum, row) => sum + (parseInt(row[4]) || 0), 0);
+            const quantidadeEnvios = dadosEnvios.reduce(function(sum, row) { return sum + (parseInt(row[4]) || 0); }, 0);
+            const quantidadeRecebimentos = dadosRecebimentos.reduce(function(sum, row) { return sum + (parseInt(row[4]) || 0); }, 0);
             const quantidadeTotal = quantidadeEnvios + quantidadeRecebimentos;
+            
             atualizarCards({totalGeral, totalEnvios, totalRecebimentos, quantidadeTotal});
+            
             const porTipo = {};
-            todosDados.forEach(row => { const tipo = row[2]; const qtd = parseInt(row[4]) || 0; porTipo[tipo] = (porTipo[tipo] || 0) + qtd; });
+            todosDados.forEach(function(row) { 
+                const tipo = row[2]; 
+                const qtd = parseInt(row[4]) || 0; 
+                porTipo[tipo] = (porTipo[tipo] || 0) + qtd; 
+            });
+            
             const porDepartamento = {};
-            todosDados.forEach(row => { const depto = row[1]; const qtd = parseInt(row[4]) || 0; porDepartamento[depto] = (porDepartamento[depto] || 0) + qtd; });
+            todosDados.forEach(function(row) { 
+                const depto = row[1]; 
+                const qtd = parseInt(row[4]) || 0; 
+                porDepartamento[depto] = (porDepartamento[depto] || 0) + qtd; 
+            });
+            
             const detalhado = {};
-            todosDados.forEach(row => { const depto = row[1]; const tipo = row[2]; const qtd = parseInt(row[4]) || 0; const chave = `${depto}|${tipo}`; detalhado[chave] = (detalhado[chave] || 0) + qtd; });
+            todosDados.forEach(function(row) { 
+                const depto = row[1]; 
+                const tipo = row[2]; 
+                const qtd = parseInt(row[4]) || 0; 
+                const chave = depto + '|' + tipo; 
+                detalhado[chave] = (detalhado[chave] || 0) + qtd; 
+            });
+            
             atualizarGraficos(porTipo, porDepartamento);
             atualizarTabelaDetalhada(detalhado);
         }
 
         function atualizarCards(stats) {
-            document.getElementById('statsCards').innerHTML = `
-                <div class="stat-card"><h4>📦 TOTAL GERAL</h4><div class="number">${stats.totalGeral}</div><div class="label">Correspondências</div></div>
-                <div class="stat-card"><h4>📤 ENVIOS</h4><div class="number">${stats.totalEnvios}</div><div class="label">Correspondências</div></div>
-                <div class="stat-card"><h4>📥 RECEBIMENTOS</h4><div class="number">${stats.totalRecebimentos}</div><div class="label">Correspondências</div></div>
-                <div class="stat-card"><h4>📊 QUANTIDADE TOTAL</h4><div class="number">${stats.quantidadeTotal}</div><div class="label">Unidades</div></div>
-            `;
+            document.getElementById('statsCards').innerHTML = 
+                '<div class="stat-card"><h4>📦 TOTAL GERAL</h4><div class="number">' + stats.totalGeral + '</div><div class="label">Correspondências</div></div>' +
+                '<div class="stat-card"><h4>📤 ENVIOS</h4><div class="number">' + stats.totalEnvios + '</div><div class="label">Correspondências</div></div>' +
+                '<div class="stat-card"><h4>📥 RECEBIMENTOS</h4><div class="number">' + stats.totalRecebimentos + '</div><div class="label">Correspondências</div></div>' +
+                '<div class="stat-card"><h4>📊 QUANTIDADE TOTAL</h4><div class="number">' + stats.quantidadeTotal + '</div><div class="label">Unidades</div></div>';
         }
 
         function atualizarGraficos(porTipo, porDepartamento) {
@@ -1036,59 +1131,159 @@
             const ctxTipo = document.getElementById('chartTipo').getContext('2d');
             chartTipo = new Chart(ctxTipo, {
                 type: 'bar',
-                data: { labels: Object.keys(porTipo), datasets: [{ label: 'Quantidade', data: Object.values(porTipo), backgroundColor: ['#0066CC', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4'], borderWidth: 0 }] },
-                options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+                data: { 
+                    labels: Object.keys(porTipo), 
+                    datasets: [{ 
+                        label: 'Quantidade', 
+                        data: Object.values(porTipo), 
+                        backgroundColor: ['#0066CC', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4'], 
+                        borderWidth: 0 
+                    }] 
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: true, 
+                    plugins: { legend: { display: false } }, 
+                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } 
+                }
             });
+            
             if (chartDepartamento) chartDepartamento.destroy();
             const ctxDepto = document.getElementById('chartDepartamento').getContext('2d');
             chartDepartamento = new Chart(ctxDepto, {
                 type: 'doughnut',
-                data: { labels: Object.keys(porDepartamento), datasets: [{ data: Object.values(porDepartamento), backgroundColor: ['#0066CC', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4', '#EC4899'], borderWidth: 2, borderColor: '#FFFFFF' }] },
-                options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+                data: { 
+                    labels: Object.keys(porDepartamento), 
+                    datasets: [{ 
+                        data: Object.values(porDepartamento), 
+                        backgroundColor: ['#0066CC', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4', '#EC4899'], 
+                        borderWidth: 2, 
+                        borderColor: '#FFFFFF' 
+                    }] 
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: true, 
+                    plugins: { legend: { position: 'bottom' } } 
+                }
             });
         }
 
         function atualizarTabelaDetalhada(detalhado) {
             const tbody = document.getElementById('bodyTabelaDetalhada');
-            if (Object.keys(detalhado).length === 0) { tbody.innerHTML = '<tr><td colspan="3" style="text-align: center;">Nenhum dado encontrado</td></tr>'; return; }
+            if (Object.keys(detalhado).length === 0) { 
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align: center;">Nenhum dado encontrado</td></tr>'; 
+                return; 
+            }
             tbody.innerHTML = '';
-            Object.entries(detalhado).sort((a, b) => a[0].localeCompare(b[0])).forEach(([chave, qtd]) => {
-                const [depto, tipo] = chave.split('|');
+            const ordenado = Object.entries(detalhado).sort(function(a, b) { return a[0].localeCompare(b[0]); });
+            ordenado.forEach(function(item) {
+                const chave = item[0];
+                const qtd = item[1];
+                const partes = chave.split('|');
+                const depto = partes[0];
+                const tipo = partes[1];
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td><strong>${depto}</strong></td><td>${tipo}</td><td><strong style="color: #0066CC;">${qtd}</strong></td>`;
+                tr.innerHTML = '<td><strong>' + depto + '</strong></td><td>' + tipo + '</td><td><strong style="color: #0066CC;">' + qtd + '</strong></td>';
                 tbody.appendChild(tr);
             });
+        }
+
+        function imprimirRelatorioDashboard() {
+            const tbody = document.getElementById('bodyTabelaDetalhada');
+            const rows = tbody.querySelectorAll('tr');
+            
+            if (rows.length === 0 || (rows.length === 1 && rows[0].cells[0].textContent.indexOf('Nenhum') !== -1)) {
+                alert('Não há dados para imprimir! Clique em "Atualizar" primeiro.');
+                return;
+            }
+
+            const periodo = document.getElementById('filtroPeriodo').value;
+            const tipo = document.getElementById('filtroTipo').value;
+            let tituloPeriodo = '';
+            
+            if (periodo === 'hoje') tituloPeriodo = 'HOJE - ' + formatarData(dadosAtuaisDashboard.dataInicio);
+            else if (periodo === 'mes') tituloPeriodo = 'MÊS ATUAL';
+            else if (periodo === 'ano') tituloPeriodo = 'ANO ATUAL';
+            else tituloPeriodo = formatarData(dadosAtuaisDashboard.dataInicio) + ' a ' + formatarData(dadosAtuaisDashboard.dataFim);
+
+            const tipoTexto = tipo === 'ambos' ? 'ENVIOS E RECEBIMENTOS' : tipo === 'envios' ? 'APENAS ENVIOS' : 'APENAS RECEBIMENTOS';
+
+            const cards = document.querySelectorAll('.stat-card .number');
+            const totalGeral = cards[0].textContent;
+            const totalEnvios = cards[1].textContent;
+            const totalRecebimentos = cards[2].textContent;
+            const quantidadeTotal = cards[3].textContent;
+
+            let html = '<!DOCTYPE html><html><head><title>Relatório Dashboard</title><style>body{font-family:Arial,sans-serif;padding:20px}h1{text-align:center;color:#0066CC;margin-bottom:10px}.info{margin:20px 0;background:#E6F2FF;padding:15px;border-radius:8px}.info p{margin:5px 0}.resumo{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin:20px 0}.resumo-card{background:#0066CC;color:white;padding:15px;border-radius:8px;text-align:center}.resumo-card h3{font-size:2em;margin:10px 0}.resumo-card p{font-size:0.9em;opacity:0.9}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{border:1px solid #0066CC;padding:12px 8px;text-align:left;font-size:11px}th{background:#0066CC;color:white;font-weight:bold}tr:nth-child(even){background:#F8FAFC}</style></head><body><h1>📊 RELATÓRIO DE CORRESPONDÊNCIAS</h1><div class="info"><p><strong>Bensaúde Logística</strong></p><p><strong>Período:</strong> ' + tituloPeriodo + '</p><p><strong>Filtro:</strong> ' + tipoTexto + '</p><p><strong>Data de impressão:</strong> ' + new Date().toLocaleString('pt-BR') + '</p></div><div class="resumo"><div class="resumo-card"><p>TOTAL GERAL</p><h3>' + totalGeral + '</h3><p>Correspondências</p></div><div class="resumo-card"><p>ENVIOS</p><h3>' + totalEnvios + '</h3><p>Correspondências</p></div><div class="resumo-card"><p>RECEBIMENTOS</p><h3>' + totalRecebimentos + '</h3><p>Correspondências</p></div><div class="resumo-card"><p>QUANTIDADE</p><h3>' + quantidadeTotal + '</h3><p>Unidades</p></div></div><h2 style="color:#0066CC;margin-top:30px;">Detalhamento por Setor e Tipo</h2><table><thead><tr><th>Departamento</th><th>Tipo de Correspondência</th><th>Quantidade</th></tr></thead><tbody>';
+
+            rows.forEach(function(row) {
+                if (row.cells.length > 1) {
+                    html += '<tr>';
+                    for (let i = 0; i < row.cells.length; i++) {
+                        html += '<td>' + row.cells[i].textContent + '</td>';
+                    }
+                    html += '</tr>';
+                }
+            });
+
+            html += '</tbody></table></body></html>';
+
+            const janela = window.open('', '_blank');
+            janela.document.write(html);
+            janela.document.close();
+            janela.print();
         }
 
         function imprimirProtocoloEnvio() {
             const tbody = document.getElementById('bodyTabelaEnvios');
             const dataFiltro = document.getElementById('filtroDataEnvio').value;
-            const dataProtocolo = dataFiltro || new Date().toISOString().split('T')[0];
+            const hoje = new Date();
+            const ano = hoje.getFullYear();
+            const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+            const dia = String(hoje.getDate()).padStart(2, '0');
+            const dataProtocolo = dataFiltro || (ano + '-' + mes + '-' + dia);
             imprimirProtocolo('ENVIO', tbody, dataProtocolo, false);
         }
 
         function imprimirProtocoloRecebimento() {
             const tbody = document.getElementById('bodyTabelaRecebimentos');
             const dataFiltro = document.getElementById('filtroDataRecebimento').value;
-            const dataProtocolo = dataFiltro || new Date().toISOString().split('T')[0];
+            const hoje = new Date();
+            const ano = hoje.getFullYear();
+            const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+            const dia = String(hoje.getDate()).padStart(2, '0');
+            const dataProtocolo = dataFiltro || (ano + '-' + mes + '-' + dia);
             imprimirProtocolo('RECEBIMENTO', tbody, dataProtocolo, true);
         }
 
         function imprimirProtocolo(tipo, tbody, data, temAssinatura) {
             const rows = tbody.querySelectorAll('tr');
-            if (rows.length === 0 || (rows.length === 1 && rows[0].cells.length === 1)) { alert('Não há registros!'); return; }
-            let html = `<!DOCTYPE html><html><head><title>Protocolo de ${tipo}</title><style>body{font-family:Arial,sans-serif;padding:20px}h1{text-align:center;color:#0066CC;margin-bottom:10px}.info{margin:20px 0}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{border:1px solid #0066CC;padding:12px 8px;text-align:left;font-size:11px}th{background:#0066CC;color:white;font-weight:bold}.assinatura-col{background:#FFF9E6;width:180px;text-align:center;vertical-align:middle}.linha-assinatura{border-top:1px solid #333;margin-top:50px;width:90%;margin-left:auto;margin-right:auto}.label-recebedor{font-size:10px;color:#0066CC;font-weight:bold;margin-bottom:5px}</style></head><body><h1>PROTOCOLO DE ${tipo} DE CORRESPONDÊNCIAS</h1><div class="info"><p><strong>Bensaúde Logística</strong></p><p><strong>Data:</strong> ${formatarData(data)}</p><p><strong>Hora de impressão:</strong> ${new Date().toLocaleString('pt-BR')}</p></div><table><thead><tr><th>Data</th><th>Departamento</th><th>Tipo</th><th>Descrição</th><th style="width:60px;">Qtd</th>`;
+            if (rows.length === 0 || (rows.length === 1 && rows[0].cells.length === 1)) { 
+                alert('Não há registros!'); 
+                return; 
+            }
+            
+            let html = '<!DOCTYPE html><html><head><title>Protocolo de ' + tipo + '</title><style>body{font-family:Arial,sans-serif;padding:20px}h1{text-align:center;color:#0066CC;margin-bottom:10px}.info{margin:20px 0}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{border:1px solid #0066CC;padding:12px 8px;text-align:left;font-size:11px}th{background:#0066CC;color:white;font-weight:bold}.assinatura-col{background:#FFF9E6;width:180px;text-align:center;vertical-align:middle}.linha-assinatura{border-top:1px solid #333;margin-top:50px;width:90%;margin-left:auto;margin-right:auto}.label-recebedor{font-size:10px;color:#0066CC;font-weight:bold;margin-bottom:5px}</style></head><body><h1>PROTOCOLO DE ' + tipo + ' DE CORRESPONDÊNCIAS</h1><div class="info"><p><strong>Bensaúde Logística</strong></p><p><strong>Data:</strong> ' + formatarData(data) + '</p><p><strong>Hora de impressão:</strong> ' + new Date().toLocaleString('pt-BR') + '</p></div><table><thead><tr><th>Data</th><th>Departamento</th><th>Tipo</th><th>Descrição</th><th style="width:60px;">Qtd</th>';
+            
             if (temAssinatura) html += '<th class="assinatura-col">Recebedor / Assinatura</th>';
             html += '</tr></thead><tbody>';
-            rows.forEach(row => {
+            
+            rows.forEach(function(row) {
                 if (row.cells.length > 1) {
                     html += '<tr>';
-                    for (let i = 0; i &lt; row.cells.length; i++) html += `<td>${row.cells[i].textContent}</td>`;
-                    if (temAssinatura) html += '<td class="assinatura-col"><div class="label-recebedor">RECEBEDOR:</div><div class="linha-assinatura"></div></td>';
+                    for (let i = 0; i < row.cells.length; i++) {
+                        html += '<td>' + row.cells[i].textContent + '</td>';
+                    }
+                    if (temAssinatura) {
+                        html += '<td class="assinatura-col"><div class="label-recebedor">RECEBEDOR:</div><div class="linha-assinatura"></div></td>';
+                    }
                     html += '</tr>';
                 }
             });
+            
             html += '</tbody></table></body></html>';
+            
             const janela = window.open('', '_blank');
             janela.document.write(html);
             janela.document.close();
