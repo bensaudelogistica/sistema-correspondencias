@@ -472,24 +472,6 @@
             margin-top: 30px;
         }
 
-        @media print {
-            body * {
-                visibility: hidden;
-            }
-            #areaDashboardImpressao, #areaDashboardImpressao * {
-                visibility: visible;
-            }
-            #areaDashboardImpressao {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-            }
-            .button-group, .filter-section {
-                display: none !important;
-            }
-        }
-
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 1.8em;
@@ -542,115 +524,104 @@
         </div>
 
         <div id="telaDashboard" class="screen">
-            <div id="areaDashboardImpressao">
-                <h2><i class="fas fa-chart-line"></i> Dashboard - Estatísticas de Correspondências</h2>
-                
-                <div class="loading" id="loadingDashboard">
-                    <div class="spinner"></div>
-                    <p>Carregando estatísticas...</p>
-                </div>
-
-                <div class="filter-section">
-                    <h4><i class="fas fa-filter"></i> Filtros</h4>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Período:</label>
-                                <select id="filtroPeriodo" onchange="toggleDataPersonalizada()">
-                                    <option value="hoje">Hoje</option>
-                                    <option value="mes" selected>Este Mês</option>
-                                    <option value="ano">Este Ano</option>
-                                    <option value="personalizado">Personalizado</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3" id="dataInicioContainer" style="display: none;">
-                            <div class="form-group">
-                                <label>Data Início:</label>
-                                <input type="date" id="dataInicio">
-                            </div>
-                        </div>
-                        <div class="col-md-3" id="dataFimContainer" style="display: none;">
-                            <div class="form-group">
-                                <label>Data Fim:</label>
-                                <input type="date" id="dataFim">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Tipo:</label>
-                                <select id="filtroTipo">
-                                    <option value="ambos">Envios e Recebimentos</option>
-                                    <option value="envios">Apenas Envios</option>
-                                    <option value="recebimentos">Apenas Recebimentos</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3" style="display: flex; align-items: flex-end;">
-                            <button class="btn-custom btn-info-custom" onclick="atualizarDashboard()">
-                                <i class="fas fa-sync"></i> Atualizar
-                            </button>
+            <h2><i class="fas fa-chart-line"></i> Dashboard - Estatísticas de Correspondências</h2>
+            <div class="loading" id="loadingDashboard">
+                <div class="spinner"></div>
+                <p>Carregando estatísticas...</p>
+            </div>
+            <div class="filter-section">
+                <h4><i class="fas fa-filter"></i> Filtros</h4>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Período:</label>
+                            <select id="filtroPeriodo" onchange="toggleDataPersonalizada()">
+                                <option value="hoje">Hoje</option>
+                                <option value="mes" selected>Este Mês</option>
+                                <option value="ano">Este Ano</option>
+                                <option value="personalizado">Personalizado</option>
+                            </select>
                         </div>
                     </div>
-                </div>
-
-                <div class="stats-cards" id="statsCards">
-                    <div class="stat-card">
-                        <h4>📦 TOTAL GERAL</h4>
-                        <div class="number">0</div>
-                        <div class="label">Correspondências</div>
+                    <div class="col-md-3" id="dataInicioContainer" style="display: none;">
+                        <div class="form-group">
+                            <label>Data Início:</label>
+                            <input type="date" id="dataInicio">
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <h4>📤 ENVIOS</h4>
-                        <div class="number">0</div>
-                        <div class="label">Correspondências</div>
+                    <div class="col-md-3" id="dataFimContainer" style="display: none;">
+                        <div class="form-group">
+                            <label>Data Fim:</label>
+                            <input type="date" id="dataFim">
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <h4>📥 RECEBIMENTOS</h4>
-                        <div class="number">0</div>
-                        <div class="label">Correspondências</div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Tipo:</label>
+                            <select id="filtroTipo">
+                                <option value="ambos">Envios e Recebimentos</option>
+                                <option value="envios">Apenas Envios</option>
+                                <option value="recebimentos">Apenas Recebimentos</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <h4>📊 QUANTIDADE TOTAL</h4>
-                        <div class="number">0</div>
-                        <div class="label">Unidades</div>
+                    <div class="col-md-3" style="display: flex; align-items: flex-end;">
+                        <button class="btn-custom btn-info-custom" onclick="atualizarDashboard()">
+                            <i class="fas fa-sync"></i> Atualizar
+                        </button>
                     </div>
-                </div>
-
-                <div class="dashboard-grid">
-                    <div class="chart-container">
-                        <h3>📊 Por Tipo de Correspondência</h3>
-                        <canvas id="chartTipo"></canvas>
-                    </div>
-                    <div class="chart-container">
-                        <h3>🏢 Por Departamento</h3>
-                        <canvas id="chartDepartamento"></canvas>
-                    </div>
-                </div>
-
-                <div class="table-container" style="margin-top: 30px;">
-                    <h3 style="padding: 20px 20px 0;">📋 Detalhamento por Setor e Tipo</h3>
-                    <table id="tabelaDetalhada">
-                        <thead>
-                            <tr>
-                                <th>Departamento</th>
-                                <th>Tipo</th>
-                                <th>Quantidade</th>
-                            </tr>
-                        </thead>
-                        <tbody id="bodyTabelaDetalhada">
-                            <tr>
-                                <td colspan="3" style="text-align: center;">Selecione um período e clique em Atualizar</td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
             </div>
-
+            <div class="stats-cards" id="statsCards">
+                <div class="stat-card">
+                    <h4>📦 TOTAL GERAL</h4>
+                    <div class="number">0</div>
+                    <div class="label">Correspondências</div>
+                </div>
+                <div class="stat-card">
+                    <h4>📤 ENVIOS</h4>
+                    <div class="number">0</div>
+                    <div class="label">Correspondências</div>
+                </div>
+                <div class="stat-card">
+                    <h4>📥 RECEBIMENTOS</h4>
+                    <div class="number">0</div>
+                    <div class="label">Correspondências</div>
+                </div>
+                <div class="stat-card">
+                    <h4>📊 QUANTIDADE TOTAL</h4>
+                    <div class="number">0</div>
+                    <div class="label">Unidades</div>
+                </div>
+            </div>
+            <div class="dashboard-grid">
+                <div class="chart-container">
+                    <h3>📊 Por Tipo de Correspondência</h3>
+                    <canvas id="chartTipo"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>🏢 Por Departamento</h3>
+                    <canvas id="chartDepartamento"></canvas>
+                </div>
+            </div>
+            <div class="table-container" style="margin-top: 30px;">
+                <h3 style="padding: 20px 20px 0;">📋 Detalhamento por Setor e Tipo</h3>
+                <table id="tabelaDetalhada">
+                    <thead>
+                        <tr>
+                            <th>Departamento</th>
+                            <th>Tipo</th>
+                            <th>Quantidade</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyTabelaDetalhada">
+                        <tr>
+                            <td colspan="3" style="text-align: center;">Selecione um período e clique em Atualizar</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <div class="button-group">
-                <button type="button" class="btn-custom btn-success-custom" onclick="imprimirRelatorioDashboard()">
-                    <i class="fas fa-print"></i> Imprimir Relatório
-                </button>
                 <button type="button" class="btn-custom btn-secondary-custom" onclick="showScreen('telaInicial')">
                     <i class="fas fa-arrow-left"></i> Retornar
                 </button>
@@ -874,7 +845,6 @@
         const scriptURL = 'https://script.google.com/macros/s/AKfycbyzAYgPkNNXRURK-kpGDMkvMKbpYFod2MmAd5VqctRdVWyxzWBsW6FfPUsw2s6OUynG/exec';
         let chartTipo = null;
         let chartDepartamento = null;
-        let dadosAtuaisDashboard = { envios: [], recebimentos: [], periodo: '', tipo: '' };
 
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -884,13 +854,7 @@
             else if (screenId === 'telaDashboard') { atualizarDashboard(); }
         }
 
-        function setDataHoje(id) { 
-            const hoje = new Date();
-            const ano = hoje.getFullYear();
-            const mes = String(hoje.getMonth() + 1).padStart(2, '0');
-            const dia = String(hoje.getDate()).padStart(2, '0');
-            document.getElementById(id).value = `${ano}-${mes}-${dia}`;
-        }
+        function setDataHoje(id) { document.getElementById(id).value = new Date().toISOString().split('T')[0]; }
 
         function toggleDataPersonalizada() {
             const p = document.getElementById('filtroPeriodo').value === 'personalizado';
@@ -1004,72 +968,39 @@
         async function atualizarDashboard() {
             const loading = document.getElementById('loadingDashboard');
             loading.classList.add('active');
-
             try {
                 const periodo = document.getElementById('filtroPeriodo').value;
                 const tipo = document.getElementById('filtroTipo').value;
                 let dataInicio, dataFim;
                 const hoje = new Date();
-                const ano = hoje.getFullYear();
-                const mes = hoje.getMonth();
-                const dia = hoje.getDate();
-                
-                if (periodo === 'hoje') {
-                    // CORREÇÃO: Formatar corretamente a data de hoje
-                    dataInicio = dataFim = `${ano}-${String(mes + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
-                    console.log('Buscando dados de hoje:', dataInicio);
-                } else if (periodo === 'mes') {
-                    dataInicio = `${ano}-${String(mes + 1).padStart(2, '0')}-01`;
-                    const ultimoDia = new Date(ano, mes + 1, 0).getDate();
-                    dataFim = `${ano}-${String(mes + 1).padStart(2, '0')}-${String(ultimoDia).padStart(2, '0')}`;
-                    console.log('Buscando dados do mês:', dataInicio, 'até', dataFim);
-                } else if (periodo === 'ano') {
-                    dataInicio = `${ano}-01-01`;
-                    dataFim = `${ano}-12-31`;
-                    console.log('Buscando dados do ano:', dataInicio, 'até', dataFim);
-                } else {
+                if (periodo === 'hoje') { dataInicio = dataFim = hoje.toISOString().split('T')[0]; }
+                else if (periodo === 'mes') {
+                    dataInicio = new Date(hoje.getFullYear(), hoje.getMonth(), 1).toISOString().split('T')[0];
+                    dataFim = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0).toISOString().split('T')[0];
+                }
+                else if (periodo === 'ano') {
+                    dataInicio = new Date(hoje.getFullYear(), 0, 1).toISOString().split('T')[0];
+                    dataFim = new Date(hoje.getFullYear(), 11, 31).toISOString().split('T')[0];
+                }
+                else {
                     dataInicio = document.getElementById('dataInicio').value;
                     dataFim = document.getElementById('dataFim').value;
-                    if (!dataInicio || !dataFim) { 
-                        alert('Selecione as datas!'); 
-                        loading.classList.remove('active'); 
-                        return; 
-                    }
+                    if (!dataInicio || !dataFim) { alert('Selecione as datas!'); loading.classList.remove('active'); return; }
                 }
-
-                // Salvar dados para impressão
-                dadosAtuaisDashboard.periodo = periodo;
-                dadosAtuaisDashboard.tipo = tipo;
-                dadosAtuaisDashboard.dataInicio = dataInicio;
-                dadosAtuaisDashboard.dataFim = dataFim;
-
                 let dadosEnvios = [], dadosRecebimentos = [];
-
                 if (tipo === 'ambos' || tipo === 'envios') {
                     const r = await fetch(`${scriptURL}?acao=buscarEstatisticas&tipo=Envios&dataInicio=${dataInicio}&dataFim=${dataFim}`);
                     const res = await r.json();
-                    console.log('Resposta Envios:', res);
                     if (res.status === 'success' && res.data) dadosEnvios = res.data;
                 }
-
                 if (tipo === 'ambos' || tipo === 'recebimentos') {
                     const r = await fetch(`${scriptURL}?acao=buscarEstatisticas&tipo=Recebimentos&dataInicio=${dataInicio}&dataFim=${dataFim}`);
                     const res = await r.json();
-                    console.log('Resposta Recebimentos:', res);
                     if (res.status === 'success' && res.data) dadosRecebimentos = res.data;
                 }
-
-                dadosAtuaisDashboard.envios = dadosEnvios;
-                dadosAtuaisDashboard.recebimentos = dadosRecebimentos;
-
                 processarEstatisticas(dadosEnvios, dadosRecebimentos, tipo);
-                
-            } catch (error) { 
-                console.error('Erro ao carregar dashboard:', error);
-                alert('Erro ao carregar estatísticas'); 
-            } finally { 
-                loading.classList.remove('active'); 
-            }
+            } catch (error) { alert('Erro ao carregar estatísticas'); }
+            finally { loading.classList.remove('active'); }
         }
 
         function processarEstatisticas(dadosEnvios, dadosRecebimentos, tipoFiltro) {
@@ -1127,120 +1058,6 @@
                 tr.innerHTML = `<td><strong>${depto}</strong></td><td>${tipo}</td><td><strong style="color: #0066CC;">${qtd}</strong></td>`;
                 tbody.appendChild(tr);
             });
-        }
-
-        function imprimirRelatorioDashboard() {
-            const tbody = document.getElementById('bodyTabelaDetalhada');
-            const rows = tbody.querySelectorAll('tr');
-            
-            if (rows.length === 0 || (rows.length === 1 && rows[0].cells[0].textContent.includes('Nenhum'))) {
-                alert('Não há dados para imprimir! Clique em "Atualizar" primeiro.');
-                return;
-            }
-
-            const periodo = document.getElementById('filtroPeriodo').value;
-            const tipo = document.getElementById('filtroTipo').value;
-            let tituloPeriodo = '';
-            
-            if (periodo === 'hoje') tituloPeriodo = 'HOJE - ' + formatarData(dadosAtuaisDashboard.dataInicio);
-            else if (periodo === 'mes') tituloPeriodo = 'MÊS ATUAL';
-            else if (periodo === 'ano') tituloPeriodo = 'ANO ATUAL';
-            else tituloPeriodo = `${formatarData(dadosAtuaisDashboard.dataInicio)} a ${formatarData(dadosAtuaisDashboard.dataFim)}`;
-
-            const tipoTexto = tipo === 'ambos' ? 'ENVIOS E RECEBIMENTOS' : tipo === 'envios' ? 'APENAS ENVIOS' : 'APENAS RECEBIMENTOS';
-
-            // Calcular totais dos cards
-            const cards = document.querySelectorAll('.stat-card .number');
-            const totalGeral = cards[0].textContent;
-            const totalEnvios = cards[1].textContent;
-            const totalRecebimentos = cards[2].textContent;
-            const quantidadeTotal = cards[3].textContent;
-
-            let html = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Relatório Dashboard</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; padding: 20px; }
-                        h1 { text-align: center; color: #0066CC; margin-bottom: 10px; }
-                        .info { margin: 20px 0; background: #E6F2FF; padding: 15px; border-radius: 8px; }
-                        .info p { margin: 5px 0; }
-                        .resumo { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 20px 0; }
-                        .resumo-card { background: #0066CC; color: white; padding: 15px; border-radius: 8px; text-align: center; }
-                        .resumo-card h3 { font-size: 2em; margin: 10px 0; }
-                        .resumo-card p { font-size: 0.9em; opacity: 0.9; }
-                        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-                        th, td { border: 1px solid #0066CC; padding: 12px 8px; text-align: left; font-size: 11px; }
-                        th { background: #0066CC; color: white; font-weight: bold; }
-                        tr:nth-child(even) { background: #F8FAFC; }
-                    </style>
-                </head>
-                <body>
-                    <h1>📊 RELATÓRIO DE CORRESPONDÊNCIAS</h1>
-                    <div class="info">
-                        <p><strong>Bensaúde Logística</strong></p>
-                        <p><strong>Período:</strong> ${tituloPeriodo}</p>
-                        <p><strong>Filtro:</strong> ${tipoTexto}</p>
-                        <p><strong>Data de impressão:</strong> ${new Date().toLocaleString('pt-BR')}</p>
-                    </div>
-                    
-                    <div class="resumo">
-                        <div class="resumo-card">
-                            <p>TOTAL GERAL</p>
-                            <h3>${totalGeral}</h3>
-                            <p>Correspondências</p>
-                        </div>
-                        <div class="resumo-card">
-                            <p>ENVIOS</p>
-                            <h3>${totalEnvios}</h3>
-                            <p>Correspondências</p>
-                        </div>
-                        <div class="resumo-card">
-                            <p>RECEBIMENTOS</p>
-                            <h3>${totalRecebimentos}</h3>
-                            <p>Correspondências</p>
-                        </div>
-                        <div class="resumo-card">
-                            <p>QUANTIDADE</p>
-                            <h3>${quantidadeTotal}</h3>
-                            <p>Unidades</p>
-                        </div>
-                    </div>
-
-                    <h2 style="color: #0066CC; margin-top: 30px;">Detalhamento por Setor e Tipo</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Departamento</th>
-                                <th>Tipo de Correspondência</th>
-                                <th>Quantidade</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
-
-            rows.forEach(row => {
-                if (row.cells.length > 1) {
-                    html += '<tr>';
-                    for (let i = 0; i &lt; row.cells.length; i++) {
-                        html += `<td>${row.cells[i].textContent}</td>`;
-                    }
-                    html += '</tr>';
-                }
-            });
-
-            html += `
-                        </tbody>
-                    </table>
-                </body>
-                </html>
-            `;
-
-            const janela = window.open('', '_blank');
-            janela.document.write(html);
-            janela.document.close();
-            janela.print();
         }
 
         function imprimirProtocoloEnvio() {
