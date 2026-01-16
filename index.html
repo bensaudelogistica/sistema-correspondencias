@@ -3,10 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Correspondências - Bensaúde</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <title>Sistema de Manutenção Bensaúde</title>
     <style>
         * {
             margin: 0;
@@ -14,79 +11,102 @@
             box-sizing: border-box;
         }
 
-        :root {
-            --azul-bensaude: #0066CC;
-            --azul-escuro: #004C99;
-            --azul-claro: #E6F2FF;
-            --branco: #FFFFFF;
-            --cinza-tech: #F8FAFC;
-            --cinza-borda: #E2E8F0;
-            --texto-escuro: #1E293B;
-            --texto-secundario: #64748B;
-        }
-
         body {
-            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #E6F2FF 0%, #F8FAFC 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
             min-height: 100vh;
             padding: 20px;
-            color: var(--texto-escuro);
         }
 
-        .container-custom {
+        .container {
             max-width: 1400px;
             margin: 0 auto;
-            background: var(--branco);
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0, 102, 204, 0.12);
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
         }
 
         .header {
-            background: linear-gradient(135deg, var(--azul-bensaude) 0%, var(--azul-escuro) 100%);
-            color: var(--branco);
-            padding: 40px 30px;
+            background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
+            color: white;
+            padding: 30px;
             text-align: center;
             position: relative;
-            overflow: hidden;
-        }
-
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: pulse 15s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 0.3; }
         }
 
         .header h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
-            font-weight: 700;
-            position: relative;
-            z-index: 1;
         }
 
         .header p {
             font-size: 1.1em;
-            opacity: 0.95;
-            font-weight: 300;
-            position: relative;
-            z-index: 1;
+            opacity: 0.9;
         }
 
-        .screen {
+        .reload-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .reload-btn:hover {
+            background: white;
+            color: #003366;
+        }
+
+        .nav {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 3px solid #003366;
+            overflow-x: auto;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -3px;
+        }
+
+        .nav-btn:hover {
+            background: #e9ecef;
+            color: #003366;
+        }
+
+        .nav-btn.active {
+            color: #003366;
+            background: white;
+            border-bottom-color: #003366;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .page {
             display: none;
-            padding: 40px;
-            animation: fadeIn 0.3s ease-in;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.3s;
         }
 
         @keyframes fadeIn {
@@ -94,325 +114,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .screen.active {
-            display: block;
-        }
-
-        .menu-inicial {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            padding: 20px;
-        }
-
-        .menu-card {
-            background: var(--branco);
-            border: 2px solid var(--cinza-borda);
-            border-radius: 20px;
-            padding: 40px 25px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            color: var(--azul-bensaude);
-            box-shadow: 0 4px 20px rgba(0, 102, 204, 0.08);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .menu-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--azul-bensaude) 0%, var(--azul-escuro) 100%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            z-index: 0;
-        }
-
-        .menu-card:hover {
-            transform: translateY(-12px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0, 102, 204, 0.25);
-            border-color: var(--azul-bensaude);
-        }
-
-        .menu-card:hover::before {
-            opacity: 1;
-        }
-
-        .menu-card:hover i,
-        .menu-card:hover h3,
-        .menu-card:hover p {
-            color: var(--branco);
-            position: relative;
-            z-index: 1;
-        }
-
-        .menu-card i {
-            font-size: 3.5em;
-            margin-bottom: 15px;
-            transition: all 0.4s ease;
-            position: relative;
-            z-index: 1;
-        }
-
-        .menu-card h3 {
-            font-size: 1.5em;
-            margin-bottom: 8px;
-            font-weight: 700;
-            transition: all 0.4s ease;
-            position: relative;
-            z-index: 1;
-        }
-
-        .menu-card p {
-            color: var(--texto-secundario);
-            font-size: 0.9em;
-            transition: all 0.4s ease;
-            position: relative;
-            z-index: 1;
-        }
-
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: var(--texto-escuro);
-            font-size: 0.95em;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 14px 16px;
-            border: 2px solid var(--cinza-borda);
-            border-radius: 12px;
-            font-size: 1em;
-            transition: all 0.3s ease;
-            background: var(--cinza-tech);
-            color: var(--texto-escuro);
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--azul-bensaude);
-            background: var(--branco);
-            box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1);
-        }
-
-        .btn-custom {
-            padding: 14px 32px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 5px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-primary-custom {
-            background: linear-gradient(135deg, var(--azul-bensaude) 0%, var(--azul-escuro) 100%);
-            color: var(--branco);
-        }
-
-        .btn-primary-custom:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 102, 204, 0.35);
-        }
-
-        .btn-secondary-custom {
-            background: #64748B;
-            color: var(--branco);
-        }
-
-        .btn-secondary-custom:hover {
-            background: #475569;
-            transform: translateY(-2px);
-        }
-
-        .btn-success-custom {
-            background: #10B981;
-            color: var(--branco);
-        }
-
-        .btn-success-custom:hover {
-            background: #059669;
-            transform: translateY(-2px);
-        }
-
-        .btn-info-custom {
-            background: var(--azul-bensaude);
-            color: var(--branco);
-        }
-
-        .btn-info-custom:hover {
-            background: var(--azul-escuro);
-            transform: translateY(-2px);
-        }
-
-        .btn-warning-custom {
-            background: #F59E0B;
-            color: var(--branco);
-        }
-
-        .btn-warning-custom:hover {
-            background: #D97706;
-            transform: translateY(-2px);
-        }
-
-        .button-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 24px;
-        }
-
-        .alert-custom {
-            padding: 16px 20px;
-            border-radius: 12px;
-            margin-bottom: 24px;
-            display: none;
-            font-weight: 500;
-            border-left: 4px solid;
-        }
-
-        .alert-success {
-            background: #D1FAE5;
-            color: #065F46;
-            border-color: #10B981;
-        }
-
-        .alert-error {
-            background: #FEE2E2;
-            color: #991B1B;
-            border-color: #EF4444;
-        }
-
-        .table-container {
-            margin-top: 30px;
-            overflow-x: auto;
-            background: var(--branco);
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 102, 204, 0.08);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table thead {
-            background: linear-gradient(135deg, var(--azul-bensaude) 0%, var(--azul-escuro) 100%);
-            color: var(--branco);
-        }
-
-        table th {
-            padding: 18px 20px;
-            text-align: left;
-            font-weight: 600;
-            font-size: 0.95em;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        table td {
-            padding: 16px 20px;
-            text-align: left;
-            border-bottom: 1px solid var(--cinza-borda);
-            color: var(--texto-escuro);
-        }
-
-        table tbody tr {
-            transition: background 0.2s ease;
-        }
-
-        table tbody tr:hover {
-            background: var(--azul-claro);
-        }
-
-        table tbody tr:nth-child(even) {
-            background: var(--cinza-tech);
-        }
-
-        table tbody tr:nth-child(even):hover {
-            background: var(--azul-claro);
-        }
-
-        .filter-section {
-            background: linear-gradient(135deg, var(--azul-claro) 0%, var(--branco) 100%);
-            padding: 28px;
-            border-radius: 16px;
-            margin-top: 30px;
-            margin-bottom: 20px;
-            border: 2px solid var(--azul-bensaude);
-            box-shadow: 0 4px 20px rgba(0, 102, 204, 0.1);
-        }
-
-        .filter-section h4 {
-            color: var(--azul-bensaude);
-            margin-bottom: 20px;
-            font-weight: 700;
-            font-size: 1.2em;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 30px;
-        }
-
-        .loading.active {
-            display: block;
-        }
-
-        .spinner {
-            border: 4px solid var(--azul-claro);
-            border-top: 4px solid var(--azul-bensaude);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .loading p {
-            color: var(--azul-bensaude);
-            font-weight: 600;
-        }
-
-        h2 {
-            color: var(--azul-bensaude);
-            font-weight: 700;
-            margin-bottom: 30px;
-            font-size: 2em;
-        }
-
-        h3 {
-            color: var(--texto-escuro);
-            font-weight: 600;
-            margin-bottom: 20px;
-            font-size: 1.3em;
-        }
-
-        .stats-cards {
+        .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
@@ -420,870 +122,1442 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, var(--azul-bensaude) 0%, var(--azul-escuro) 100%);
-            color: var(--branco);
+            background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
+            color: white;
             padding: 25px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 102, 204, 0.2);
-            transition: transform 0.3s ease;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .stat-card h4 {
+        .stat-card h3 {
             font-size: 0.9em;
             opacity: 0.9;
             margin-bottom: 10px;
-            font-weight: 600;
-            color: var(--branco);
         }
 
         .stat-card .number {
             font-size: 2.5em;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .stat-card .label {
-            font-size: 0.85em;
-            opacity: 0.8;
+            font-weight: bold;
         }
 
         .chart-container {
-            background: var(--branco);
+            background: white;
             padding: 25px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 102, 204, 0.08);
-            margin-bottom: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
         }
 
-        .chart-container h3 {
-            color: var(--azul-bensaude);
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 51, 102, 0.4);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .btn-info {
+            background: #00a8e8;
+            color: white;
+            padding: 8px 16px;
+            font-size: 0.9em;
+        }
+
+        .btn-info:hover {
+            background: #0088c4;
+            transform: scale(1.05);
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1em;
             margin-bottom: 20px;
-            font-size: 1.2em;
+            transition: all 0.3s;
         }
 
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
+        .search-box:focus {
+            outline: none;
+            border-color: #003366;
+            box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
         }
 
-        @media print {
-            body * {
-                visibility: hidden;
-            }
-            #areaDashboardImpressao, #areaDashboardImpressao * {
-                visibility: visible;
-            }
-            #areaDashboardImpressao {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-            }
-            .button-group, .filter-section {
-                display: none !important;
-            }
+        .table-container {
+            overflow-x: auto;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-verde {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-amarelo {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-vermelho {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #003366;
+            box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
 
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 1.8em;
             }
-            
-            .menu-card {
-                padding: 30px 20px;
-            }
-            
-            .button-group {
+
+            .nav {
                 flex-direction: column;
             }
-            
-            .btn-custom {
+
+            .reload-btn {
+                position: static;
+                margin-top: 20px;
                 width: 100%;
-                justify-content: center;
             }
 
-            .dashboard-grid {
+            .stats-grid {
                 grid-template-columns: 1fr;
             }
+
+            table {
+                font-size: 0.9em;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+        }
+
+        .proximas-manutencoes {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .proximas-manutencoes h3 {
+            color: #003366;
+            margin-bottom: 20px;
+        }
+
+        .manutencao-item {
+            padding: 15px;
+            border-left: 4px solid #003366;
+            background: #f8f9fa;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .filter-group {
+            margin-bottom: 20px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .filter-group select {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1em;
+        }
+
+        /* Estilos para barras de status */
+        .status-bar-container {
+            margin-bottom: 25px;
+        }
+
+        .status-bar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .status-bar-label {
+            font-weight: 600;
+            color: #333;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+        }
+
+        .status-bar-value {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #003366;
+        }
+
+        .status-bar-track {
+            width: 100%;
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .status-bar-fill {
+            height: 100%;
+            border-radius: 15px;
+            transition: width 0.6s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .status-bar-percentage {
+            text-align: right;
+            margin-top: 5px;
+            font-size: 0.9em;
+            color: #666;
+            font-weight: 600;
+        }
+
+        /* Estilos para listas de status */
+        .status-list-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .status-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .status-list-item {
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .status-list-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .status-list-item strong {
+            display: block;
+            color: #003366;
+            margin-bottom: 5px;
+        }
+
+        .status-list-item small {
+            color: #666;
+            font-size: 0.85em;
+        }
+
+        .status-list-item .btn-action {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .status-list-item:hover .btn-action {
+            opacity: 1;
+        }
+
+        .status-list-empty {
+            text-align: center;
+            color: #999;
+            padding: 20px;
+            font-style: italic;
+        }
+
+        .status-list-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
         }
     </style>
 </head>
 <body>
-    <div class="container-custom">
+    <div class="container">
         <div class="header">
-            <h1><i class="fas fa-box"></i> Sistema de Correspondências</h1>
-            <p>Bensaúde Logística - Controle Inteligente</p>
+            <h1>🔧 Sistema de Manutenção Bensaúde</h1>
+            <p>Gestão Completa de Equipamentos e Manutenções</p>
+            <button class="reload-btn" onclick="carregarDados()">🔄 Recarregar</button>
         </div>
 
-        <div id="telaInicial" class="screen active">
-            <div class="menu-inicial">
-                <div class="menu-card" onclick="showScreen('telaDashboard')">
-                    <i class="fas fa-chart-line"></i>
-                    <h3>Dashboard</h3>
-                    <p>Estatísticas e relatórios</p>
+        <div class="nav">
+            <button class="nav-btn active" onclick="mostrarPagina('dashboard')">📊 Dashboard</button>
+            <button class="nav-btn" onclick="mostrarPagina('equipamentos')">🖥️ Equipamentos</button>
+            <button class="nav-btn" onclick="mostrarPagina('manutencoes')">🔧 Manutenções</button>
+        </div>
+
+        <div class="content">
+            <!-- DASHBOARD -->
+            <div id="dashboard" class="page active">
+                <div class="stats-grid">
+                    <div class="stat-card" style="background: linear-gradient(135deg, #003366 0%, #0066cc 100%);">
+                        <h3>Total de Equipamentos</h3>
+                        <div class="number" id="totalEquipamentos">0</div>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+                        <h3>Manutenções Concluídas</h3>
+                        <div class="number" id="manutencoesConcluidas">0</div>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);">
+                        <h3>Manutenções Pendentes</h3>
+                        <div class="number" id="manutencoesPendentes">0</div>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);">
+                        <h3>Equipamentos Atrasados</h3>
+                        <div class="number" id="equipamentosAtrasados">0</div>
+                    </div>
                 </div>
-                <div class="menu-card" onclick="showScreen('telaEnvio')">
-                    <i class="fas fa-paper-plane"></i>
-                    <h3>Envio</h3>
-                    <p>Registrar envios</p>
+
+                <div class="filter-group">
+                    <label>Filtrar por Frequência:</label>
+                    <select id="filtroFrequencia" onchange="atualizarDashboard()">
+                        <option value="">Todas</option>
+                        <option value="semanal">Semanal</option>
+                        <option value="mensal">Mensal</option>
+                        <option value="semestral">Semestral</option>
+                        <option value="anual">Anual</option>
+                    </select>
                 </div>
-                <div class="menu-card" onclick="showScreen('telaRecebimento')">
-                    <i class="fas fa-inbox"></i>
-                    <h3>Recebimento</h3>
-                    <p>Registrar recebimentos</p>
+
+                <!-- GRÁFICO DE STATUS DOS EQUIPAMENTOS -->
+                <div class="chart-container">
+                    <h3 style="color: #003366; margin-bottom: 20px;">📊 Status dos Equipamentos</h3>
+                    
+                    <!-- Barras Horizontais com Porcentagem -->
+                    <div style="margin-bottom: 30px;">
+                        <div class="status-bar-container">
+                            <div class="status-bar-header">
+                                <span class="status-bar-label">
+                                    <span style="display: inline-block; width: 12px; height: 12px; background: #28a745; border-radius: 50%; margin-right: 8px;"></span>
+                                    Em Dia
+                                </span>
+                                <span class="status-bar-value" id="statusEmDiaCount">0</span>
+                            </div>
+                            <div class="status-bar-track">
+                                <div class="status-bar-fill" id="statusEmDiaBar" style="background: linear-gradient(90deg, #28a745, #20c997);"></div>
+                            </div>
+                            <div class="status-bar-percentage" id="statusEmDiaPercent">0%</div>
+                        </div>
+
+                        <div class="status-bar-container">
+                            <div class="status-bar-header">
+                                <span class="status-bar-label">
+                                    <span style="display: inline-block; width: 12px; height: 12px; background: #ffc107; border-radius: 50%; margin-right: 8px;"></span>
+                                    Atenção (próximo de vencer)
+                                </span>
+                                <span class="status-bar-value" id="statusAtencaoCount">0</span>
+                            </div>
+                            <div class="status-bar-track">
+                                <div class="status-bar-fill" id="statusAtencaoBar" style="background: linear-gradient(90deg, #ffc107, #ffb300);"></div>
+                            </div>
+                            <div class="status-bar-percentage" id="statusAtencaoPercent">0%</div>
+                        </div>
+
+                        <div class="status-bar-container">
+                            <div class="status-bar-header">
+                                <span class="status-bar-label">
+                                    <span style="display: inline-block; width: 12px; height: 12px; background: #dc3545; border-radius: 50%; margin-right: 8px;"></span>
+                                    Atrasado (requer atenção)
+                                </span>
+                                <span class="status-bar-value" id="statusAtrasadoCount">0</span>
+                            </div>
+                            <div class="status-bar-track">
+                                <div class="status-bar-fill" id="statusAtrasadoBar" style="background: linear-gradient(90deg, #dc3545, #c82333);"></div>
+                            </div>
+                            <div class="status-bar-percentage" id="statusAtrasadoPercent">0%</div>
+                        </div>
+                    </div>
+
+                    <!-- Gráfico de Pizza -->
+                    <div style="display: flex; justify-content: center; align-items: center; margin-top: 40px; flex-wrap: wrap;">
+                        <div style="position: relative; width: 250px; height: 250px;">
+                            <canvas id="pieChart"></canvas>
+                            <div id="pieChartCenter" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                                <div style="font-size: 2em; font-weight: bold; color: #003366;" id="pieChartTotal">0</div>
+                                <div style="font-size: 0.9em; color: #666;">Equipamentos</div>
+                            </div>
+                        </div>
+                        <div style="margin-left: 50px; margin-top: 20px;">
+                            <div style="margin-bottom: 15px;">
+                                <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                                    <div style="width: 20px; height: 20px; background: #28a745; border-radius: 4px; margin-right: 10px;"></div>
+                                    <span style="font-weight: 600;">Em Dia</span>
+                                </div>
+                                <div style="margin-left: 30px; color: #666;" id="legendEmDia">0 equipamentos (0%)</div>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                                    <div style="width: 20px; height: 20px; background: #ffc107; border-radius: 4px; margin-right: 10px;"></div>
+                                    <span style="font-weight: 600;">Atenção</span>
+                                </div>
+                                <div style="margin-left: 30px; color: #666;" id="legendAtencao">0 equipamentos (0%)</div>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                                    <div style="width: 20px; height: 20px; background: #dc3545; border-radius: 4px; margin-right: 10px;"></div>
+                                    <span style="font-weight: 600;">Atrasado</span>
+                                </div>
+                                <div style="margin-left: 30px; color: #666;" id="legendAtrasado">0 equipamentos (0%)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LISTA DE EQUIPAMENTOS POR STATUS -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 30px;">
+                    <!-- Equipamentos Em Dia -->
+                    <div class="status-list-card" style="border-left: 4px solid #28a745;">
+                        <h4 style="color: #28a745; margin-bottom: 15px;">✅ Em Dia</h4>
+                        <div id="listaEmDia" class="status-list"></div>
+                    </div>
+
+                    <!-- Equipamentos Atenção -->
+                    <div class="status-list-card" style="border-left: 4px solid #ffc107;">
+                        <h4 style="color: #ffc107; margin-bottom: 15px;">⚠️ Atenção</h4>
+                        <div id="listaAtencao" class="status-list"></div>
+                    </div>
+
+                    <!-- Equipamentos Atrasados -->
+                    <div class="status-list-card" style="border-left: 4px solid #dc3545;">
+                        <h4 style="color: #dc3545; margin-bottom: 15px;">🚨 Atrasado</h4>
+                        <div id="listaAtrasado" class="status-list"></div>
+                    </div>
+                </div>
+
+                <!-- PRÓXIMAS MANUTENÇÕES -->
+                <div class="proximas-manutencoes" style="margin-top: 30px;">
+                    <h3 style="color: #003366;">📅 Próximas Manutenções (7 dias)</h3>
+                    <div id="proximasManutencoes"></div>
                 </div>
             </div>
-        </div>
 
-        <div id="telaDashboard" class="screen">
-            <div id="areaDashboardImpressao">
-                <h2><i class="fas fa-chart-line"></i> Dashboard - Estatísticas de Correspondências</h2>
+            <!-- EQUIPAMENTOS -->
+            <div id="equipamentos" class="page">
+                <button class="btn btn-primary" onclick="abrirModalEquipamento()">➕ Adicionar Equipamento</button>
                 
-                <div class="loading" id="loadingDashboard">
-                    <div class="spinner"></div>
-                    <p>Carregando estatísticas...</p>
-                </div>
+                <input type="text" class="search-box" id="searchEquipamentos" placeholder="🔍 Buscar por nome ou patrimônio..." onkeyup="filtrarEquipamentos()">
 
-                <div class="filter-section">
-                    <h4><i class="fas fa-filter"></i> Filtros</h4>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Período:</label>
-                                <select id="filtroPeriodo" onchange="toggleDataPersonalizada()">
-                                    <option value="hoje">Hoje</option>
-                                    <option value="mes" selected>Este Mês</option>
-                                    <option value="ano">Este Ano</option>
-                                    <option value="personalizado">Personalizado</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3" id="dataInicioContainer" style="display: none;">
-                            <div class="form-group">
-                                <label>Data Início:</label>
-                                <input type="date" id="dataInicio">
-                            </div>
-                        </div>
-                        <div class="col-md-3" id="dataFimContainer" style="display: none;">
-                            <div class="form-group">
-                                <label>Data Fim:</label>
-                                <input type="date" id="dataFim">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Tipo:</label>
-                                <select id="filtroTipo">
-                                    <option value="ambos">Envios e Recebimentos</option>
-                                    <option value="envios">Apenas Envios</option>
-                                    <option value="recebimentos">Apenas Recebimentos</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3" style="display: flex; align-items: flex-end;">
-                            <button class="btn-custom btn-info-custom" onclick="atualizarDashboard()">
-                                <i class="fas fa-sync"></i> Atualizar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="stats-cards" id="statsCards">
-                    <div class="stat-card">
-                        <h4>📦 TOTAL GERAL</h4>
-                        <div class="number">0</div>
-                        <div class="label">Correspondências</div>
-                    </div>
-                    <div class="stat-card">
-                        <h4>📤 ENVIOS</h4>
-                        <div class="number">0</div>
-                        <div class="label">Correspondências</div>
-                    </div>
-                    <div class="stat-card">
-                        <h4>📥 RECEBIMENTOS</h4>
-                        <div class="number">0</div>
-                        <div class="label">Correspondências</div>
-                    </div>
-                    <div class="stat-card">
-                        <h4>📊 QUANTIDADE TOTAL</h4>
-                        <div class="number">0</div>
-                        <div class="label">Unidades</div>
-                    </div>
-                </div>
-
-                <div class="dashboard-grid">
-                    <div class="chart-container">
-                        <h3>📊 Por Tipo de Correspondência</h3>
-                        <canvas id="chartTipo"></canvas>
-                    </div>
-                    <div class="chart-container">
-                        <h3>🏢 Por Departamento</h3>
-                        <canvas id="chartDepartamento"></canvas>
-                    </div>
-                </div>
-
-                <div class="table-container" style="margin-top: 30px;">
-                    <h3 style="padding: 20px 20px 0;">📋 Detalhamento por Setor e Tipo</h3>
-                    <table id="tabelaDetalhada">
+                <div class="table-container">
+                    <table>
                         <thead>
                             <tr>
-                                <th>Departamento</th>
-                                <th>Tipo</th>
-                                <th>Quantidade</th>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Patrimônio</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>BTU</th>
+                                <th>Frequência</th>
+                                <th>Status</th>
+                                <th>Ações</th>
                             </tr>
                         </thead>
-                        <tbody id="bodyTabelaDetalhada">
-                            <tr>
-                                <td colspan="3" style="text-align: center;">Selecione um período e clique em Atualizar</td>
-                            </tr>
-                        </tbody>
+                        <tbody id="tabelaEquipamentos"></tbody>
                     </table>
                 </div>
             </div>
 
-            <div class="button-group">
-                <button type="button" class="btn-custom btn-success-custom" onclick="imprimirRelatorioDashboard()">
-                    <i class="fas fa-print"></i> Imprimir Relatório
-                </button>
-                <button type="button" class="btn-custom btn-secondary-custom" onclick="showScreen('telaInicial')">
-                    <i class="fas fa-arrow-left"></i> Retornar
-                </button>
-            </div>
-        </div>
+            <!-- MANUTENÇÕES -->
+            <div id="manutencoes" class="page">
+                <button class="btn btn-primary" onclick="abrirModalManutencao()">➕ Registrar Manutenção</button>
 
-        <div id="telaEnvio" class="screen">
-            <h2><i class="fas fa-paper-plane"></i> Envio de Correspondências</h2>
-            <div class="alert-custom alert-success" id="alertSuccessEnvio">✅ Correspondência registrada com sucesso!</div>
-            <div class="alert-custom alert-error" id="alertErrorEnvio">❌ Erro ao registrar. Tente novamente.</div>
-            <form id="formEnvio" onsubmit="inserirEnvio(event)">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label><i class="fas fa-calendar"></i> Data do Envio:</label>
-                            <input type="date" id="dataEnvio" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label><i class="fas fa-building"></i> Departamento:</label>
-                            <select id="departamentoEnvio" required>
-                                <option value="">Selecione...</option>
-                                <option value="ATENDIMENTO">ATENDIMENTO</option>
-                                <option value="CADASTRO">CADASTRO</option>
-                                <option value="COMERCIAL">COMERCIAL</option>
-                                <option value="LOGISTICA">LOGISTICA</option>
-                                <option value="CONTAS MÉDICAS">CONTAS MÉDICAS</option>
-                                <option value="CONTROLADORIA">CONTROLADORIA</option>
-                                <option value="QUALIDADE">QUALIDADE</option>
-                                <option value="GESTÃO DE REDE">GESTÃO DE REDE</option>
-                                <option value="JURÍDICO">JURÍDICO</option>
-                                <option value="R.H/D.P">R.H/D.P</option>
-                                <option value="AUDITORIA">AUDITORIA</option>
-                                <option value="SECRETARIA">SECRETARIA</option>
-                                <option value="MANUTENÇÃO DE CONTRATOS">MANUTENÇÃO DE CONTRATOS</option>
-                                <option value="OUTROS">OUTROS</option>
-                            </select>
-                        </div>
-                    </div>
+                <div class="filter-group">
+                    <label>Filtrar por Equipamento:</label>
+                    <select id="filtroEquipamento" onchange="filtrarManutencoes()">
+                        <option value="">Todos</option>
+                    </select>
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label><i class="fas fa-envelope"></i> Tipo de Correspondência:</label>
-                            <select id="tipoEnvio" required>
-                                <option value="">Selecione...</option>
-                                <option value="PAC">PAC</option>
-                                <option value="REGISTRADA">REGISTRADA</option>
-                                <option value="REGISTRADA COM AR">REGISTRADA COM AR</option>
-                                <option value="SEDEX">SEDEX</option>
-                                <option value="SEDEX REVERSO">SEDEX REVERSO</option>
-                                <option value="SIMPLES">SIMPLES</option>
-                                <option value="OUTROS">OUTROS</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label><i class="fas fa-sort-numeric-up"></i> Quantidade:</label>
-                            <input type="number" id="quantidadeEnvio" min="1" value="1" required>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-align-left"></i> Descrição da Correspondência:</label>
-                    <textarea id="descricaoEnvio" rows="3" placeholder="Digite detalhes sobre a correspondência..." required></textarea>
-                </div>
-                <div class="button-group">
-                    <button type="submit" class="btn-custom btn-primary-custom"><i class="fas fa-plus-circle"></i> Inserir</button>
-                    <button type="button" class="btn-custom btn-success-custom" onclick="imprimirProtocoloEnvio()"><i class="fas fa-print"></i> Imprimir Protocolo</button>
-                    <button type="button" class="btn-custom btn-secondary-custom" onclick="showScreen('telaInicial')"><i class="fas fa-arrow-left"></i> Retornar</button>
-                </div>
-            </form>
-            <div class="filter-section">
-                <h4><i class="fas fa-search"></i> Buscar Correspondências por Data</h4>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Selecione a Data:</label>
-                            <input type="date" id="filtroDataEnvio">
-                        </div>
-                    </div>
-                    <div class="col-md-6" style="display: flex; align-items: flex-end; gap: 10px;">
-                        <button class="btn-custom btn-info-custom" onclick="buscarEnviosPorData()"><i class="fas fa-search"></i> Buscar Data</button>
-                        <button class="btn-custom btn-warning-custom" onclick="limparBuscaEnvio()"><i class="fas fa-calendar-day"></i> Ver Hoje</button>
-                    </div>
-                </div>
-            </div>
-            <div class="loading" id="loadingEnvio">
-                <div class="spinner"></div>
-                <p>Buscando registros...</p>
-            </div>
-            <div class="table-container">
-                <h3 id="tituloTabelaEnvio">📋 Correspondências Registradas Hoje</h3>
-                <table id="tabelaEnvios">
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Departamento</th>
-                            <th>Tipo</th>
-                            <th>Descrição</th>
-                            <th>Quantidade</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bodyTabelaEnvios">
-                        <tr><td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
 
-        <div id="telaRecebimento" class="screen">
-            <h2><i class="fas fa-inbox"></i> Recebimento de Correspondências</h2>
-            <div class="alert-custom alert-success" id="alertSuccessRecebimento">✅ Correspondência registrada com sucesso!</div>
-            <div class="alert-custom alert-error" id="alertErrorRecebimento">❌ Erro ao registrar. Tente novamente.</div>
-            <form id="formRecebimento" onsubmit="inserirRecebimento(event)">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label><i class="fas fa-calendar"></i> Data do Recebimento:</label>
-                            <input type="date" id="dataRecebimento" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label><i class="fas fa-building"></i> Departamento:</label>
-                            <select id="departamentoRecebimento" required>
-                                <option value="">Selecione...</option>
-                                <option value="ATENDIMENTO">ATENDIMENTO</option>
-                                <option value="CADASTRO">CADASTRO</option>
-                                <option value="COMERCIAL">COMERCIAL</option>
-                                <option value="LOGISTICA">LOGISTICA</option>
-                                <option value="CONTAS MÉDICAS">CONTAS MÉDICAS</option>
-                                <option value="CONTROLADORIA">CONTROLADORIA</option>
-                                <option value="QUALIDADE">QUALIDADE</option>
-                                <option value="GESTÃO DE REDE">GESTÃO DE REDE</option>
-                                <option value="JURÍDICO">JURÍDICO</option>
-                                <option value="R.H/D.P">R.H/D.P</option>
-                                <option value="AUDITORIA">AUDITORIA</option>
-                                <option value="SECRETARIA">SECRETARIA</option>
-                                <option value="MANUTENÇÃO DE CONTRATOS">MANUTENÇÃO DE CONTRATOS</option>
-                                <option value="OUTROS">OUTROS</option>
-                            </select>
-                        </div>
-                    </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Equipamento</th>
+                                <th>Data</th>
+                                <th>Tipo</th>
+                                <th>Técnico</th>
+                                <th>Descrição</th>
+                                <th>Próxima Data</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaManutencoes"></tbody>
+                    </table>
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label><i class="fas fa-envelope"></i> Tipo de Correspondência:</label>
-                            <select id="tipoRecebimento" required>
-                                <option value="">Selecione...</option>
-                                <option value="BOLETOS">BOLETOS</option>
-                                <option value="FATURAMENTO">FATURAMENTO</option>
-                                <option value="NOTIFICAÇÃO EXTRA-JUDICIAL">NOTIFICAÇÃO EXTRA-JUDICIAL</option>
-                                <option value="NOTIFICAÇÃO JUDICIAL">NOTIFICAÇÃO JUDICIAL</option>
-                                <option value="REEMBOLSO">REEMBOLSO</option>
-                                <option value="TELEGRAMA">TELEGRAMA</option>
-                                <option value="OUTROS">OUTROS</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label><i class="fas fa-sort-numeric-up"></i> Quantidade:</label>
-                            <input type="number" id="quantidadeRecebimento" min="1" value="1" required>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-align-left"></i> Descrição da Correspondência:</label>
-                    <textarea id="descricaoRecebimento" rows="3" placeholder="Digite detalhes sobre a correspondência..." required></textarea>
-                </div>
-                <div class="button-group">
-                    <button type="submit" class="btn-custom btn-primary-custom"><i class="fas fa-plus-circle"></i> Inserir</button>
-                    <button type="button" class="btn-custom btn-success-custom" onclick="imprimirProtocoloRecebimento()"><i class="fas fa-print"></i> Imprimir Protocolo</button>
-                    <button type="button" class="btn-custom btn-secondary-custom" onclick="showScreen('telaInicial')"><i class="fas fa-arrow-left"></i> Retornar</button>
-                </div>
-            </form>
-            <div class="filter-section">
-                <h4><i class="fas fa-search"></i> Buscar Correspondências por Data</h4>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Selecione a Data:</label>
-                            <input type="date" id="filtroDataRecebimento">
-                        </div>
-                    </div>
-                    <div class="col-md-6" style="display: flex; align-items: flex-end; gap: 10px;">
-                        <button class="btn-custom btn-info-custom" onclick="buscarRecebimentosPorData()"><i class="fas fa-search"></i> Buscar Data</button>
-                        <button class="btn-custom btn-warning-custom" onclick="limparBuscaRecebimento()"><i class="fas fa-calendar-day"></i> Ver Hoje</button>
-                    </div>
-                </div>
-            </div>
-            <div class="loading" id="loadingRecebimento">
-                <div class="spinner"></div>
-                <p>Buscando registros...</p>
-            </div>
-            <div class="table-container">
-                <h3 id="tituloTabelaRecebimento">📋 Correspondências Registradas Hoje</h3>
-                <table id="tabelaRecebimentos">
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Departamento</th>
-                            <th>Tipo</th>
-                            <th>Descrição</th>
-                            <th>Quantidade</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bodyTabelaRecebimentos">
-                        <tr><td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
 
+    <!-- MODAL EQUIPAMENTO -->
+    <div id="modalEquipamento" class="modal">
+        <div class="modal-content">
+            <h2 id="tituloModalEquipamento">Adicionar Equipamento</h2>
+            <form id="formEquipamento" onsubmit="salvarEquipamento(event)">
+                <input type="hidden" id="equipamentoId">
+                
+                <div class="form-group">
+                    <label>Nome do Equipamento *</label>
+                    <input type="text" id="equipamentoNome" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Número de Patrimônio *</label>
+                    <input type="text" id="equipamentoPatrimonio" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Marca</label>
+                    <input type="text" id="equipamentoMarca">
+                </div>
+
+                <div class="form-group">
+                    <label>Modelo</label>
+                    <input type="text" id="equipamentoModelo">
+                </div>
+
+                <div class="form-group">
+                    <label>BTU (apenas para ar-condicionado)</label>
+                    <input type="number" id="equipamentoBtu">
+                </div>
+
+                <div class="form-group">
+                    <label>Data de Instalação *</label>
+                    <input type="date" id="equipamentoDataInstalacao" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Frequência de Manutenção *</label>
+                    <select id="equipamentoFrequencia" required>
+                        <option value="">Selecione...</option>
+                        <option value="semanal">Semanal</option>
+                        <option value="mensal">Mensal</option>
+                        <option value="semestral">Semestral</option>
+                        <option value="anual">Anual</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Localização</label>
+                    <input type="text" id="equipamentoLocalizacao">
+                </div>
+
+                <div class="form-group">
+                    <label>Notas</label>
+                    <textarea id="equipamentoNotas" rows="3"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">💾 Salvar</button>
+                <button type="button" class="btn btn-danger" onclick="fecharModal('modalEquipamento')">❌ Cancelar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL MANUTENÇÃO -->
+    <div id="modalManutencao" class="modal">
+        <div class="modal-content">
+            <h2 id="tituloModalManutencao">Registrar Manutenção</h2>
+            <form id="formManutencao" onsubmit="salvarManutencao(event)">
+                <input type="hidden" id="manutencaoId">
+                
+                <div class="form-group">
+                    <label>Equipamento *</label>
+                    <select id="manutencaoEquipamento" required></select>
+                </div>
+
+                <div class="form-group">
+                    <label>Data da Manutenção *</label>
+                    <input type="date" id="manutencaoData" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Tipo de Manutenção *</label>
+                    <select id="manutencaoTipo" required>
+                        <option value="">Selecione...</option>
+                        <option value="preventiva">Preventiva</option>
+                        <option value="corretiva">Corretiva</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Técnico Responsável *</label>
+                    <input type="text" id="manutencaoTecnico" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Descrição do Serviço *</label>
+                    <textarea id="manutencaoDescricao" rows="3" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Próxima Manutenção</label>
+                    <input type="date" id="manutencaoProximaData">
+                </div>
+
+                <button type="submit" class="btn btn-primary">💾 Salvar</button>
+                <button type="button" class="btn btn-danger" onclick="fecharModal('modalManutencao')">❌ Cancelar</button>
+            </form>
+        </div>
+    </div>
+
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbyzAYgPkNNXRURK-kpGDMkvMKbpYFod2MmAd5VqctRdVWyxzWBsW6FfPUsw2s6OUynG/exec';
-        let chartTipo = null;
-        let chartDepartamento = null;
-        let dadosAtuaisDashboard = { envios: [], recebimentos: [], periodo: '', tipo: '' };
+        // Configuração
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzbUBoiLovhzGr2V0QvozpxS7BYIN_GkH99tGR5kD4M5e_O2nP9h5d16oIPgTB6aayCjg/exec';
 
-        function showScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
-            if (screenId === 'telaEnvio') { setDataHoje('dataEnvio'); setDataHoje('filtroDataEnvio'); }
-            else if (screenId === 'telaRecebimento') { setDataHoje('dataRecebimento'); setDataHoje('filtroDataRecebimento'); }
-            else if (screenId === 'telaDashboard') { atualizarDashboard(); }
-        }
+        let equipamentos = [];
+        let manutencoes = [];
 
-        function setDataHoje(id) { 
-            const hoje = new Date();
-            const ano = hoje.getFullYear();
-            const mes = String(hoje.getMonth() + 1).padStart(2, '0');
-            const dia = String(hoje.getDate()).padStart(2, '0');
-            document.getElementById(id).value = `${ano}-${mes}-${dia}`;
-        }
+        // Carregar dados ao iniciar
+        window.onload = function() {
+            carregarDados();
+        };
 
-        function toggleDataPersonalizada() {
-            const p = document.getElementById('filtroPeriodo').value === 'personalizado';
-            document.getElementById('dataInicioContainer').style.display = p ? 'block' : 'none';
-            document.getElementById('dataFimContainer').style.display = p ? 'block' : 'none';
-        }
-
-        async function inserirEnvio(e) {
-            e.preventDefault();
-            const d = {acao:'inserirEnvio', data:document.getElementById('dataEnvio').value, departamento:document.getElementById('departamentoEnvio').value, tipo:document.getElementById('tipoEnvio').value, descricao:document.getElementById('descricaoEnvio').value, quantidade:document.getElementById('quantidadeEnvio').value};
-            try {
-                const r = await fetch(scriptURL, {method:'POST', body:JSON.stringify(d)});
-                const res = await r.json();
-                if (res.status === 'success') {
-                    mostrarAlerta('alertSuccessEnvio', 'alertErrorEnvio');
-                    adicionarLinhaTabela('bodyTabelaEnvios', [d.data, d.departamento, d.tipo, d.descricao, d.quantidade]);
-                    document.getElementById('formEnvio').reset();
-                    setDataHoje('dataEnvio');
-                } else mostrarAlerta('alertErrorEnvio', 'alertSuccessEnvio');
-            } catch (error) { mostrarAlerta('alertErrorEnvio', 'alertSuccessEnvio'); }
-        }
-
-        async function inserirRecebimento(e) {
-            e.preventDefault();
-            const d = {acao:'inserirRecebimento', data:document.getElementById('dataRecebimento').value, departamento:document.getElementById('departamentoRecebimento').value, tipo:document.getElementById('tipoRecebimento').value, descricao:document.getElementById('descricaoRecebimento').value, quantidade:document.getElementById('quantidadeRecebimento').value};
-            try {
-                const r = await fetch(scriptURL, {method:'POST', body:JSON.stringify(d)});
-                const res = await r.json();
-                if (res.status === 'success') {
-                    mostrarAlerta('alertSuccessRecebimento', 'alertErrorRecebimento');
-                    adicionarLinhaTabela('bodyTabelaRecebimentos', [d.data, d.departamento, d.tipo, d.descricao, d.quantidade]);
-                    document.getElementById('formRecebimento').reset();
-                    setDataHoje('dataRecebimento');
-                } else mostrarAlerta('alertErrorRecebimento', 'alertSuccessRecebimento');
-            } catch (error) { mostrarAlerta('alertErrorRecebimento', 'alertSuccessRecebimento'); }
-        }
-
-        async function buscarEnviosPorData() {
-            const d = document.getElementById('filtroDataEnvio').value;
-            if (!d) { alert('Selecione uma data!'); return; }
-            await buscarDadosPorData('Envios', d, 'bodyTabelaEnvios', 'loadingEnvio', 'tituloTabelaEnvio');
-        }
-
-        async function buscarRecebimentosPorData() {
-            const d = document.getElementById('filtroDataRecebimento').value;
-            if (!d) { alert('Selecione uma data!'); return; }
-            await buscarDadosPorData('Recebimentos', d, 'bodyTabelaRecebimentos', 'loadingRecebimento', 'tituloTabelaRecebimento');
-        }
-
-        async function buscarDadosPorData(tipo, data, tabelaId, loadingId, tituloId) {
-            const loading = document.getElementById(loadingId);
-            const tbody = document.getElementById(tabelaId);
-            const titulo = document.getElementById(tituloId);
-            loading.classList.add('active');
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Buscando...</td></tr>';
-            try {
-                const r = await fetch(`${scriptURL}?acao=buscarPorData&tipo=${tipo}&data=${data}`);
-                const res = await r.json();
-                loading.classList.remove('active');
-                if (res.status === 'success' && res.data && res.data.length > 0) {
-                    tbody.innerHTML = '';
-                    titulo.textContent = `📋 Correspondências de ${formatarData(data)} (${res.data.length} registro(s))`;
-                    res.data.forEach(row => {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `<td>${formatarData(row[0])}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td><td>${row[4]}</td>`;
-                        tbody.appendChild(tr);
-                    });
-                } else {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum registro encontrado</td></tr>';
-                    titulo.textContent = `📋 Correspondências de ${formatarData(data)}`;
-                }
-            } catch (error) {
-                loading.classList.remove('active');
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: red;">Erro ao buscar dados</td></tr>';
-            }
-        }
-
-        function limparBuscaEnvio() {
-            document.getElementById('bodyTabelaEnvios').innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
-            document.getElementById('tituloTabelaEnvio').textContent = '📋 Correspondências Registradas Hoje';
-            setDataHoje('filtroDataEnvio');
-        }
-
-        function limparBuscaRecebimento() {
-            document.getElementById('bodyTabelaRecebimentos').innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
-            document.getElementById('tituloTabelaRecebimento').textContent = '📋 Correspondências Registradas Hoje';
-            setDataHoje('filtroDataRecebimento');
-        }
-
-        function adicionarLinhaTabela(tabelaId, dados) {
-            const tbody = document.getElementById(tabelaId);
-            if (tbody.rows.length === 1 && tbody.rows[0].cells.length === 1) tbody.innerHTML = '';
-            const tr = document.createElement('tr');
-            tr.innerHTML = `<td>${formatarData(dados[0])}</td><td>${dados[1]}</td><td>${dados[2]}</td><td>${dados[3]}</td><td>${dados[4]}</td>`;
-            tbody.insertBefore(tr, tbody.firstChild);
-        }
-
-        function formatarData(data) {
-            if (!data) return '';
-            const p = data.split('-');
-            return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : data;
-        }
-
-        function mostrarAlerta(mostrarId, esconderId) {
-            document.getElementById(esconderId).style.display = 'none';
-            const a = document.getElementById(mostrarId);
-            a.style.display = 'block';
-            setTimeout(() => a.style.display = 'none', 3000);
-        }
-
-        async function atualizarDashboard() {
-            const loading = document.getElementById('loadingDashboard');
-            loading.classList.add('active');
-
-            try {
-                const periodo = document.getElementById('filtroPeriodo').value;
-                const tipo = document.getElementById('filtroTipo').value;
-                let dataInicio, dataFim;
-                const hoje = new Date();
-                const ano = hoje.getFullYear();
-                const mes = hoje.getMonth();
-                const dia = hoje.getDate();
-                
-                if (periodo === 'hoje') {
-                    // CORREÇÃO: Formatar corretamente a data de hoje
-                    dataInicio = dataFim = `${ano}-${String(mes + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
-                    console.log('Buscando dados de hoje:', dataInicio);
-                } else if (periodo === 'mes') {
-                    dataInicio = `${ano}-${String(mes + 1).padStart(2, '0')}-01`;
-                    const ultimoDia = new Date(ano, mes + 1, 0).getDate();
-                    dataFim = `${ano}-${String(mes + 1).padStart(2, '0')}-${String(ultimoDia).padStart(2, '0')}`;
-                    console.log('Buscando dados do mês:', dataInicio, 'até', dataFim);
-                } else if (periodo === 'ano') {
-                    dataInicio = `${ano}-01-01`;
-                    dataFim = `${ano}-12-31`;
-                    console.log('Buscando dados do ano:', dataInicio, 'até', dataFim);
-                } else {
-                    dataInicio = document.getElementById('dataInicio').value;
-                    dataFim = document.getElementById('dataFim').value;
-                    if (!dataInicio || !dataFim) { 
-                        alert('Selecione as datas!'); 
-                        loading.classList.remove('active'); 
-                        return; 
-                    }
-                }
-
-                // Salvar dados para impressão
-                dadosAtuaisDashboard.periodo = periodo;
-                dadosAtuaisDashboard.tipo = tipo;
-                dadosAtuaisDashboard.dataInicio = dataInicio;
-                dadosAtuaisDashboard.dataFim = dataFim;
-
-                let dadosEnvios = [], dadosRecebimentos = [];
-
-                if (tipo === 'ambos' || tipo === 'envios') {
-                    const r = await fetch(`${scriptURL}?acao=buscarEstatisticas&tipo=Envios&dataInicio=${dataInicio}&dataFim=${dataFim}`);
-                    const res = await r.json();
-                    console.log('Resposta Envios:', res);
-                    if (res.status === 'success' && res.data) dadosEnvios = res.data;
-                }
-
-                if (tipo === 'ambos' || tipo === 'recebimentos') {
-                    const r = await fetch(`${scriptURL}?acao=buscarEstatisticas&tipo=Recebimentos&dataInicio=${dataInicio}&dataFim=${dataFim}`);
-                    const res = await r.json();
-                    console.log('Resposta Recebimentos:', res);
-                    if (res.status === 'success' && res.data) dadosRecebimentos = res.data;
-                }
-
-                dadosAtuaisDashboard.envios = dadosEnvios;
-                dadosAtuaisDashboard.recebimentos = dadosRecebimentos;
-
-                processarEstatisticas(dadosEnvios, dadosRecebimentos, tipo);
-                
-            } catch (error) { 
-                console.error('Erro ao carregar dashboard:', error);
-                alert('Erro ao carregar estatísticas'); 
-            } finally { 
-                loading.classList.remove('active'); 
-            }
-        }
-
-        function processarEstatisticas(dadosEnvios, dadosRecebimentos, tipoFiltro) {
-            const todosDados = [...dadosEnvios, ...dadosRecebimentos];
-            const totalEnvios = dadosEnvios.length;
-            const totalRecebimentos = dadosRecebimentos.length;
-            const totalGeral = totalEnvios + totalRecebimentos;
-            const quantidadeEnvios = dadosEnvios.reduce((sum, row) => sum + (parseInt(row[4]) || 0), 0);
-            const quantidadeRecebimentos = dadosRecebimentos.reduce((sum, row) => sum + (parseInt(row[4]) || 0), 0);
-            const quantidadeTotal = quantidadeEnvios + quantidadeRecebimentos;
-            atualizarCards({totalGeral, totalEnvios, totalRecebimentos, quantidadeTotal});
-            const porTipo = {};
-            todosDados.forEach(row => { const tipo = row[2]; const qtd = parseInt(row[4]) || 0; porTipo[tipo] = (porTipo[tipo] || 0) + qtd; });
-            const porDepartamento = {};
-            todosDados.forEach(row => { const depto = row[1]; const qtd = parseInt(row[4]) || 0; porDepartamento[depto] = (porDepartamento[depto] || 0) + qtd; });
-            const detalhado = {};
-            todosDados.forEach(row => { const depto = row[1]; const tipo = row[2]; const qtd = parseInt(row[4]) || 0; const chave = `${depto}|${tipo}`; detalhado[chave] = (detalhado[chave] || 0) + qtd; });
-            atualizarGraficos(porTipo, porDepartamento);
-            atualizarTabelaDetalhada(detalhado);
-        }
-
-        function atualizarCards(stats) {
-            document.getElementById('statsCards').innerHTML = `
-                <div class="stat-card"><h4>📦 TOTAL GERAL</h4><div class="number">${stats.totalGeral}</div><div class="label">Correspondências</div></div>
-                <div class="stat-card"><h4>📤 ENVIOS</h4><div class="number">${stats.totalEnvios}</div><div class="label">Correspondências</div></div>
-                <div class="stat-card"><h4>📥 RECEBIMENTOS</h4><div class="number">${stats.totalRecebimentos}</div><div class="label">Correspondências</div></div>
-                <div class="stat-card"><h4>📊 QUANTIDADE TOTAL</h4><div class="number">${stats.quantidadeTotal}</div><div class="label">Unidades</div></div>
-            `;
-        }
-
-        function atualizarGraficos(porTipo, porDepartamento) {
-            if (chartTipo) chartTipo.destroy();
-            const ctxTipo = document.getElementById('chartTipo').getContext('2d');
-            chartTipo = new Chart(ctxTipo, {
-                type: 'bar',
-                data: { labels: Object.keys(porTipo), datasets: [{ label: 'Quantidade', data: Object.values(porTipo), backgroundColor: ['#0066CC', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4'], borderWidth: 0 }] },
-                options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
-            });
-            if (chartDepartamento) chartDepartamento.destroy();
-            const ctxDepto = document.getElementById('chartDepartamento').getContext('2d');
-            chartDepartamento = new Chart(ctxDepto, {
-                type: 'doughnut',
-                data: { labels: Object.keys(porDepartamento), datasets: [{ data: Object.values(porDepartamento), backgroundColor: ['#0066CC', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4', '#EC4899'], borderWidth: 2, borderColor: '#FFFFFF' }] },
-                options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
-            });
-        }
-
-        function atualizarTabelaDetalhada(detalhado) {
-            const tbody = document.getElementById('bodyTabelaDetalhada');
-            if (Object.keys(detalhado).length === 0) { tbody.innerHTML = '<tr><td colspan="3" style="text-align: center;">Nenhum dado encontrado</td></tr>'; return; }
-            tbody.innerHTML = '';
-            Object.entries(detalhado).sort((a, b) => a[0].localeCompare(b[0])).forEach(([chave, qtd]) => {
-                const [depto, tipo] = chave.split('|');
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td><strong>${depto}</strong></td><td>${tipo}</td><td><strong style="color: #0066CC;">${qtd}</strong></td>`;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function imprimirRelatorioDashboard() {
-            const tbody = document.getElementById('bodyTabelaDetalhada');
-            const rows = tbody.querySelectorAll('tr');
+        // Carregar dados do Google Sheets usando JSONP
+        function carregarDados() {
+            const script = document.createElement('script');
+            const callbackName = 'callback_' + Date.now();
             
-            if (rows.length === 0 || (rows.length === 1 && rows[0].cells[0].textContent.includes('Nenhum'))) {
-                alert('Não há dados para imprimir! Clique em "Atualizar" primeiro.');
+            window[callbackName] = function(data) {
+                try {
+                    if (data.success) {
+                        equipamentos = data.equipamentos || [];
+                        manutencoes = data.manutencoes || [];
+                        atualizarInterface();
+                        console.log('Dados carregados:', equipamentos.length, 'equipamentos', manutencoes.length, 'manutenções');
+                    } else {
+                        mostrarAlerta('Erro ao carregar dados: ' + (data.error || 'Erro desconhecido'), 'error');
+                    }
+                } catch (error) {
+                    mostrarAlerta('Erro ao processar dados: ' + error.message, 'error');
+                }
+                document.head.removeChild(script);
+                delete window[callbackName];
+            };
+            
+            script.src = APPS_SCRIPT_URL + '?callback=' + callbackName + '&_=' + Date.now();
+            script.onerror = function() {
+                mostrarAlerta('Erro ao conectar com o Google Sheets.', 'error');
+                delete window[callbackName];
+            };
+            
+            document.head.appendChild(script);
+        }
+
+        // Salvar equipamento usando formulário oculto
+        function salvarEquipamento(event) {
+            event.preventDefault();
+            
+            const id = document.getElementById('equipamentoId').value;
+            const equipamento = {
+                action: id ? 'updateEquipamento' : 'addEquipamento',
+                id: id,
+                nome: document.getElementById('equipamentoNome').value,
+                patrimonio: document.getElementById('equipamentoPatrimonio').value,
+                marca: document.getElementById('equipamentoMarca').value,
+                modelo: document.getElementById('equipamentoModelo').value,
+                btu: document.getElementById('equipamentoBtu').value,
+                dataInstalacao: document.getElementById('equipamentoDataInstalacao').value,
+                frequencia: document.getElementById('equipamentoFrequencia').value,
+                localizacao: document.getElementById('equipamentoLocalizacao').value,
+                notas: document.getElementById('equipamentoNotas').value
+            };
+
+            // Criar iframe oculto para enviar POST
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.name = 'postFrame';
+            document.body.appendChild(iframe);
+
+            // Criar formulário
+            const form = document.createElement('form');
+            form.target = 'postFrame';
+            form.method = 'POST';
+            form.action = APPS_SCRIPT_URL;
+
+            // Adicionar campo com JSON
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'data';
+            input.value = JSON.stringify(equipamento);
+            form.appendChild(input);
+
+            document.body.appendChild(form);
+            form.submit();
+
+            // Limpar após envio
+            setTimeout(() => {
+                document.body.removeChild(form);
+                document.body.removeChild(iframe);
+            }, 1000);
+
+            mostrarAlerta('Equipamento salvo! Recarregando em 3 segundos...', 'success');
+            fecharModal('modalEquipamento');
+            
+            // Recarregar após 3 segundos
+            setTimeout(() => carregarDados(), 3000);
+        }
+
+        // Salvar manutenção
+        function salvarManutencao(event) {
+            event.preventDefault();
+            
+            const id = document.getElementById('manutencaoId').value;
+            const manutencao = {
+                action: id ? 'updateManutencao' : 'addManutencao',
+                id: id,
+                equipamentoId: document.getElementById('manutencaoEquipamento').value,
+                data: document.getElementById('manutencaoData').value,
+                tipo: document.getElementById('manutencaoTipo').value,
+                tecnico: document.getElementById('manutencaoTecnico').value,
+                descricao: document.getElementById('manutencaoDescricao').value,
+                proximaData: document.getElementById('manutencaoProximaData').value,
+                status: 'concluida'
+            };
+
+            // Criar iframe oculto
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.name = 'postFrame';
+            document.body.appendChild(iframe);
+
+            // Criar formulário
+            const form = document.createElement('form');
+            form.target = 'postFrame';
+            form.method = 'POST';
+            form.action = APPS_SCRIPT_URL;
+
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'data';
+            input.value = JSON.stringify(manutencao);
+            form.appendChild(input);
+
+            document.body.appendChild(form);
+            form.submit();
+
+            setTimeout(() => {
+                document.body.removeChild(form);
+                document.body.removeChild(iframe);
+            }, 1000);
+
+            mostrarAlerta('Manutenção registrada! Recarregando em 3 segundos...', 'success');
+            fecharModal('modalManutencao');
+            setTimeout(() => carregarDados(), 3000);
+        }
+
+        // Excluir equipamento
+        function excluirEquipamento(id) {
+            if (!confirm('Tem certeza que deseja excluir este equipamento?')) return;
+
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.name = 'postFrame';
+            document.body.appendChild(iframe);
+
+            const form = document.createElement('form');
+            form.target = 'postFrame';
+            form.method = 'POST';
+            form.action = APPS_SCRIPT_URL;
+
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'data';
+            input.value = JSON.stringify({ action: 'deleteEquipamento', id: id });
+            form.appendChild(input);
+
+            document.body.appendChild(form);
+            form.submit();
+
+            setTimeout(() => {
+                document.body.removeChild(form);
+                document.body.removeChild(iframe);
+            }, 1000);
+
+            mostrarAlerta('Equipamento excluído! Recarregando em 3 segundos...', 'success');
+            setTimeout(() => carregarDados(), 3000);
+        }
+
+        // Excluir manutenção
+        function excluirManutencao(id) {
+            if (!confirm('Tem certeza que deseja excluir esta manutenção?')) return;
+
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.name = 'postFrame';
+            document.body.appendChild(iframe);
+
+            const form = document.createElement('form');
+            form.target = 'postFrame';
+            form.method = 'POST';
+            form.action = APPS_SCRIPT_URL;
+
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'data';
+            input.value = JSON.stringify({ action: 'deleteManutencao', id: id });
+            form.appendChild(input);
+
+            document.body.appendChild(form);
+            form.submit();
+
+            setTimeout(() => {
+                document.body.removeChild(form);
+                document.body.removeChild(iframe);
+            }, 1000);
+
+            mostrarAlerta('Manutenção excluída! Recarregando em 3 segundos...', 'success');
+            setTimeout(() => carregarDados(), 3000);
+        }
+
+        // Calcular status do equipamento
+        function calcularStatus(equipamento) {
+            const ultimaManutencao = manutencoes
+                .filter(m => m.equipamentoId == equipamento.id && m.status === 'concluida')
+                .sort((a, b) => new Date(b.data) - new Date(a.data))[0];
+
+            if (!ultimaManutencao) return 'vermelho';
+
+            const dataUltima = new Date(ultimaManutencao.data);
+            const hoje = new Date();
+            const diasPassados = Math.floor((hoje - dataUltima) / (1000 * 60 * 60 * 24));
+
+            const frequencias = {
+                'semanal': 7,
+                'mensal': 30,
+                'semestral': 180,
+                'anual': 365
+            };
+
+            const diasLimite = frequencias[equipamento.frequencia] || 30;
+            const diasRestantes = diasLimite - diasPassados;
+
+            if (diasRestantes < 0) return 'vermelho';
+            if (diasRestantes <= 7) return 'amarelo';
+            return 'verde';
+        }
+
+        // Atualizar interface
+        function atualizarInterface() {
+            atualizarDashboard();
+            atualizarTabelaEquipamentos();
+            atualizarTabelaManutencoes();
+            atualizarSelectEquipamentos();
+        }
+
+        // Atualizar dashboard
+        function atualizarDashboard() {
+            const filtro = document.getElementById('filtroFrequencia').value;
+            const equipamentosFiltrados = filtro ? equipamentos.filter(e => e.frequencia === filtro) : equipamentos;
+
+            // Atualizar cards de estatísticas
+            document.getElementById('totalEquipamentos').textContent = equipamentosFiltrados.length;
+            document.getElementById('manutencoesConcluidas').textContent = manutencoes.filter(m => m.status === 'concluida').length;
+            document.getElementById('manutencoesPendentes').textContent = manutencoes.filter(m => m.status === 'pendente').length;
+
+            // Calcular status
+            const emDia = equipamentosFiltrados.filter(e => calcularStatus(e) === 'verde');
+            const atencao = equipamentosFiltrados.filter(e => calcularStatus(e) === 'amarelo');
+            const atrasados = equipamentosFiltrados.filter(e => calcularStatus(e) === 'vermelho');
+
+            const totalEquip = equipamentosFiltrados.length || 1;
+            const emDiaCount = emDia.length;
+            const atencaoCount = atencao.length;
+            const atrasadosCount = atrasados.length;
+
+            document.getElementById('equipamentosAtrasados').textContent = atrasadosCount;
+
+            // Atualizar barras horizontais
+            const emDiaPercent = (emDiaCount / totalEquip) * 100;
+            const atencaoPercent = (atencaoCount / totalEquip) * 100;
+            const atrasadosPercent = (atrasadosCount / totalEquip) * 100;
+
+            document.getElementById('statusEmDiaCount').textContent = emDiaCount;
+            document.getElementById('statusEmDiaBar').style.width = emDiaPercent + '%';
+            document.getElementById('statusEmDiaPercent').textContent = emDiaPercent.toFixed(1) + '%';
+
+            document.getElementById('statusAtencaoCount').textContent = atencaoCount;
+            document.getElementById('statusAtencaoBar').style.width = atencaoPercent + '%';
+            document.getElementById('statusAtencaoPercent').textContent = atencaoPercent.toFixed(1) + '%';
+
+            document.getElementById('statusAtrasadoCount').textContent = atrasadosCount;
+            document.getElementById('statusAtrasadoBar').style.width = atrasadosPercent + '%';
+            document.getElementById('statusAtrasadoPercent').textContent = atrasadosPercent.toFixed(1) + '%';
+
+            // Atualizar gráfico de pizza
+            atualizarGraficoPizza(emDiaCount, atencaoCount, atrasadosCount);
+
+            // Atualizar legendas
+            document.getElementById('pieChartTotal').textContent = totalEquip;
+            document.getElementById('legendEmDia').textContent = `${emDiaCount} equipamentos (${emDiaPercent.toFixed(1)}%)`;
+            document.getElementById('legendAtencao').textContent = `${atencaoCount} equipamentos (${atencaoPercent.toFixed(1)}%)`;
+            document.getElementById('legendAtrasado').textContent = `${atrasadosCount} equipamentos (${atrasadosPercent.toFixed(1)}%)`;
+
+            // Atualizar listas de equipamentos por status
+            atualizarListasStatus(emDia, atencao, atrasados);
+
+            // Próximas manutenções
+            const hoje = new Date();
+            const seteDias = new Date(hoje.getTime() + 7 * 24 * 60 * 60 * 1000);
+            
+            const proximas = manutencoes
+                .filter(m => {
+                    if (!m.proximaData) return false;
+                    const data = new Date(m.proximaData);
+                    return data >= hoje && data <= seteDias;
+                })
+                .sort((a, b) => new Date(a.proximaData) - new Date(b.proximaData));
+
+            const proximasHTML = proximas.length > 0 
+                ? proximas.map(m => {
+                    const equip = equipamentos.find(e => e.id == m.equipamentoId);
+                    const diasRestantes = Math.ceil((new Date(m.proximaData) - hoje) / (1000 * 60 * 60 * 24));
+                    return `
+                        <div class="manutencao-item">
+                            <strong>${equip ? equip.nome : 'Equipamento não encontrado'}</strong><br>
+                            📍 ${equip ? equip.localizacao : '-'}<br>
+                            📅 Data: ${new Date(m.proximaData).toLocaleDateString('pt-BR')}<br>
+                            ⏰ Faltam ${diasRestantes} dia(s)<br>
+                            🔧 Tipo: ${m.tipo}
+                        </div>
+                    `;
+                }).join('')
+                : '<p class="status-list-empty">Nenhuma manutenção programada para os próximos 7 dias.</p>';
+
+            document.getElementById('proximasManutencoes').innerHTML = proximasHTML;
+        }
+
+        // Atualizar listas de equipamentos por status
+        function atualizarListasStatus(emDia, atencao, atrasados) {
+            // Lista Em Dia
+            const listaEmDiaHTML = emDia.length > 0
+                ? emDia.map(e => `
+                    <div class="status-list-item">
+                        <div class="status-list-item-header">
+                            <div>
+                                <strong>${e.nome}</strong>
+                                <small>📍 ${e.localizacao || 'Sem localização'}</small><br>
+                                <small>🔧 Frequência: ${e.frequencia}</small>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')
+                : '<div class="status-list-empty">Nenhum equipamento em dia</div>';
+            document.getElementById('listaEmDia').innerHTML = listaEmDiaHTML;
+
+            // Lista Atenção
+            const listaAtencaoHTML = atencao.length > 0
+                ? atencao.map(e => {
+                    const ultimaManutencao = manutencoes
+                        .filter(m => m.equipamentoId == e.id && m.status === 'concluida')
+                        .sort((a, b) => new Date(b.data) - new Date(a.data))[0];
+                    const diasRestantes = ultimaManutencao ? calcularDiasRestantes(e, ultimaManutencao) : 0;
+                    return `
+                        <div class="status-list-item" onclick="abrirManutencaoRapida(${e.id})">
+                            <div class="status-list-item-header">
+                                <div>
+                                    <strong>${e.nome}</strong>
+                                    <small>📍 ${e.localizacao || 'Sem localização'}</small><br>
+                                    <small>⏰ ${diasRestantes} dia(s) para vencer</small>
+                                </div>
+                                <button class="btn btn-info btn-action" onclick="event.stopPropagation(); abrirManutencaoRapida(${e.id})">
+                                    🔧 Manutenção
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('')
+                : '<div class="status-list-empty">Nenhum equipamento em atenção</div>';
+            document.getElementById('listaAtencao').innerHTML = listaAtencaoHTML;
+
+            // Lista Atrasados
+            const listaAtrasadosHTML = atrasados.length > 0
+                ? atrasados.map(e => {
+                    const ultimaManutencao = manutencoes
+                        .filter(m => m.equipamentoId == e.id && m.status === 'concluida')
+                        .sort((a, b) => new Date(b.data) - new Date(a.data))[0];
+                    const diasAtrasados = ultimaManutencao ? Math.abs(calcularDiasRestantes(e, ultimaManutencao)) : 0;
+                    return `
+                        <div class="status-list-item" onclick="abrirManutencaoRapida(${e.id})">
+                            <div class="status-list-item-header">
+                                <div>
+                                    <strong>${e.nome}</strong>
+                                    <small>📍 ${e.localizacao || 'Sem localização'}</small><br>
+                                    <small>🚨 Atrasado há ${diasAtrasados} dia(s)</small>
+                                </div>
+                                <button class="btn btn-info btn-action" onclick="event.stopPropagation(); abrirManutencaoRapida(${e.id})">
+                                    🔧 Manutenção
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('')
+                : '<div class="status-list-empty">Nenhum equipamento atrasado</div>';
+            document.getElementById('listaAtrasado').innerHTML = listaAtrasadosHTML;
+        }
+
+        // Abrir manutenção rápida (preenchida com equipamento)
+        function abrirManutencaoRapida(equipamentoId) {
+            document.getElementById('formManutencao').reset();
+            document.getElementById('manutencaoId').value = '';
+            document.getElementById('tituloModalManutencao').textContent = 'Registrar Manutenção';
+            
+            // Preencher equipamento
+            document.getElementById('manutencaoEquipamento').value = equipamentoId;
+            
+            // Preencher data com hoje
+            const hoje = new Date().toISOString().split('T')[0];
+            document.getElementById('manutencaoData').value = hoje;
+            
+            // Focar no campo de técnico
+            setTimeout(() => {
+                document.getElementById('manutencaoTecnico').focus();
+            }, 100);
+            
+            document.getElementById('modalManutencao').classList.add('active');
+        }
+
+        // Calcular dias restantes
+        function calcularDiasRestantes(equipamento, ultimaManutencao) {
+            const dataUltima = new Date(ultimaManutencao.data);
+            const hoje = new Date();
+            const diasPassados = Math.floor((hoje - dataUltima) / (1000 * 60 * 60 * 24));
+
+            const frequencias = {
+                'semanal': 7,
+                'mensal': 30,
+                'semestral': 180,
+                'anual': 365
+            };
+
+            const diasLimite = frequencias[equipamento.frequencia] || 30;
+            return diasLimite - diasPassados;
+        }
+
+        // Atualizar gráfico de pizza
+        function atualizarGraficoPizza(emDia, atencao, atrasados) {
+            const canvas = document.getElementById('pieChart');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = 250;
+            canvas.height = 250;
+
+            const total = emDia + atencao + atrasados || 1;
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = 100;
+
+            // Limpar canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (total === 0 || (emDia === 0 && atencao === 0 && atrasados === 0)) {
+                // Desenhar círculo vazio
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+                ctx.fillStyle = '#e9ecef';
+                ctx.fill();
                 return;
             }
 
-            const periodo = document.getElementById('filtroPeriodo').value;
-            const tipo = document.getElementById('filtroTipo').value;
-            let tituloPeriodo = '';
+            let currentAngle = -Math.PI / 2;
+
+            // Em Dia (Verde)
+            if (emDia > 0) {
+                const sliceAngle = (emDia / total) * 2 * Math.PI;
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
+                ctx.closePath();
+                ctx.fillStyle = '#28a745';
+                ctx.fill();
+                currentAngle += sliceAngle;
+            }
+
+            // Atenção (Amarelo)
+            if (atencao > 0) {
+                const sliceAngle = (atencao / total) * 2 * Math.PI;
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
+                ctx.closePath();
+                ctx.fillStyle = '#ffc107';
+                ctx.fill();
+                currentAngle += sliceAngle;
+            }
+
+            // Atrasados (Vermelho)
+            if (atrasados > 0) {
+                const sliceAngle = (atrasados / total) * 2 * Math.PI;
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
+                ctx.closePath();
+                ctx.fillStyle = '#dc3545';
+                ctx.fill();
+            }
+
+            // Círculo branco no centro (efeito donut)
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius * 0.6, 0, 2 * Math.PI);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+        }
+
+        // Atualizar tabela de equipamentos
+        function atualizarTabelaEquipamentos() {
+            const tbody = document.getElementById('tabelaEquipamentos');
             
-            if (periodo === 'hoje') tituloPeriodo = 'HOJE - ' + formatarData(dadosAtuaisDashboard.dataInicio);
-            else if (periodo === 'mes') tituloPeriodo = 'MÊS ATUAL';
-            else if (periodo === 'ano') tituloPeriodo = 'ANO ATUAL';
-            else tituloPeriodo = `${formatarData(dadosAtuaisDashboard.dataInicio)} a ${formatarData(dadosAtuaisDashboard.dataFim)}`;
+            if (equipamentos.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center;">Nenhum equipamento cadastrado</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = equipamentos.map(e => {
+                const status = calcularStatus(e);
+                const statusClass = `status-${status}`;
+                const statusTexto = status === 'verde' ? 'Em Dia' : status === 'amarelo' ? 'Atenção' : 'Atrasado';
+                
+                return `
+                    <tr>
+                        <td>${e.id}</td>
+                        <td>${e.nome}</td>
+                        <td>${e.patrimonio}</td>
+                        <td>${e.marca || '-'}</td>
+                        <td>${e.modelo || '-'}</td>
+                        <td>${e.btu || '-'}</td>
+                        <td>${e.frequencia}</td>
+                        <td><span class="status-badge ${statusClass}">${statusTexto}</span></td>
+                        <td>
+                            <button class="btn btn-warning" onclick='editarEquipamento(${JSON.stringify(e).replace(/'/g, "&apos;")})'>✏️</button>
+                            <button class="btn btn-danger" onclick="excluirEquipamento(${e.id})">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
 
-            const tipoTexto = tipo === 'ambos' ? 'ENVIOS E RECEBIMENTOS' : tipo === 'envios' ? 'APENAS ENVIOS' : 'APENAS RECEBIMENTOS';
+        // Atualizar tabela de manutenções
+        function atualizarTabelaManutencoes() {
+            const tbody = document.getElementById('tabelaManutencoes');
+            
+            if (manutencoes.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center;">Nenhuma manutenção registrada</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = manutencoes.map(m => {
+                const equip = equipamentos.find(e => e.id == m.equipamentoId);
+                return `
+                    <tr>
+                        <td>${m.id}</td>
+                        <td>${equip ? equip.nome : 'N/A'}</td>
+                        <td>${m.data ? new Date(m.data).toLocaleDateString('pt-BR') : '-'}</td>
+                        <td>${m.tipo}</td>
+                        <td>${m.tecnico}</td>
+                        <td>${m.descricao}</td>
+                        <td>${m.proximaData ? new Date(m.proximaData).toLocaleDateString('pt-BR') : '-'}</td>
+                        <td><span class="status-badge ${m.status === 'concluida' ? 'status-verde' : 'status-amarelo'}">${m.status}</span></td>
+                        <td>
+                            <button class="btn btn-danger" onclick="excluirManutencao(${m.id})">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
 
-            // Calcular totais dos cards
-            const cards = document.querySelectorAll('.stat-card .number');
-            const totalGeral = cards[0].textContent;
-            const totalEnvios = cards[1].textContent;
-            const totalRecebimentos = cards[2].textContent;
-            const quantidadeTotal = cards[3].textContent;
+        // Atualizar selects de equipamentos
+        function atualizarSelectEquipamentos() {
+            const options = equipamentos.map(e => `<option value="${e.id}">${e.nome} - ${e.patrimonio}</option>`).join('');
+            document.getElementById('manutencaoEquipamento').innerHTML = '<option value="">Selecione...</option>' + options;
+            document.getElementById('filtroEquipamento').innerHTML = '<option value="">Todos</option>' + options;
+        }
 
-            let html = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Relatório Dashboard</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; padding: 20px; }
-                        h1 { text-align: center; color: #0066CC; margin-bottom: 10px; }
-                        .info { margin: 20px 0; background: #E6F2FF; padding: 15px; border-radius: 8px; }
-                        .info p { margin: 5px 0; }
-                        .resumo { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 20px 0; }
-                        .resumo-card { background: #0066CC; color: white; padding: 15px; border-radius: 8px; text-align: center; }
-                        .resumo-card h3 { font-size: 2em; margin: 10px 0; }
-                        .resumo-card p { font-size: 0.9em; opacity: 0.9; }
-                        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-                        th, td { border: 1px solid #0066CC; padding: 12px 8px; text-align: left; font-size: 11px; }
-                        th { background: #0066CC; color: white; font-weight: bold; }
-                        tr:nth-child(even) { background: #F8FAFC; }
-                    </style>
-                </head>
-                <body>
-                    <h1>📊 RELATÓRIO DE CORRESPONDÊNCIAS</h1>
-                    <div class="info">
-                        <p><strong>Bensaúde Logística</strong></p>
-                        <p><strong>Período:</strong> ${tituloPeriodo}</p>
-                        <p><strong>Filtro:</strong> ${tipoTexto}</p>
-                        <p><strong>Data de impressão:</strong> ${new Date().toLocaleString('pt-BR')}</p>
-                    </div>
-                    
-                    <div class="resumo">
-                        <div class="resumo-card">
-                            <p>TOTAL GERAL</p>
-                            <h3>${totalGeral}</h3>
-                            <p>Correspondências</p>
-                        </div>
-                        <div class="resumo-card">
-                            <p>ENVIOS</p>
-                            <h3>${totalEnvios}</h3>
-                            <p>Correspondências</p>
-                        </div>
-                        <div class="resumo-card">
-                            <p>RECEBIMENTOS</p>
-                            <h3>${totalRecebimentos}</h3>
-                            <p>Correspondências</p>
-                        </div>
-                        <div class="resumo-card">
-                            <p>QUANTIDADE</p>
-                            <h3>${quantidadeTotal}</h3>
-                            <p>Unidades</p>
-                        </div>
-                    </div>
-
-                    <h2 style="color: #0066CC; margin-top: 30px;">Detalhamento por Setor e Tipo</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Departamento</th>
-                                <th>Tipo de Correspondência</th>
-                                <th>Quantidade</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
-
-            rows.forEach(row => {
-                if (row.cells.length > 1) {
-                    html += '<tr>';
-                    for (let i = 0; i < row.cells.length; i++) {
-                        html += `<td>${row.cells[i].textContent}</td>`;
-                    }
-                    html += '</tr>';
-                }
+        // Filtrar equipamentos
+        function filtrarEquipamentos() {
+            const busca = document.getElementById('searchEquipamentos').value.toLowerCase();
+            const linhas = document.querySelectorAll('#tabelaEquipamentos tr');
+            
+            linhas.forEach(linha => {
+                const texto = linha.textContent.toLowerCase();
+                linha.style.display = texto.includes(busca) ? '' : 'none';
             });
-
-            html += `
-                        </tbody>
-                    </table>
-                </body>
-                </html>
-            `;
-
-            const janela = window.open('', '_blank');
-            janela.document.write(html);
-            janela.document.close();
-            janela.print();
         }
 
-        function imprimirProtocoloEnvio() {
-            const tbody = document.getElementById('bodyTabelaEnvios');
-            const dataFiltro = document.getElementById('filtroDataEnvio').value;
-            const dataProtocolo = dataFiltro || new Date().toISOString().split('T')[0];
-            imprimirProtocolo('ENVIO', tbody, dataProtocolo, false);
+        // Filtrar manutenções
+        function filtrarManutencoes() {
+            const filtro = document.getElementById('filtroEquipamento').value;
+            const tbody = document.getElementById('tabelaManutencoes');
+            
+            if (!filtro) {
+                atualizarTabelaManutencoes();
+                return;
+            }
+            
+            const manutencoesFiltradas = manutencoes.filter(m => m.equipamentoId == filtro);
+            
+            if (manutencoesFiltradas.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center;">Nenhuma manutenção encontrada para este equipamento</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = manutencoesFiltradas.map(m => {
+                const equip = equipamentos.find(e => e.id == m.equipamentoId);
+                return `
+                    <tr>
+                        <td>${m.id}</td>
+                        <td>${equip ? equip.nome : 'N/A'}</td>
+                        <td>${m.data ? new Date(m.data).toLocaleDateString('pt-BR') : '-'}</td>
+                        <td>${m.tipo}</td>
+                        <td>${m.tecnico}</td>
+                        <td>${m.descricao}</td>
+                        <td>${m.proximaData ? new Date(m.proximaData).toLocaleDateString('pt-BR') : '-'}</td>
+                        <td><span class="status-badge ${m.status === 'concluida' ? 'status-verde' : 'status-amarelo'}">${m.status}</span></td>
+                        <td>
+                            <button class="btn btn-danger" onclick="excluirManutencao(${m.id})">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
         }
 
-        function imprimirProtocoloRecebimento() {
-            const tbody = document.getElementById('bodyTabelaRecebimentos');
-            const dataFiltro = document.getElementById('filtroDataRecebimento').value;
-            const dataProtocolo = dataFiltro || new Date().toISOString().split('T')[0];
-            imprimirProtocolo('RECEBIMENTO', tbody, dataProtocolo, true);
+        // Abrir modal de equipamento
+        function abrirModalEquipamento() {
+            document.getElementById('formEquipamento').reset();
+            document.getElementById('equipamentoId').value = '';
+            document.getElementById('tituloModalEquipamento').textContent = 'Adicionar Equipamento';
+            document.getElementById('modalEquipamento').classList.add('active');
         }
 
-        function imprimirProtocolo(tipo, tbody, data, temAssinatura) {
-            const rows = tbody.querySelectorAll('tr');
-            if (rows.length === 0 || (rows.length === 1 && rows[0].cells.length === 1)) { alert('Não há registros!'); return; }
-            let html = `<!DOCTYPE html><html><head><title>Protocolo de ${tipo}</title><style>body{font-family:Arial,sans-serif;padding:20px}h1{text-align:center;color:#0066CC;margin-bottom:10px}.info{margin:20px 0}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{border:1px solid #0066CC;padding:12px 8px;text-align:left;font-size:11px}th{background:#0066CC;color:white;font-weight:bold}.assinatura-col{background:#FFF9E6;width:180px;text-align:center;vertical-align:middle}.linha-assinatura{border-top:1px solid #333;margin-top:50px;width:90%;margin-left:auto;margin-right:auto}.label-recebedor{font-size:10px;color:#0066CC;font-weight:bold;margin-bottom:5px}</style></head><body><h1>PROTOCOLO DE ${tipo} DE CORRESPONDÊNCIAS</h1><div class="info"><p><strong>Bensaúde Logística</strong></p><p><strong>Data:</strong> ${formatarData(data)}</p><p><strong>Hora de impressão:</strong> ${new Date().toLocaleString('pt-BR')}</p></div><table><thead><tr><th>Data</th><th>Departamento</th><th>Tipo</th><th>Descrição</th><th style="width:60px;">Qtd</th>`;
-            if (temAssinatura) html += '<th class="assinatura-col">Recebedor / Assinatura</th>';
-            html += '</tr></thead><tbody>';
-            rows.forEach(row => {
-                if (row.cells.length > 1) {
-                    html += '<tr>';
-                    for (let i = 0; i < row.cells.length; i++) html += `<td>${row.cells[i].textContent}</td>`;
-                    if (temAssinatura) html += '<td class="assinatura-col"><div class="label-recebedor">RECEBEDOR:</div><div class="linha-assinatura"></div></td>';
-                    html += '</tr>';
-                }
-            });
-            html += '</tbody></table></body></html>';
-            const janela = window.open('', '_blank');
-            janela.document.write(html);
-            janela.document.close();
-            janela.print();
+        // Editar equipamento
+        function editarEquipamento(equipamento) {
+            document.getElementById('equipamentoId').value = equipamento.id;
+            document.getElementById('equipamentoNome').value = equipamento.nome;
+            document.getElementById('equipamentoPatrimonio').value = equipamento.patrimonio;
+            document.getElementById('equipamentoMarca').value = equipamento.marca || '';
+            document.getElementById('equipamentoModelo').value = equipamento.modelo || '';
+            document.getElementById('equipamentoBtu').value = equipamento.btu || '';
+            document.getElementById('equipamentoDataInstalacao').value = equipamento.dataInstalacao;
+            document.getElementById('equipamentoFrequencia').value = equipamento.frequencia;
+            document.getElementById('equipamentoLocalizacao').value = equipamento.localizacao || '';
+            document.getElementById('equipamentoNotas').value = equipamento.notas || '';
+            document.getElementById('tituloModalEquipamento').textContent = 'Editar Equipamento';
+            document.getElementById('modalEquipamento').classList.add('active');
         }
 
-        window.onload = function() {
-            setDataHoje('dataEnvio');
-            setDataHoje('dataRecebimento');
-            setDataHoje('filtroDataEnvio');
-            setDataHoje('filtroDataRecebimento');
-        };
+        // Abrir modal de manutenção
+        function abrirModalManutencao() {
+            if (equipamentos.length === 0) {
+                alert('Cadastre um equipamento primeiro!');
+                return;
+            }
+            
+            document.getElementById('formManutencao').reset();
+            document.getElementById('manutencaoId').value = '';
+            document.getElementById('tituloModalManutencao').textContent = 'Registrar Manutenção';
+            
+            const hoje = new Date().toISOString().split('T')[0];
+            document.getElementById('manutencaoData').value = hoje;
+            
+            document.getElementById('modalManutencao').classList.add('active');
+        }
+
+        // Fechar modal
+        function fecharModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Mostrar página
+        function mostrarPagina(pagina) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(pagina).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Mostrar alerta
+        function mostrarAlerta(mensagem, tipo) {
+            const alerta = document.createElement('div');
+            alerta.className = `alert alert-${tipo}`;
+            alerta.textContent = mensagem;
+            
+            const content = document.querySelector('.content');
+            const firstChild = content.firstChild;
+            content.insertBefore(alerta, firstChild);
+            
+            setTimeout(() => alerta.remove(), 5000);
+        }
+
+        // Fechar modal ao clicar fora
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+            }
+        }
     </script>
 </body>
 </html>
