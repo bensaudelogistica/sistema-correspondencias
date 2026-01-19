@@ -84,7 +84,6 @@
             margin-bottom: 25px;
         }
 
-        /* ÍCONES DISCRETOS NO CANTO SUPERIOR DIREITO */
         .header-icons {
             position: absolute;
             top: 20px;
@@ -115,7 +114,6 @@
             transform: scale(1.1);
         }
 
-        /* BARRA DE NAVEGAÇÃO DENTRO DO HEADER */
         .navbar-custom {
             background: rgba(255, 255, 255, 0.15);
             padding: 15px 30px;
@@ -439,7 +437,6 @@
             background: var(--azul-claro);
         }
 
-        /* BOTÃO DE EXCLUSÃO */
         .btn-delete {
             background: #EF4444;
             color: white;
@@ -589,7 +586,6 @@
             margin-top: 30px;
         }
 
-        /* ESTILOS DA TELA DE CONFIGURAÇÕES */
         .config-tabs {
             display: flex;
             gap: 10px;
@@ -717,7 +713,6 @@
 <body>
     <div class="container-custom">
         <div class="header">
-            <!-- ÍCONES DISCRETOS NO CANTO SUPERIOR DIREITO -->
             <div class="header-icons">
                 <button class="icon-btn" onclick="irParaTela('telaDashboard')" title="Dashboard">
                     <i class="fas fa-chart-line"></i>
@@ -730,7 +725,6 @@
             <h1><i class="fas fa-box"></i> Sistema de Correspondências</h1>
             <p>Bensaúde Logística - Controle Inteligente</p>
             
-            <!-- BARRA DE NAVEGAÇÃO DENTRO DO HEADER -->
             <nav class="navbar-custom">
                 <button class="nav-btn" id="navHome" onclick="irParaTela('telaInicial')">
                     <i class="fas fa-home"></i> HOME
@@ -744,7 +738,6 @@
             </nav>
         </div>
 
-        <!-- TELA INICIAL (SEM DASHBOARD) -->
         <div id="telaInicial" class="screen active">
             <div class="menu-inicial">
                 <div class="menu-card" onclick="irParaTela('telaEnvio')">
@@ -760,7 +753,6 @@
             </div>
         </div>
 
-        <!-- TELA DE CONFIGURAÇÕES -->
         <div id="telaConfiguracoes" class="screen">
             <h2><i class="fas fa-cog"></i> Configurações do Sistema</h2>
 
@@ -768,7 +760,6 @@
                 ✅ Item salvo com sucesso!
             </div>
 
-            <!-- ABAS DE CONFIGURAÇÃO -->
             <div class="config-tabs">
                 <button class="config-tab active" onclick="trocarAbaConfig('departamentos', event)">
                     <i class="fas fa-building"></i> Departamentos
@@ -784,7 +775,6 @@
                 </button>
             </div>
 
-            <!-- CONTEÚDO: DEPARTAMENTOS -->
             <div id="configDepartamentos" class="config-content active">
                 <h3>📋 Gerenciar Departamentos</h3>
                 <div class="row">
@@ -805,7 +795,6 @@
                 <div class="lista-itens" id="listaDepartamentos"></div>
             </div>
 
-            <!-- CONTEÚDO: TIPOS DE ENVIO -->
             <div id="configTiposEnvio" class="config-content">
                 <h3>📤 Gerenciar Tipos de Correspondência (Envio)</h3>
                 <div class="row">
@@ -826,7 +815,6 @@
                 <div class="lista-itens" id="listaTiposEnvio"></div>
             </div>
 
-            <!-- CONTEÚDO: TIPOS DE RECEBIMENTO -->
             <div id="configTiposRecebimento" class="config-content">
                 <h3>📥 Gerenciar Tipos de Correspondência (Recebimento)</h3>
                 <div class="row">
@@ -847,7 +835,6 @@
                 <div class="lista-itens" id="listaTiposRecebimento"></div>
             </div>
 
-            <!-- CONTEÚDO: USUÁRIOS (EM BREVE) -->
             <div id="configUsuarios" class="config-content">
                 <h3>👥 Gerenciar Usuários</h3>
                 <div style="padding: 40px; text-align: center; background: var(--cinza-tech); border-radius: 12px;">
@@ -860,7 +847,6 @@
             </div>
         </div>
 
-        <!-- TELA DASHBOARD -->
         <div id="telaDashboard" class="screen">
             <h2><i class="fas fa-chart-line"></i> Dashboard - Estatísticas de Correspondências</h2>
             
@@ -972,7 +958,6 @@
             </div>
         </div>
 
-        <!-- TELA DE ENVIO -->
         <div id="telaEnvio" class="screen">
             <h2><i class="fas fa-paper-plane"></i> Envio de Correspondências</h2>
             <div class="alert-custom alert-success" id="alertSuccessEnvio">✅ Correspondência registrada com sucesso!</div>
@@ -1058,7 +1043,6 @@
             </div>
         </div>
 
-        <!-- TELA DE RECEBIMENTO -->
         <div id="telaRecebimento" class="screen">
             <h2><i class="fas fa-inbox"></i> Recebimento de Correspondências</h2>
             <div class="alert-custom alert-success" id="alertSuccessRecebimento">✅ Correspondência registrada com sucesso!</div>
@@ -1151,12 +1135,11 @@
         let chartDepartamento = null;
         let dadosAtuaisDashboard = { envios: [], recebimentos: [], periodo: '', tipo: '' };
 
-        // DADOS PADRÃO
         const departamentosPadrao = ['ATENDIMENTO', 'CADASTRO', 'COMERCIAL', 'LOGISTICA', 'CONTAS MÉDICAS', 'CONTROLADORIA', 'QUALIDADE', 'GESTÃO DE REDE', 'JURÍDICO', 'R.H/D.P', 'AUDITORIA', 'SECRETARIA', 'MANUTENÇÃO DE CONTRATOS', 'OUTROS'];
         const tiposEnvioPadrao = ['PAC', 'REGISTRADA', 'REGISTRADA COM AR', 'SEDEX', 'SEDEX REVERSO', 'SIMPLES', 'OUTROS'];
         const tiposRecebimentoPadrao = ['BOLETOS', 'FATURAMENTO', 'NOTIFICAÇÃO EXTRA-JUDICIAL', 'NOTIFICAÇÃO JUDICIAL', 'REEMBOLSO', 'TELEGRAMA', 'OUTROS'];
 
-        // FUNÇÃO DE EXCLUIR REGISTRO
+        // FUNÇÃO DE EXCLUIR REGISTRO - CORRIGIDA
         function excluirRegistro(botao, tabelaId) {
             if (!confirm('Tem certeza que deseja excluir este registro?')) {
                 return;
@@ -1164,73 +1147,71 @@
 
             const linha = botao.closest('tr');
             
-            // Coletar dados da linha para identificação
-            const cells = linha.cells;
-            const data = cells[0].textContent;
-            const departamento = cells[1].textContent;
-            const tipo = cells[2].textContent;
-            const descricao = cells[3].textContent;
-            const quantidade = cells[4].textContent;
+            // Pegar dados dos atributos data-*
+            const data = linha.getAttribute('data-date');
+            const departamento = linha.getAttribute('data-dept');
+            const tipo = linha.getAttribute('data-type');
+            const descricao = linha.getAttribute('data-desc');
+            const quantidade = linha.getAttribute('data-qty');
             
-            // Determinar se é Envio ou Recebimento
+            console.log('=== DADOS PARA EXCLUSÃO ===');
+            console.log('Data:', data);
+            console.log('Departamento:', departamento);
+            console.log('Tipo:', tipo);
+            console.log('Descrição:', descricao);
+            console.log('Quantidade:', quantidade);
+            
             const tipoOperacao = tabelaId === 'bodyTabelaEnvios' ? 'Envios' : 'Recebimentos';
             
-            // Converter data para formato YYYY-MM-DD
-            const partesData = data.split('/');
-            const dataFormatada = partesData.length === 3 ? partesData[2] + '-' + partesData[1] + '-' + partesData[0] : data;
-            
-            // Dados para enviar ao Apps Script
             const dadosExclusao = {
                 acao: 'excluirRegistro',
                 tipo: tipoOperacao,
-                data: dataFormatada,
+                data: data,
                 departamento: departamento,
                 tipoCorrespondencia: tipo,
                 descricao: descricao,
                 quantidade: quantidade
             };
             
-            console.log('Excluindo registro:', dadosExclusao);
+            console.log('Payload enviado:', JSON.stringify(dadosExclusao, null, 2));
             
-            // Enviar requisição para o Google Apps Script
             fetch(scriptURL, {
                 method: 'POST',
                 body: JSON.stringify(dadosExclusao)
             })
-            .then(function(response) { return response.json(); })
+            .then(function(response) { 
+                console.log('Status da resposta:', response.status);
+                return response.json(); 
+            })
             .then(function(resultado) {
-                console.log('Resposta:', resultado);
+                console.log('Resposta do servidor:', resultado);
                 if (resultado.status === 'success') {
-                    // Remover linha da tabela visualmente
                     linha.remove();
                     
-                    // Verificar se a tabela ficou vazia
                     const tbody = document.getElementById(tabelaId);
                     if (tbody.rows.length === 0) {
                         tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
                     }
                     
-                    alert('Registro excluído com sucesso!');
+                    alert('✅ ' + resultado.message);
                 } else {
-                    alert('Erro ao excluir registro: ' + (resultado.message || 'Erro desconhecido'));
+                    console.error('Erro retornado:', resultado);
+                    alert('❌ ' + resultado.message);
                 }
             })
             .catch(function(error) {
-                console.error('Erro:', error);
-                alert('Erro ao excluir o registro. Tente novamente.');
+                console.error('Erro na requisição:', error);
+                alert('❌ Erro ao excluir. Verifique o console (F12) para mais detalhes.');
             });
         }
 
-        // FUNÇÃO PRINCIPAL DE NAVEGAÇÃO
         function irParaTela(telaId) {
             console.log('Navegando para:', telaId);
             
-            // Remover active de todos os botões da navbar
             document.querySelectorAll('.nav-btn').forEach(function(btn) {
                 btn.classList.remove('active');
             });
             
-            // Adicionar active no botão correspondente
             if (telaId === 'telaInicial') {
                 document.getElementById('navHome').classList.add('active');
             } else if (telaId === 'telaEnvio') {
@@ -1239,18 +1220,15 @@
                 document.getElementById('navRecebimento').classList.add('active');
             }
             
-            // Esconder todas as telas
             document.querySelectorAll('.screen').forEach(function(screen) {
                 screen.classList.remove('active');
             });
             
-            // Mostrar a tela selecionada
             const telaDestino = document.getElementById(telaId);
             if (telaDestino) {
                 telaDestino.classList.add('active');
             }
             
-            // Ações específicas por tela
             if (telaId === 'telaEnvio') {
                 setDataHoje('dataEnvio');
                 setDataHoje('filtroDataEnvio');
@@ -1262,7 +1240,6 @@
             }
         }
 
-        // INICIALIZAR LOCALSTORAGE
         function inicializarDados() {
             if (!localStorage.getItem('departamentos')) {
                 localStorage.setItem('departamentos', JSON.stringify(departamentosPadrao));
@@ -1277,13 +1254,11 @@
             renderizarListas();
         }
 
-        // ATUALIZAR SELECTS
         function atualizarSelects() {
             const departamentos = JSON.parse(localStorage.getItem('departamentos')) || departamentosPadrao;
             const tiposEnvio = JSON.parse(localStorage.getItem('tiposEnvio')) || tiposEnvioPadrao;
             const tiposRecebimento = JSON.parse(localStorage.getItem('tiposRecebimento')) || tiposRecebimentoPadrao;
 
-            // Atualizar select de departamentos
             ['departamentoEnvio', 'departamentoRecebimento'].forEach(function(id) {
                 const select = document.getElementById(id);
                 const valorAtual = select.value;
@@ -1297,7 +1272,6 @@
                 if (valorAtual) select.value = valorAtual;
             });
 
-            // Atualizar select de tipos de envio
             const selectEnvio = document.getElementById('tipoEnvio');
             const valorEnvio = selectEnvio.value;
             selectEnvio.innerHTML = '<option value="">Selecione...</option>';
@@ -1309,7 +1283,6 @@
             });
             if (valorEnvio) selectEnvio.value = valorEnvio;
 
-            // Atualizar select de tipos de recebimento
             const selectReceb = document.getElementById('tipoRecebimento');
             const valorReceb = selectReceb.value;
             selectReceb.innerHTML = '<option value="">Selecione...</option>';
@@ -1322,13 +1295,11 @@
             if (valorReceb) selectReceb.value = valorReceb;
         }
 
-        // RENDERIZAR LISTAS DE CONFIGURAÇÕES
         function renderizarListas() {
             const departamentos = JSON.parse(localStorage.getItem('departamentos')) || [];
             const tiposEnvio = JSON.parse(localStorage.getItem('tiposEnvio')) || [];
             const tiposRecebimento = JSON.parse(localStorage.getItem('tiposRecebimento')) || [];
 
-            // Renderizar departamentos
             const listaDept = document.getElementById('listaDepartamentos');
             listaDept.innerHTML = '';
             departamentos.forEach(function(dept) {
@@ -1336,7 +1307,6 @@
                 listaDept.appendChild(badge);
             });
 
-            // Renderizar tipos de envio
             const listaEnvio = document.getElementById('listaTiposEnvio');
             listaEnvio.innerHTML = '';
             tiposEnvio.forEach(function(tipo) {
@@ -1344,7 +1314,6 @@
                 listaEnvio.appendChild(badge);
             });
 
-            // Renderizar tipos de recebimento
             const listaReceb = document.getElementById('listaTiposRecebimento');
             listaReceb.innerHTML = '';
             tiposRecebimento.forEach(function(tipo) {
@@ -1367,7 +1336,6 @@
             return badge;
         }
 
-        // ADICIONAR DEPARTAMENTO
         function adicionarDepartamento() {
             const input = document.getElementById('novoDepartamento');
             const valor = input.value.trim().toUpperCase();
@@ -1404,7 +1372,6 @@
             renderizarListas();
         }
 
-        // ADICIONAR TIPO DE ENVIO
         function adicionarTipoEnvio() {
             const input = document.getElementById('novoTipoEnvio');
             const valor = input.value.trim().toUpperCase();
@@ -1441,7 +1408,6 @@
             renderizarListas();
         }
 
-        // ADICIONAR TIPO DE RECEBIMENTO
         function adicionarTipoRecebimento() {
             const input = document.getElementById('novoTipoRecebimento');
             const valor = input.value.trim().toUpperCase();
@@ -1478,7 +1444,6 @@
             renderizarListas();
         }
 
-        // TROCAR ABA DE CONFIGURAÇÃO
         function trocarAbaConfig(aba, event) {
             document.querySelectorAll('.config-tab').forEach(function(tab) {
                 tab.classList.remove('active');
@@ -1580,6 +1545,7 @@
             await buscarDadosPorData('Recebimentos', d, 'bodyTabelaRecebimentos', 'loadingRecebimento', 'tituloTabelaRecebimento');
         }
 
+        // FUNÇÃO CORRIGIDA - buscarDadosPorData com atributos data-*
         async function buscarDadosPorData(tipo, data, tabelaId, loadingId, tituloId) {
             const loading = document.getElementById(loadingId);
             const tbody = document.getElementById(tabelaId);
@@ -1593,8 +1559,17 @@
                 if (res.status === 'success' && res.data && res.data.length > 0) {
                     tbody.innerHTML = '';
                     titulo.textContent = '📋 Correspondências de ' + formatarData(data) + ' (' + res.data.length + ' registro(s))';
+                    
                     res.data.forEach(function(row) {
                         const tr = document.createElement('tr');
+                        
+                        // CRÍTICO: Guardar os dados ORIGINAIS como atributos
+                        tr.setAttribute('data-date', row[0]);
+                        tr.setAttribute('data-dept', row[1]);
+                        tr.setAttribute('data-type', row[2]);
+                        tr.setAttribute('data-desc', row[3]);
+                        tr.setAttribute('data-qty', row[4]);
+                        
                         tr.innerHTML = 
                             '<td>' + formatarData(row[0]) + '</td>' +
                             '<td>' + row[1] + '</td>' +
@@ -1631,12 +1606,20 @@
             setDataHoje('filtroDataRecebimento');
         }
 
+        // FUNÇÃO CORRIGIDA - adicionarLinhaTabela com atributos data-*
         function adicionarLinhaTabela(tabelaId, dados, idRegistro) {
             const tbody = document.getElementById(tabelaId);
             if (tbody.rows.length === 1 && tbody.rows[0].cells.length === 1) tbody.innerHTML = '';
             
             const tr = document.createElement('tr');
-            tr.setAttribute('data-id', idRegistro || '');
+            
+            // CRÍTICO: Guardar os dados ORIGINAIS como atributos
+            tr.setAttribute('data-date', dados[0]);
+            tr.setAttribute('data-dept', dados[1]);
+            tr.setAttribute('data-type', dados[2]);
+            tr.setAttribute('data-desc', dados[3]);
+            tr.setAttribute('data-qty', dados[4]);
+            
             tr.innerHTML = 
                 '<td>' + formatarData(dados[0]) + '</td>' +
                 '<td>' + dados[1] + '</td>' +
