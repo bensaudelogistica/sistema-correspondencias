@@ -30,7 +30,54 @@
             background: linear-gradient(135deg, #E6F2FF 0%, #F8FAFC 100%);
             min-height: 100vh;
             padding: 20px;
+            padding-top: 90px;
             color: var(--texto-escuro);
+        }
+
+        /* BARRA DE NAVEGAÇÃO FIXA */
+        .navbar-custom {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, var(--azul-bensaude) 0%, var(--azul-escuro) 100%);
+            padding: 15px 30px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 102, 204, 0.3);
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--branco);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            background: var(--branco);
+            color: var(--azul-bensaude);
+            border-color: var(--branco);
+        }
+
+        .nav-btn i {
+            font-size: 1.2em;
         }
 
         .container-custom {
@@ -473,6 +520,19 @@
         }
 
         @media (max-width: 768px) {
+            .navbar-custom {
+                flex-wrap: wrap;
+                justify-content: center;
+                padding: 10px 15px;
+            }
+            
+            .nav-btn {
+                flex: 1 1 45%;
+                justify-content: center;
+                padding: 10px 15px;
+                font-size: 0.85em;
+            }
+
             .header h1 {
                 font-size: 1.8em;
             }
@@ -493,10 +553,30 @@
             .dashboard-grid {
                 grid-template-columns: 1fr;
             }
+
+            body {
+                padding-top: 120px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- BARRA DE NAVEGAÇÃO FIXA -->
+    <nav class="navbar-custom">
+        <button class="nav-btn" id="navHome" onclick="navegarPara('telaInicial')">
+            <i class="fas fa-home"></i> HOME
+        </button>
+        <button class="nav-btn" id="navDashboard" onclick="navegarPara('telaDashboard')">
+            <i class="fas fa-chart-line"></i> DASHBOARD
+        </button>
+        <button class="nav-btn" id="navEnvio" onclick="navegarPara('telaEnvio')">
+            <i class="fas fa-paper-plane"></i> ENVIO
+        </button>
+        <button class="nav-btn" id="navRecebimento" onclick="navegarPara('telaRecebimento')">
+            <i class="fas fa-inbox"></i> RECEBIMENTO
+        </button>
+    </nav>
+
     <div class="container-custom">
         <div class="header">
             <h1><i class="fas fa-box"></i> Sistema de Correspondências</h1>
@@ -505,17 +585,17 @@
 
         <div id="telaInicial" class="screen active">
             <div class="menu-inicial">
-                <div class="menu-card" onclick="showScreen('telaDashboard')">
+                <div class="menu-card" onclick="navegarPara('telaDashboard')">
                     <i class="fas fa-chart-line"></i>
                     <h3>Dashboard</h3>
                     <p>Estatísticas e relatórios</p>
                 </div>
-                <div class="menu-card" onclick="showScreen('telaEnvio')">
+                <div class="menu-card" onclick="navegarPara('telaEnvio')">
                     <i class="fas fa-paper-plane"></i>
                     <h3>Envio</h3>
                     <p>Registrar envios</p>
                 </div>
-                <div class="menu-card" onclick="showScreen('telaRecebimento')">
+                <div class="menu-card" onclick="navegarPara('telaRecebimento')">
                     <i class="fas fa-inbox"></i>
                     <h3>Recebimento</h3>
                     <p>Registrar recebimentos</p>
@@ -631,9 +711,6 @@
                 <button type="button" class="btn-custom btn-success-custom" onclick="imprimirRelatorioDashboard()">
                     <i class="fas fa-print"></i> Imprimir Relatório
                 </button>
-                <button type="button" class="btn-custom btn-secondary-custom" onclick="showScreen('telaInicial')">
-                    <i class="fas fa-arrow-left"></i> Retornar
-                </button>
             </div>
         </div>
 
@@ -702,7 +779,6 @@
                 <div class="button-group">
                     <button type="submit" class="btn-custom btn-primary-custom"><i class="fas fa-plus-circle"></i> Inserir</button>
                     <button type="button" class="btn-custom btn-success-custom" onclick="imprimirProtocoloEnvio()"><i class="fas fa-print"></i> Imprimir Protocolo</button>
-                    <button type="button" class="btn-custom btn-secondary-custom" onclick="showScreen('telaInicial')"><i class="fas fa-arrow-left"></i> Retornar</button>
                 </div>
             </form>
             <div class="filter-section">
@@ -808,7 +884,6 @@
                 <div class="button-group">
                     <button type="submit" class="btn-custom btn-primary-custom"><i class="fas fa-plus-circle"></i> Inserir</button>
                     <button type="button" class="btn-custom btn-success-custom" onclick="imprimirProtocoloRecebimento()"><i class="fas fa-print"></i> Imprimir Protocolo</button>
-                    <button type="button" class="btn-custom btn-secondary-custom" onclick="showScreen('telaInicial')"><i class="fas fa-arrow-left"></i> Retornar</button>
                 </div>
             </form>
             <div class="filter-section">
@@ -856,9 +931,30 @@
         let chartDepartamento = null;
         let dadosAtuaisDashboard = { envios: [], recebimentos: [], periodo: '', tipo: '' };
 
+        function navegarPara(screenId) {
+            document.querySelectorAll('.nav-btn').forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            
+            if (screenId === 'telaInicial') {
+                document.getElementById('navHome').classList.add('active');
+            } else if (screenId === 'telaDashboard') {
+                document.getElementById('navDashboard').classList.add('active');
+            } else if (screenId === 'telaEnvio') {
+                document.getElementById('navEnvio').classList.add('active');
+            } else if (screenId === 'telaRecebimento') {
+                document.getElementById('navRecebimento').classList.add('active');
+            }
+            
+            showScreen(screenId);
+        }
+
         function showScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.screen').forEach(function(s) {
+                s.classList.remove('active');
+            });
             document.getElementById(screenId).classList.add('active');
+            
             if (screenId === 'telaEnvio') { 
                 setDataHoje('dataEnvio'); 
                 setDataHoje('filtroDataEnvio'); 
@@ -963,7 +1059,7 @@
                 if (res.status === 'success' && res.data && res.data.length > 0) {
                     tbody.innerHTML = '';
                     titulo.textContent = '📋 Correspondências de ' + formatarData(data) + ' (' + res.data.length + ' registro(s))';
-                    res.data.forEach(row => {
+                    res.data.forEach(function(row) {
                         const tr = document.createElement('tr');
                         tr.innerHTML = '<td>' + formatarData(row[0]) + '</td><td>' + row[1] + '</td><td>' + row[2] + '</td><td>' + row[3] + '</td><td>' + row[4] + '</td>';
                         tbody.appendChild(tr);
@@ -1295,6 +1391,7 @@
             setDataHoje('dataRecebimento');
             setDataHoje('filtroDataEnvio');
             setDataHoje('filtroDataRecebimento');
+            document.getElementById('navHome').classList.add('active');
         };
     </script>
 </body>
