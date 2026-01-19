@@ -84,6 +84,37 @@
             margin-bottom: 25px;
         }
 
+        /* ÍCONES DISCRETOS NO CANTO SUPERIOR DIREITO */
+        .header-icons {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--branco);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2em;
+        }
+
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.35);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: scale(1.1);
+        }
+
         /* BARRA DE NAVEGAÇÃO DENTRO DO HEADER */
         .navbar-custom {
             background: rgba(255, 255, 255, 0.15);
@@ -147,8 +178,8 @@
 
         .menu-inicial {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
             padding: 20px;
         }
 
@@ -156,7 +187,7 @@
             background: var(--branco);
             border: 2px solid var(--cinza-borda);
             border-radius: 20px;
-            padding: 40px 25px;
+            padding: 50px 30px;
             text-align: center;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -198,16 +229,16 @@
         }
 
         .menu-card i {
-            font-size: 3.5em;
-            margin-bottom: 15px;
+            font-size: 4em;
+            margin-bottom: 20px;
             transition: all 0.4s ease;
             position: relative;
             z-index: 1;
         }
 
         .menu-card h3 {
-            font-size: 1.5em;
-            margin-bottom: 8px;
+            font-size: 1.6em;
+            margin-bottom: 10px;
             font-weight: 700;
             transition: all 0.4s ease;
             position: relative;
@@ -216,7 +247,7 @@
 
         .menu-card p {
             color: var(--texto-secundario);
-            font-size: 0.9em;
+            font-size: 0.95em;
             transition: all 0.4s ease;
             position: relative;
             z-index: 1;
@@ -317,6 +348,16 @@
 
         .btn-warning-custom:hover {
             background: #D97706;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger-custom {
+            background: #EF4444;
+            color: var(--branco);
+        }
+
+        .btn-danger-custom:hover {
+            background: #DC2626;
             transform: translateY(-2px);
         }
 
@@ -519,6 +560,80 @@
             margin-top: 30px;
         }
 
+        /* ESTILOS DA TELA DE CONFIGURAÇÕES */
+        .config-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--cinza-borda);
+        }
+
+        .config-tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: var(--texto-secundario);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .config-tab:hover {
+            color: var(--azul-bensaude);
+        }
+
+        .config-tab.active {
+            color: var(--azul-bensaude);
+            border-bottom-color: var(--azul-bensaude);
+        }
+
+        .config-content {
+            display: none;
+        }
+
+        .config-content.active {
+            display: block;
+        }
+
+        .lista-itens {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .item-badge {
+            background: var(--azul-claro);
+            color: var(--azul-bensaude);
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            border: 2px solid var(--azul-bensaude);
+        }
+
+        .item-badge .remove-btn {
+            background: var(--azul-bensaude);
+            color: white;
+            border: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            transition: all 0.2s ease;
+        }
+
+        .item-badge .remove-btn:hover {
+            background: #EF4444;
+        }
+
         @media (max-width: 768px) {
             .navbar-custom {
                 padding: 10px 15px;
@@ -526,7 +641,7 @@
             }
             
             .nav-btn {
-                flex: 1 1 45%;
+                flex: 1 1 100%;
                 justify-content: center;
                 padding: 10px 15px;
                 font-size: 0.85em;
@@ -534,6 +649,17 @@
 
             .header h1 {
                 font-size: 1.8em;
+            }
+
+            .header-icons {
+                top: 15px;
+                right: 15px;
+            }
+
+            .icon-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1em;
             }
             
             .menu-card {
@@ -552,12 +678,26 @@
             .dashboard-grid {
                 grid-template-columns: 1fr;
             }
+
+            .menu-inicial {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container-custom">
         <div class="header">
+            <!-- ÍCONES DISCRETOS NO CANTO SUPERIOR DIREITO -->
+            <div class="header-icons">
+                <button class="icon-btn" onclick="navegarPara('telaDashboard')" title="Dashboard">
+                    <i class="fas fa-chart-line"></i>
+                </button>
+                <button class="icon-btn" onclick="navegarPara('telaConfiguracoes')" title="Configurações">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+
             <h1><i class="fas fa-box"></i> Sistema de Correspondências</h1>
             <p>Bensaúde Logística - Controle Inteligente</p>
             
@@ -565,9 +705,6 @@
             <nav class="navbar-custom">
                 <button class="nav-btn" id="navHome" onclick="navegarPara('telaInicial')">
                     <i class="fas fa-home"></i> HOME
-                </button>
-                <button class="nav-btn" id="navDashboard" onclick="navegarPara('telaDashboard')">
-                    <i class="fas fa-chart-line"></i> DASHBOARD
                 </button>
                 <button class="nav-btn" id="navEnvio" onclick="navegarPara('telaEnvio')">
                     <i class="fas fa-paper-plane"></i> ENVIO
@@ -578,26 +715,123 @@
             </nav>
         </div>
 
+        <!-- TELA INICIAL (SEM DASHBOARD) -->
         <div id="telaInicial" class="screen active">
             <div class="menu-inicial">
-                <div class="menu-card" onclick="navegarPara('telaDashboard')">
-                    <i class="fas fa-chart-line"></i>
-                    <h3>Dashboard</h3>
-                    <p>Estatísticas e relatórios</p>
-                </div>
                 <div class="menu-card" onclick="navegarPara('telaEnvio')">
                     <i class="fas fa-paper-plane"></i>
                     <h3>Envio</h3>
-                    <p>Registrar envios</p>
+                    <p>Registrar envios de correspondências</p>
                 </div>
                 <div class="menu-card" onclick="navegarPara('telaRecebimento')">
                     <i class="fas fa-inbox"></i>
                     <h3>Recebimento</h3>
-                    <p>Registrar recebimentos</p>
+                    <p>Registrar recebimentos de correspondências</p>
                 </div>
             </div>
         </div>
 
+        <!-- TELA DE CONFIGURAÇÕES -->
+        <div id="telaConfiguracoes" class="screen">
+            <h2><i class="fas fa-cog"></i> Configurações do Sistema</h2>
+
+            <div class="alert-custom alert-success" id="alertSuccessConfig">
+                ✅ Item salvo com sucesso!
+            </div>
+
+            <!-- ABAS DE CONFIGURAÇÃO -->
+            <div class="config-tabs">
+                <button class="config-tab active" onclick="trocarAbaConfig('departamentos')">
+                    <i class="fas fa-building"></i> Departamentos
+                </button>
+                <button class="config-tab" onclick="trocarAbaConfig('tiposEnvio')">
+                    <i class="fas fa-paper-plane"></i> Tipos de Envio
+                </button>
+                <button class="config-tab" onclick="trocarAbaConfig('tiposRecebimento')">
+                    <i class="fas fa-inbox"></i> Tipos de Recebimento
+                </button>
+                <button class="config-tab" onclick="trocarAbaConfig('usuarios')">
+                    <i class="fas fa-users"></i> Usuários (Em breve)
+                </button>
+            </div>
+
+            <!-- CONTEÚDO: DEPARTAMENTOS -->
+            <div id="configDepartamentos" class="config-content active">
+                <h3>📋 Gerenciar Departamentos</h3>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label>Nome do Departamento:</label>
+                            <input type="text" id="novoDepartamento" placeholder="Digite o nome do novo departamento...">
+                        </div>
+                    </div>
+                    <div class="col-md-4" style="display: flex; align-items: flex-end;">
+                        <button class="btn-custom btn-primary-custom" onclick="adicionarDepartamento()">
+                            <i class="fas fa-plus"></i> Adicionar
+                        </button>
+                    </div>
+                </div>
+
+                <h4 style="margin-top: 30px; color: var(--azul-bensaude);">Departamentos Cadastrados:</h4>
+                <div class="lista-itens" id="listaDepartamentos"></div>
+            </div>
+
+            <!-- CONTEÚDO: TIPOS DE ENVIO -->
+            <div id="configTiposEnvio" class="config-content">
+                <h3>📤 Gerenciar Tipos de Correspondência (Envio)</h3>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label>Nome do Tipo de Envio:</label>
+                            <input type="text" id="novoTipoEnvio" placeholder="Digite o nome do novo tipo de envio...">
+                        </div>
+                    </div>
+                    <div class="col-md-4" style="display: flex; align-items: flex-end;">
+                        <button class="btn-custom btn-primary-custom" onclick="adicionarTipoEnvio()">
+                            <i class="fas fa-plus"></i> Adicionar
+                        </button>
+                    </div>
+                </div>
+
+                <h4 style="margin-top: 30px; color: var(--azul-bensaude);">Tipos de Envio Cadastrados:</h4>
+                <div class="lista-itens" id="listaTiposEnvio"></div>
+            </div>
+
+            <!-- CONTEÚDO: TIPOS DE RECEBIMENTO -->
+            <div id="configTiposRecebimento" class="config-content">
+                <h3>📥 Gerenciar Tipos de Correspondência (Recebimento)</h3>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label>Nome do Tipo de Recebimento:</label>
+                            <input type="text" id="novoTipoRecebimento" placeholder="Digite o nome do novo tipo de recebimento...">
+                        </div>
+                    </div>
+                    <div class="col-md-4" style="display: flex; align-items: flex-end;">
+                        <button class="btn-custom btn-primary-custom" onclick="adicionarTipoRecebimento()">
+                            <i class="fas fa-plus"></i> Adicionar
+                        </button>
+                    </div>
+                </div>
+
+                <h4 style="margin-top: 30px; color: var(--azul-bensaude);">Tipos de Recebimento Cadastrados:</h4>
+                <div class="lista-itens" id="listaTiposRecebimento"></div>
+            </div>
+
+            <!-- CONTEÚDO: USUÁRIOS (EM BREVE) -->
+            <div id="configUsuarios" class="config-content">
+                <h3>👥 Gerenciar Usuários</h3>
+                <div style="padding: 40px; text-align: center; background: var(--cinza-tech); border-radius: 12px;">
+                    <i class="fas fa-users" style="font-size: 4em; color: var(--azul-bensaude); margin-bottom: 20px;"></i>
+                    <h4 style="color: var(--azul-bensaude);">Funcionalidade em Desenvolvimento</h4>
+                    <p style="color: var(--texto-secundario); margin-top: 10px;">
+                        A gestão de usuários estará disponível em breve. Esta funcionalidade permitirá cadastrar e gerenciar usuários com diferentes níveis de acesso ao sistema.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TELA DASHBOARD -->
         <div id="telaDashboard" class="screen">
             <h2><i class="fas fa-chart-line"></i> Dashboard - Estatísticas de Correspondências</h2>
             
@@ -709,6 +943,7 @@
             </div>
         </div>
 
+        <!-- TELA DE ENVIO -->
         <div id="telaEnvio" class="screen">
             <h2><i class="fas fa-paper-plane"></i> Envio de Correspondências</h2>
             <div class="alert-custom alert-success" id="alertSuccessEnvio">✅ Correspondência registrada com sucesso!</div>
@@ -726,20 +961,6 @@
                             <label><i class="fas fa-building"></i> Departamento:</label>
                             <select id="departamentoEnvio" required>
                                 <option value="">Selecione...</option>
-                                <option value="ATENDIMENTO">ATENDIMENTO</option>
-                                <option value="CADASTRO">CADASTRO</option>
-                                <option value="COMERCIAL">COMERCIAL</option>
-                                <option value="LOGISTICA">LOGISTICA</option>
-                                <option value="CONTAS MÉDICAS">CONTAS MÉDICAS</option>
-                                <option value="CONTROLADORIA">CONTROLADORIA</option>
-                                <option value="QUALIDADE">QUALIDADE</option>
-                                <option value="GESTÃO DE REDE">GESTÃO DE REDE</option>
-                                <option value="JURÍDICO">JURÍDICO</option>
-                                <option value="R.H/D.P">R.H/D.P</option>
-                                <option value="AUDITORIA">AUDITORIA</option>
-                                <option value="SECRETARIA">SECRETARIA</option>
-                                <option value="MANUTENÇÃO DE CONTRATOS">MANUTENÇÃO DE CONTRATOS</option>
-                                <option value="OUTROS">OUTROS</option>
                             </select>
                         </div>
                     </div>
@@ -750,13 +971,6 @@
                             <label><i class="fas fa-envelope"></i> Tipo de Correspondência:</label>
                             <select id="tipoEnvio" required>
                                 <option value="">Selecione...</option>
-                                <option value="PAC">PAC</option>
-                                <option value="REGISTRADA">REGISTRADA</option>
-                                <option value="REGISTRADA COM AR">REGISTRADA COM AR</option>
-                                <option value="SEDEX">SEDEX</option>
-                                <option value="SEDEX REVERSO">SEDEX REVERSO</option>
-                                <option value="SIMPLES">SIMPLES</option>
-                                <option value="OUTROS">OUTROS</option>
                             </select>
                         </div>
                     </div>
@@ -814,6 +1028,7 @@
             </div>
         </div>
 
+        <!-- TELA DE RECEBIMENTO -->
         <div id="telaRecebimento" class="screen">
             <h2><i class="fas fa-inbox"></i> Recebimento de Correspondências</h2>
             <div class="alert-custom alert-success" id="alertSuccessRecebimento">✅ Correspondência registrada com sucesso!</div>
@@ -831,20 +1046,6 @@
                             <label><i class="fas fa-building"></i> Departamento:</label>
                             <select id="departamentoRecebimento" required>
                                 <option value="">Selecione...</option>
-                                <option value="ATENDIMENTO">ATENDIMENTO</option>
-                                <option value="CADASTRO">CADASTRO</option>
-                                <option value="COMERCIAL">COMERCIAL</option>
-                                <option value="LOGISTICA">LOGISTICA</option>
-                                <option value="CONTAS MÉDICAS">CONTAS MÉDICAS</option>
-                                <option value="CONTROLADORIA">CONTROLADORIA</option>
-                                <option value="QUALIDADE">QUALIDADE</option>
-                                <option value="GESTÃO DE REDE">GESTÃO DE REDE</option>
-                                <option value="JURÍDICO">JURÍDICO</option>
-                                <option value="R.H/D.P">R.H/D.P</option>
-                                <option value="AUDITORIA">AUDITORIA</option>
-                                <option value="SECRETARIA">SECRETARIA</option>
-                                <option value="MANUTENÇÃO DE CONTRATOS">MANUTENÇÃO DE CONTRATOS</option>
-                                <option value="OUTROS">OUTROS</option>
                             </select>
                         </div>
                     </div>
@@ -855,13 +1056,6 @@
                             <label><i class="fas fa-envelope"></i> Tipo de Correspondência:</label>
                             <select id="tipoRecebimento" required>
                                 <option value="">Selecione...</option>
-                                <option value="BOLETOS">BOLETOS</option>
-                                <option value="FATURAMENTO">FATURAMENTO</option>
-                                <option value="NOTIFICAÇÃO EXTRA-JUDICIAL">NOTIFICAÇÃO EXTRA-JUDICIAL</option>
-                                <option value="NOTIFICAÇÃO JUDICIAL">NOTIFICAÇÃO JUDICIAL</option>
-                                <option value="REEMBOLSO">REEMBOLSO</option>
-                                <option value="TELEGRAMA">TELEGRAMA</option>
-                                <option value="OUTROS">OUTROS</option>
                             </select>
                         </div>
                     </div>
@@ -926,6 +1120,249 @@
         let chartDepartamento = null;
         let dadosAtuaisDashboard = { envios: [], recebimentos: [], periodo: '', tipo: '' };
 
+        // DADOS PADRÃO
+        const departamentosPadrao = ['ATENDIMENTO', 'CADASTRO', 'COMERCIAL', 'LOGISTICA', 'CONTAS MÉDICAS', 'CONTROLADORIA', 'QUALIDADE', 'GESTÃO DE REDE', 'JURÍDICO', 'R.H/D.P', 'AUDITORIA', 'SECRETARIA', 'MANUTENÇÃO DE CONTRATOS', 'OUTROS'];
+        const tiposEnvioPadrao = ['PAC', 'REGISTRADA', 'REGISTRADA COM AR', 'SEDEX', 'SEDEX REVERSO', 'SIMPLES', 'OUTROS'];
+        const tiposRecebimentoPadrao = ['BOLETOS', 'FATURAMENTO', 'NOTIFICAÇÃO EXTRA-JUDICIAL', 'NOTIFICAÇÃO JUDICIAL', 'REEMBOLSO', 'TELEGRAMA', 'OUTROS'];
+
+        // INICIALIZAR LOCALSTORAGE
+        function inicializarDados() {
+            if (!localStorage.getItem('departamentos')) {
+                localStorage.setItem('departamentos', JSON.stringify(departamentosPadrao));
+            }
+            if (!localStorage.getItem('tiposEnvio')) {
+                localStorage.setItem('tiposEnvio', JSON.stringify(tiposEnvioPadrao));
+            }
+            if (!localStorage.getItem('tiposRecebimento')) {
+                localStorage.setItem('tiposRecebimento', JSON.stringify(tiposRecebimentoPadrao));
+            }
+            atualizarSelects();
+            renderizarListas();
+        }
+
+        // ATUALIZAR SELECTS
+        function atualizarSelects() {
+            const departamentos = JSON.parse(localStorage.getItem('departamentos')) || departamentosPadrao;
+            const tiposEnvio = JSON.parse(localStorage.getItem('tiposEnvio')) || tiposEnvioPadrao;
+            const tiposRecebimento = JSON.parse(localStorage.getItem('tiposRecebimento')) || tiposRecebimentoPadrao;
+
+            // Atualizar select de departamentos
+            ['departamentoEnvio', 'departamentoRecebimento'].forEach(function(id) {
+                const select = document.getElementById(id);
+                const valorAtual = select.value;
+                select.innerHTML = '<option value="">Selecione...</option>';
+                departamentos.forEach(function(dept) {
+                    const option = document.createElement('option');
+                    option.value = dept;
+                    option.textContent = dept;
+                    select.appendChild(option);
+                });
+                if (valorAtual) select.value = valorAtual;
+            });
+
+            // Atualizar select de tipos de envio
+            const selectEnvio = document.getElementById('tipoEnvio');
+            const valorEnvio = selectEnvio.value;
+            selectEnvio.innerHTML = '<option value="">Selecione...</option>';
+            tiposEnvio.forEach(function(tipo) {
+                const option = document.createElement('option');
+                option.value = tipo;
+                option.textContent = tipo;
+                selectEnvio.appendChild(option);
+            });
+            if (valorEnvio) selectEnvio.value = valorEnvio;
+
+            // Atualizar select de tipos de recebimento
+            const selectReceb = document.getElementById('tipoRecebimento');
+            const valorReceb = selectReceb.value;
+            selectReceb.innerHTML = '<option value="">Selecione...</option>';
+            tiposRecebimento.forEach(function(tipo) {
+                const option = document.createElement('option');
+                option.value = tipo;
+                option.textContent = tipo;
+                selectReceb.appendChild(option);
+            });
+            if (valorReceb) selectReceb.value = valorReceb;
+        }
+
+        // RENDERIZAR LISTAS DE CONFIGURAÇÕES
+        function renderizarListas() {
+            const departamentos = JSON.parse(localStorage.getItem('departamentos')) || [];
+            const tiposEnvio = JSON.parse(localStorage.getItem('tiposEnvio')) || [];
+            const tiposRecebimento = JSON.parse(localStorage.getItem('tiposRecebimento')) || [];
+
+            // Renderizar departamentos
+            const listaDept = document.getElementById('listaDepartamentos');
+            listaDept.innerHTML = '';
+            departamentos.forEach(function(dept) {
+                const badge = criarBadge(dept, function() { removerDepartamento(dept); });
+                listaDept.appendChild(badge);
+            });
+
+            // Renderizar tipos de envio
+            const listaEnvio = document.getElementById('listaTiposEnvio');
+            listaEnvio.innerHTML = '';
+            tiposEnvio.forEach(function(tipo) {
+                const badge = criarBadge(tipo, function() { removerTipoEnvio(tipo); });
+                listaEnvio.appendChild(badge);
+            });
+
+            // Renderizar tipos de recebimento
+            const listaReceb = document.getElementById('listaTiposRecebimento');
+            listaReceb.innerHTML = '';
+            tiposRecebimento.forEach(function(tipo) {
+                const badge = criarBadge(tipo, function() { removerTipoRecebimento(tipo); });
+                listaReceb.appendChild(badge);
+            });
+        }
+
+        function criarBadge(texto, onRemove) {
+            const badge = document.createElement('div');
+            badge.className = 'item-badge';
+            badge.innerHTML = '<span>' + texto + '</span>';
+            
+            const btnRemover = document.createElement('button');
+            btnRemover.className = 'remove-btn';
+            btnRemover.innerHTML = '×';
+            btnRemover.onclick = onRemove;
+            
+            badge.appendChild(btnRemover);
+            return badge;
+        }
+
+        // ADICIONAR DEPARTAMENTO
+        function adicionarDepartamento() {
+            const input = document.getElementById('novoDepartamento');
+            const valor = input.value.trim().toUpperCase();
+            
+            if (!valor) {
+                alert('Digite o nome do departamento!');
+                return;
+            }
+
+            const departamentos = JSON.parse(localStorage.getItem('departamentos')) || [];
+            
+            if (departamentos.includes(valor)) {
+                alert('Este departamento já existe!');
+                return;
+            }
+
+            departamentos.push(valor);
+            localStorage.setItem('departamentos', JSON.stringify(departamentos));
+            
+            input.value = '';
+            atualizarSelects();
+            renderizarListas();
+            mostrarAlerta('alertSuccessConfig', null);
+        }
+
+        function removerDepartamento(dept) {
+            if (!confirm('Deseja realmente remover "' + dept + '"?')) return;
+            
+            let departamentos = JSON.parse(localStorage.getItem('departamentos')) || [];
+            departamentos = departamentos.filter(function(d) { return d !== dept; });
+            localStorage.setItem('departamentos', JSON.stringify(departamentos));
+            
+            atualizarSelects();
+            renderizarListas();
+        }
+
+        // ADICIONAR TIPO DE ENVIO
+        function adicionarTipoEnvio() {
+            const input = document.getElementById('novoTipoEnvio');
+            const valor = input.value.trim().toUpperCase();
+            
+            if (!valor) {
+                alert('Digite o nome do tipo de envio!');
+                return;
+            }
+
+            const tipos = JSON.parse(localStorage.getItem('tiposEnvio')) || [];
+            
+            if (tipos.includes(valor)) {
+                alert('Este tipo já existe!');
+                return;
+            }
+
+            tipos.push(valor);
+            localStorage.setItem('tiposEnvio', JSON.stringify(tipos));
+            
+            input.value = '';
+            atualizarSelects();
+            renderizarListas();
+            mostrarAlerta('alertSuccessConfig', null);
+        }
+
+        function removerTipoEnvio(tipo) {
+            if (!confirm('Deseja realmente remover "' + tipo + '"?')) return;
+            
+            let tipos = JSON.parse(localStorage.getItem('tiposEnvio')) || [];
+            tipos = tipos.filter(function(t) { return t !== tipo; });
+            localStorage.setItem('tiposEnvio', JSON.stringify(tipos));
+            
+            atualizarSelects();
+            renderizarListas();
+        }
+
+        // ADICIONAR TIPO DE RECEBIMENTO
+        function adicionarTipoRecebimento() {
+            const input = document.getElementById('novoTipoRecebimento');
+            const valor = input.value.trim().toUpperCase();
+            
+            if (!valor) {
+                alert('Digite o nome do tipo de recebimento!');
+                return;
+            }
+
+            const tipos = JSON.parse(localStorage.getItem('tiposRecebimento')) || [];
+            
+            if (tipos.includes(valor)) {
+                alert('Este tipo já existe!');
+                return;
+            }
+
+            tipos.push(valor);
+            localStorage.setItem('tiposRecebimento', JSON.stringify(tipos));
+            
+            input.value = '';
+            atualizarSelects();
+            renderizarListas();
+            mostrarAlerta('alertSuccessConfig', null);
+        }
+
+        function removerTipoRecebimento(tipo) {
+            if (!confirm('Deseja realmente remover "' + tipo + '"?')) return;
+            
+            let tipos = JSON.parse(localStorage.getItem('tiposRecebimento')) || [];
+            tipos = tipos.filter(function(t) { return t !== tipo; });
+            localStorage.setItem('tiposRecebimento', JSON.stringify(tipos));
+            
+            atualizarSelects();
+            renderizarListas();
+        }
+
+        // TROCAR ABA DE CONFIGURAÇÃO
+        function trocarAbaConfig(aba) {
+            document.querySelectorAll('.config-tab').forEach(function(tab) {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.config-content').forEach(function(content) {
+                content.classList.remove('active');
+            });
+
+            event.target.classList.add('active');
+            
+            if (aba === 'departamentos') {
+                document.getElementById('configDepartamentos').classList.add('active');
+            } else if (aba === 'tiposEnvio') {
+                document.getElementById('configTiposEnvio').classList.add('active');
+            } else if (aba === 'tiposRecebimento') {
+                document.getElementById('configTiposRecebimento').classList.add('active');
+            } else if (aba === 'usuarios') {
+                document.getElementById('configUsuarios').classList.add('active');
+            }
+        }
+
         function navegarPara(screenId) {
             document.querySelectorAll('.nav-btn').forEach(function(btn) {
                 btn.classList.remove('active');
@@ -933,8 +1370,6 @@
             
             if (screenId === 'telaInicial') {
                 document.getElementById('navHome').classList.add('active');
-            } else if (screenId === 'telaDashboard') {
-                document.getElementById('navDashboard').classList.add('active');
             } else if (screenId === 'telaEnvio') {
                 document.getElementById('navEnvio').classList.add('active');
             } else if (screenId === 'telaRecebimento') {
@@ -1097,7 +1532,7 @@
         }
 
         function mostrarAlerta(mostrarId, esconderId) {
-            document.getElementById(esconderId).style.display = 'none';
+            if (esconderId) document.getElementById(esconderId).style.display = 'none';
             const a = document.getElementById(mostrarId);
             a.style.display = 'block';
             setTimeout(function() { a.style.display = 'none'; }, 3000);
@@ -1311,7 +1746,7 @@
             rows.forEach(function(row) {
                 if (row.cells.length > 1) {
                     html += '<tr>';
-                    for (let i = 0; i < row.cells.length; i++) {
+                    for (let i = 0; i &lt; row.cells.length; i++) {
                         html += '<td>' + row.cells[i].textContent + '</td>';
                     }
                     html += '</tr>';
@@ -1363,7 +1798,7 @@
             rows.forEach(function(row) {
                 if (row.cells.length > 1) {
                     html += '<tr>';
-                    for (let i = 0; i < row.cells.length; i++) {
+                    for (let i = 0; i &lt; row.cells.length; i++) {
                         html += '<td>' + row.cells[i].textContent + '</td>';
                     }
                     if (temAssinatura) {
@@ -1382,6 +1817,7 @@
         }
 
         window.onload = function() {
+            inicializarDados();
             setDataHoje('dataEnvio');
             setDataHoje('dataRecebimento');
             setDataHoje('filtroDataEnvio');
