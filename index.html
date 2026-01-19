@@ -439,6 +439,35 @@
             background: var(--azul-claro);
         }
 
+        /* BOTÃO DE EXCLUSÃO */
+        .btn-delete {
+            background: #EF4444;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin: 0 auto;
+        }
+
+        .btn-delete:hover {
+            background: #DC2626;
+            transform: scale(1.1);
+        }
+
+        table th.acao-col,
+        table td.acao-col {
+            width: 80px;
+            text-align: center;
+        }
+
         .filter-section {
             background: linear-gradient(135deg, var(--azul-claro) 0%, var(--branco) 100%);
             padding: 28px;
@@ -1019,10 +1048,11 @@
                             <th>Tipo</th>
                             <th>Descrição</th>
                             <th>Quantidade</th>
+                            <th class="acao-col">Ações</th>
                         </tr>
                     </thead>
                     <tbody id="bodyTabelaEnvios">
-                        <tr><td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>
+                        <tr><td colspan="6" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -1104,10 +1134,11 @@
                             <th>Tipo</th>
                             <th>Descrição</th>
                             <th>Quantidade</th>
+                            <th class="acao-col">Ações</th>
                         </tr>
                     </thead>
                     <tbody id="bodyTabelaRecebimentos">
-                        <tr><td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>
+                        <tr><td colspan="6" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -1124,6 +1155,71 @@
         const departamentosPadrao = ['ATENDIMENTO', 'CADASTRO', 'COMERCIAL', 'LOGISTICA', 'CONTAS MÉDICAS', 'CONTROLADORIA', 'QUALIDADE', 'GESTÃO DE REDE', 'JURÍDICO', 'R.H/D.P', 'AUDITORIA', 'SECRETARIA', 'MANUTENÇÃO DE CONTRATOS', 'OUTROS'];
         const tiposEnvioPadrao = ['PAC', 'REGISTRADA', 'REGISTRADA COM AR', 'SEDEX', 'SEDEX REVERSO', 'SIMPLES', 'OUTROS'];
         const tiposRecebimentoPadrao = ['BOLETOS', 'FATURAMENTO', 'NOTIFICAÇÃO EXTRA-JUDICIAL', 'NOTIFICAÇÃO JUDICIAL', 'REEMBOLSO', 'TELEGRAMA', 'OUTROS'];
+
+        // FUNÇÃO DE EXCLUIR REGISTRO
+        function excluirRegistro(botao, tabelaId) {
+            if (!confirm('Tem certeza que deseja excluir este registro?')) {
+                return;
+            }
+
+            const linha = botao.closest('tr');
+            
+            // Coletar dados da linha para identificação
+            const cells = linha.cells;
+            const data = cells[0].textContent;
+            const departamento = cells[1].textContent;
+            const tipo = cells[2].textContent;
+            const descricao = cells[3].textContent;
+            const quantidade = cells[4].textContent;
+            
+            // Determinar se é Envio ou Recebimento
+            const tipoOperacao = tabelaId === 'bodyTabelaEnvios' ? 'Envios' : 'Recebimentos';
+            
+            // Converter data para formato YYYY-MM-DD
+            const partesData = data.split('/');
+            const dataFormatada = partesData.length === 3 ? partesData[2] + '-' + partesData[1] + '-' + partesData[0] : data;
+            
+            // Dados para enviar ao Apps Script
+            const dadosExclusao = {
+                acao: 'excluirRegistro',
+                tipo: tipoOperacao,
+                data: dataFormatada,
+                departamento: departamento,
+                tipoCorrespondencia: tipo,
+                descricao: descricao,
+                quantidade: quantidade
+            };
+            
+            console.log('Excluindo registro:', dadosExclusao);
+            
+            // Enviar requisição para o Google Apps Script
+            fetch(scriptURL, {
+                method: 'POST',
+                body: JSON.stringify(dadosExclusao)
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(resultado) {
+                console.log('Resposta:', resultado);
+                if (resultado.status === 'success') {
+                    // Remover linha da tabela visualmente
+                    linha.remove();
+                    
+                    // Verificar se a tabela ficou vazia
+                    const tbody = document.getElementById(tabelaId);
+                    if (tbody.rows.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
+                    }
+                    
+                    alert('Registro excluído com sucesso!');
+                } else {
+                    alert('Erro ao excluir registro: ' + (resultado.message || 'Erro desconhecido'));
+                }
+            })
+            .catch(function(error) {
+                console.error('Erro:', error);
+                alert('Erro ao excluir o registro. Tente novamente.');
+            });
+        }
 
         // FUNÇÃO PRINCIPAL DE NAVEGAÇÃO
         function irParaTela(telaId) {
@@ -1489,7 +1585,7 @@
             const tbody = document.getElementById(tabelaId);
             const titulo = document.getElementById(tituloId);
             loading.classList.add('active');
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Buscando...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Buscando...</td></tr>';
             try {
                 const r = await fetch(scriptURL + '?acao=buscarPorData&tipo=' + tipo + '&data=' + data);
                 const res = await r.json();
@@ -1499,37 +1595,60 @@
                     titulo.textContent = '📋 Correspondências de ' + formatarData(data) + ' (' + res.data.length + ' registro(s))';
                     res.data.forEach(function(row) {
                         const tr = document.createElement('tr');
-                        tr.innerHTML = '<td>' + formatarData(row[0]) + '</td><td>' + row[1] + '</td><td>' + row[2] + '</td><td>' + row[3] + '</td><td>' + row[4] + '</td>';
+                        tr.innerHTML = 
+                            '<td>' + formatarData(row[0]) + '</td>' +
+                            '<td>' + row[1] + '</td>' +
+                            '<td>' + row[2] + '</td>' +
+                            '<td>' + row[3] + '</td>' +
+                            '<td>' + row[4] + '</td>' +
+                            '<td class="acao-col">' +
+                                '<button class="btn-delete" onclick="excluirRegistro(this, \'' + tabelaId + '\')" title="Excluir">' +
+                                    '×' +
+                                '</button>' +
+                            '</td>';
                         tbody.appendChild(tr);
                     });
                 } else {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum registro encontrado</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhum registro encontrado</td></tr>';
                     titulo.textContent = '📋 Correspondências de ' + formatarData(data);
                 }
             } catch (error) {
                 console.error('Erro:', error);
                 loading.classList.remove('active');
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: red;">Erro ao buscar dados</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">Erro ao buscar dados</td></tr>';
             }
         }
 
         function limparBuscaEnvio() {
-            document.getElementById('bodyTabelaEnvios').innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
+            document.getElementById('bodyTabelaEnvios').innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
             document.getElementById('tituloTabelaEnvio').textContent = '📋 Correspondências Registradas Hoje';
             setDataHoje('filtroDataEnvio');
         }
 
         function limparBuscaRecebimento() {
-            document.getElementById('bodyTabelaRecebimentos').innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
+            document.getElementById('bodyTabelaRecebimentos').innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
             document.getElementById('tituloTabelaRecebimento').textContent = '📋 Correspondências Registradas Hoje';
             setDataHoje('filtroDataRecebimento');
         }
 
-        function adicionarLinhaTabela(tabelaId, dados) {
+        function adicionarLinhaTabela(tabelaId, dados, idRegistro) {
             const tbody = document.getElementById(tabelaId);
             if (tbody.rows.length === 1 && tbody.rows[0].cells.length === 1) tbody.innerHTML = '';
+            
             const tr = document.createElement('tr');
-            tr.innerHTML = '<td>' + formatarData(dados[0]) + '</td><td>' + dados[1] + '</td><td>' + dados[2] + '</td><td>' + dados[3] + '</td><td>' + dados[4] + '</td>';
+            tr.setAttribute('data-id', idRegistro || '');
+            tr.innerHTML = 
+                '<td>' + formatarData(dados[0]) + '</td>' +
+                '<td>' + dados[1] + '</td>' +
+                '<td>' + dados[2] + '</td>' +
+                '<td>' + dados[3] + '</td>' +
+                '<td>' + dados[4] + '</td>' +
+                '<td class="acao-col">' +
+                    '<button class="btn-delete" onclick="excluirRegistro(this, \'' + tabelaId + '\')" title="Excluir">' +
+                        '×' +
+                    '</button>' +
+                '</td>';
+            
             tbody.insertBefore(tr, tbody.firstChild);
         }
 
@@ -1806,7 +1925,7 @@
             rows.forEach(function(row) {
                 if (row.cells.length > 1) {
                     html += '<tr>';
-                    for (let i = 0; i < row.cells.length; i++) {
+                    for (let i = 0; i < row.cells.length - 1; i++) {
                         html += '<td>' + row.cells[i].textContent + '</td>';
                     }
                     if (temAssinatura) {
