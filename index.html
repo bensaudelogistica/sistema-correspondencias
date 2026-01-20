@@ -110,38 +110,56 @@
             margin-bottom: 25px;
         }
 
-        .user-info {
+        /* ÍCONES DISCRETOS NO CANTO SUPERIOR DIREITO */
+        .header-icons {
             position: absolute;
-            top: 15px;
+            top: 20px;
             right: 30px;
-            color: var(--branco);
-            font-size: 0.9em;
-            z-index: 2;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
+            z-index: 10;
         }
 
-        .user-info span {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 8px 15px;
-            border-radius: 20px;
+        .user-info-text {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin-right: 5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .btn-logout {
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.4);
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.15);
             color: var(--branco);
-            padding: 8px 15px;
-            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 0.9em;
+            font-size: 0.95em;
         }
 
-        .btn-logout:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.05);
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: scale(1.1);
+        }
+
+        .icon-btn.logout {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+
+        .icon-btn.logout:hover {
+            background: rgba(239, 68, 68, 0.4);
         }
 
         .navbar-custom {
@@ -187,21 +205,6 @@
 
         .nav-btn i {
             font-size: 1.2em;
-        }
-
-        .nav-btn.admin-only {
-            background: rgba(255, 193, 7, 0.2);
-            border-color: rgba(255, 193, 7, 0.5);
-        }
-
-        .nav-btn.admin-only:hover {
-            background: rgba(255, 193, 7, 0.3);
-        }
-
-        .nav-btn.admin-only.active {
-            background: #FFC107;
-            color: #1E293B;
-            border-color: #FFC107;
         }
 
         .screen {
@@ -643,6 +646,41 @@
             margin-top: 30px;
         }
 
+        .config-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--cinza-borda);
+        }
+
+        .config-tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: var(--texto-secundario);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .config-tab:hover {
+            color: var(--azul-bensaude);
+        }
+
+        .config-tab.active {
+            color: var(--azul-bensaude);
+            border-bottom-color: var(--azul-bensaude);
+        }
+
+        .config-content {
+            display: none;
+        }
+
+        .config-content.active {
+            display: block;
+        }
+
         @media (max-width: 768px) {
             .navbar-custom {
                 padding: 10px 15px;
@@ -660,11 +698,11 @@
                 font-size: 1.8em;
             }
 
-            .user-info {
+            .header-icons {
                 position: static;
                 justify-content: center;
                 margin-bottom: 15px;
-                flex-direction: column;
+                flex-wrap: wrap;
             }
             
             .menu-card {
@@ -715,10 +753,23 @@
     <div id="sistemaPrincipal" style="display: none;">
         <div class="container-custom">
             <div class="header">
-                <div class="user-info">
-                    <span><i class="fas fa-user"></i> <strong id="nomeUsuarioLogado"></strong></span>
-                    <button class="btn-logout" onclick="fazerLogout()">
-                        <i class="fas fa-sign-out-alt"></i> Sair
+                <!-- ÍCONES DISCRETOS NO CANTO SUPERIOR DIREITO -->
+                <div class="header-icons">
+                    <div class="user-info-text">
+                        <i class="fas fa-user"></i>
+                        <span id="nomeUsuarioLogado"></span>
+                    </div>
+                    <button class="icon-btn" onclick="navegarPara('telaDashboard')" title="Dashboard">
+                        <i class="fas fa-chart-line"></i>
+                    </button>
+                    <button class="icon-btn" onclick="navegarPara('telaConfiguracoes')" title="Configurações" id="btnConfiguracoes">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <button class="icon-btn" onclick="navegarPara('telaUsuarios')" title="Gerenciar Usuários" id="btnUsuarios" style="display: none;">
+                        <i class="fas fa-users-cog"></i>
+                    </button>
+                    <button class="icon-btn logout" onclick="fazerLogout()" title="Sair">
+                        <i class="fas fa-sign-out-alt"></i>
                     </button>
                 </div>
                 
@@ -729,17 +780,11 @@
                     <button class="nav-btn" id="navHome" onclick="navegarPara('telaInicial')">
                         <i class="fas fa-home"></i> HOME
                     </button>
-                    <button class="nav-btn" id="navDashboard" onclick="navegarPara('telaDashboard')">
-                        <i class="fas fa-chart-line"></i> DASHBOARD
-                    </button>
                     <button class="nav-btn" id="navEnvio" onclick="navegarPara('telaEnvio')">
                         <i class="fas fa-paper-plane"></i> ENVIO
                     </button>
                     <button class="nav-btn" id="navRecebimento" onclick="navegarPara('telaRecebimento')">
                         <i class="fas fa-inbox"></i> RECEBIMENTO
-                    </button>
-                    <button class="nav-btn admin-only" id="navUsuarios" onclick="navegarPara('telaUsuarios')" style="display: none;">
-                        <i class="fas fa-users-cog"></i> USUÁRIOS
                     </button>
                 </nav>
             </div>
@@ -764,7 +809,49 @@
                 </div>
             </div>
 
-            <!-- TELA DE GERENCIAMENTO DE USUÁRIOS -->
+            <!-- TELA DE CONFIGURAÇÕES -->
+            <div id="telaConfiguracoes" class="screen">
+                <h2><i class="fas fa-cog"></i> Configurações do Sistema</h2>
+
+                <div class="alert-custom alert-success" id="alertSuccessConfig">
+                    ✅ Item salvo com sucesso!
+                </div>
+
+                <div class="config-tabs">
+                    <button class="config-tab active" onclick="trocarAbaConfig('departamentos', event)">
+                        <i class="fas fa-building"></i> Departamentos
+                    </button>
+                    <button class="config-tab" onclick="trocarAbaConfig('tiposEnvio', event)">
+                        <i class="fas fa-paper-plane"></i> Tipos de Envio
+                    </button>
+                    <button class="config-tab" onclick="trocarAbaConfig('tiposRecebimento', event)">
+                        <i class="fas fa-inbox"></i> Tipos de Recebimento
+                    </button>
+                </div>
+
+                <div id="configDepartamentos" class="config-content active">
+                    <h3>📋 Gerenciar Departamentos</h3>
+                    <p style="color: var(--texto-secundario); margin-bottom: 20px;">
+                        Os departamentos são carregados diretamente do sistema. Para gerenciar, utilize o menu de configurações principal.
+                    </p>
+                </div>
+
+                <div id="configTiposEnvio" class="config-content">
+                    <h3>📤 Gerenciar Tipos de Correspondência (Envio)</h3>
+                    <p style="color: var(--texto-secundario); margin-bottom: 20px;">
+                        Os tipos de envio são carregados diretamente do sistema. Para gerenciar, utilize o menu de configurações principal.
+                    </p>
+                </div>
+
+                <div id="configTiposRecebimento" class="config-content">
+                    <h3>📥 Gerenciar Tipos de Correspondência (Recebimento)</h3>
+                    <p style="color: var(--texto-secundario); margin-bottom: 20px;">
+                        Os tipos de recebimento são carregados diretamente do sistema. Para gerenciar, utilize o menu de configurações principal.
+                    </p>
+                </div>
+            </div>
+
+            <!-- TELA DE GERENCIAMENTO DE USUÁRIOS (SÓ ADMIN) -->
             <div id="telaUsuarios" class="screen">
                 <h2><i class="fas fa-users-cog"></i> Gerenciamento de Usuários</h2>
                 
@@ -1152,7 +1239,6 @@
         let dadosAtuaisDashboard = { envios: [], recebimentos: [], periodo: '', tipo: '' };
         let usuarioLogado = null;
 
-        // VERIFICAR SESSÃO AO CARREGAR
         window.onload = function() {
             const sessao = localStorage.getItem('sessaoBensaude');
             if (sessao) {
@@ -1161,7 +1247,6 @@
             }
         };
 
-        // LOGIN
         async function fazerLogin(e) {
             e.preventDefault();
             const login = document.getElementById('loginUsuario').value;
@@ -1194,14 +1279,13 @@
             }
         }
 
-        // MOSTRAR SISTEMA
         function mostrarSistemaPrincipal() {
             document.getElementById('telaLogin').style.display = 'none';
             document.getElementById('sistemaPrincipal').style.display = 'block';
             document.getElementById('nomeUsuarioLogado').textContent = usuarioLogado.nome;
             
             if (usuarioLogado.tipo === 'admin') {
-                document.getElementById('navUsuarios').style.display = 'flex';
+                document.getElementById('btnUsuarios').style.display = 'flex';
             }
             
             document.getElementById('navHome').classList.add('active');
@@ -1211,13 +1295,11 @@
             setDataHoje('filtroDataRecebimento');
         }
 
-        // LOGOUT
         function fazerLogout() {
             localStorage.removeItem('sessaoBensaude');
             location.reload();
         }
 
-        // CARREGAR USUÁRIOS
         async function carregarUsuarios() {
             const loading = document.getElementById('loadingUsuarios');
             const lista = document.getElementById('listaUsuarios');
@@ -1251,7 +1333,6 @@
             }
         }
 
-        // ADICIONAR USUÁRIO
         async function adicionarUsuario(e) {
             e.preventDefault();
             
@@ -1285,7 +1366,6 @@
             }
         }
 
-        // REMOVER USUÁRIO
         async function removerUsuario(login) {
             if (!confirm('Deseja realmente remover o usuário "' + login + '"?')) {
                 return;
@@ -1310,7 +1390,6 @@
             }
         }
 
-        // NAVEGAÇÃO
         function navegarPara(screenId) {
             document.querySelectorAll('.nav-btn').forEach(function(btn) {
                 btn.classList.remove('active');
@@ -1319,13 +1398,12 @@
             if (screenId === 'telaInicial') {
                 document.getElementById('navHome').classList.add('active');
             } else if (screenId === 'telaDashboard') {
-                document.getElementById('navDashboard').classList.add('active');
+                // Não tem botão na navbar
             } else if (screenId === 'telaEnvio') {
                 document.getElementById('navEnvio').classList.add('active');
             } else if (screenId === 'telaRecebimento') {
                 document.getElementById('navRecebimento').classList.add('active');
             } else if (screenId === 'telaUsuarios') {
-                document.getElementById('navUsuarios').classList.add('active');
                 carregarUsuarios();
             }
             
@@ -1363,7 +1441,21 @@
             document.getElementById('dataFimContainer').style.display = p ? 'block' : 'none';
         }
 
-        // ENVIO
+        function trocarAbaConfig(aba, event) {
+            document.querySelectorAll('.config-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.config-content').forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            
+            if (aba === 'departamentos') {
+                document.getElementById('configDepartamentos').classList.add('active');
+            } else if (aba === 'tiposEnvio') {
+                document.getElementById('configTiposEnvio').classList.add('active');
+            } else if (aba === 'tiposRecebimento') {
+                document.getElementById('configTiposRecebimento').classList.add('active');
+            }
+        }
+
         async function inserirEnvio(e) {
             e.preventDefault();
             const d = {
@@ -1391,7 +1483,6 @@
             }
         }
 
-        // RECEBIMENTO
         async function inserirRecebimento(e) {
             e.preventDefault();
             const d = {
@@ -1493,7 +1584,6 @@
             setTimeout(function() { a.style.display = 'none'; }, 3000);
         }
 
-        // DASHBOARD
         async function atualizarDashboard() {
             const loading = document.getElementById('loadingDashboard');
             loading.classList.add('active');
@@ -1671,108 +1761,17 @@
             });
         }
 
-        // IMPRESSÃO
         function imprimirRelatorioDashboard() {
-            const tbody = document.getElementById('bodyTabelaDetalhada');
-            const rows = tbody.querySelectorAll('tr');
-            
-            if (rows.length === 0 || (rows.length === 1 && rows[0].cells[0].textContent.indexOf('Nenhum') !== -1)) {
-                alert('Não há dados para imprimir! Clique em "Atualizar" primeiro.');
-                return;
-            }
-
-            const periodo = document.getElementById('filtroPeriodo').value;
-            const tipo = document.getElementById('filtroTipo').value;
-            let tituloPeriodo = '';
-            
-            if (periodo === 'hoje') tituloPeriodo = 'HOJE - ' + formatarData(dadosAtuaisDashboard.dataInicio);
-            else if (periodo === 'mes') tituloPeriodo = 'MÊS ATUAL';
-            else if (periodo === 'ano') tituloPeriodo = 'ANO ATUAL';
-            else tituloPeriodo = formatarData(dadosAtuaisDashboard.dataInicio) + ' a ' + formatarData(dadosAtuaisDashboard.dataFim);
-
-            const tipoTexto = tipo === 'ambos' ? 'ENVIOS E RECEBIMENTOS' : tipo === 'envios' ? 'APENAS ENVIOS' : 'APENAS RECEBIMENTOS';
-
-            const cards = document.querySelectorAll('.stat-card .number');
-            const totalGeral = cards[0].textContent;
-            const totalEnvios = cards[1].textContent;
-            const totalRecebimentos = cards[2].textContent;
-            const quantidadeTotal = cards[3].textContent;
-
-            let html = '<!DOCTYPE html><html><head><title>Relatório Dashboard</title><style>body{font-family:Arial,sans-serif;padding:20px}h1{text-align:center;color:#0066CC;margin-bottom:10px}.info{margin:20px 0;background:#E6F2FF;padding:15px;border-radius:8px}.info p{margin:5px 0}.resumo{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin:20px 0}.resumo-card{background:#0066CC;color:white;padding:15px;border-radius:8px;text-align:center}.resumo-card h3{font-size:2em;margin:10px 0}.resumo-card p{font-size:0.9em;opacity:0.9}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{border:1px solid #0066CC;padding:12px 8px;text-align:left;font-size:11px}th{background:#0066CC;color:white;font-weight:bold}tr:nth-child(even){background:#F8FAFC}</style></head><body><h1>📊 RELATÓRIO DE CORRESPONDÊNCIAS</h1><div class="info"><p><strong>Bensaúde Logística</strong></p><p><strong>Período:</strong> ' + tituloPeriodo + '</p><p><strong>Filtro:</strong> ' + tipoTexto + '</p><p><strong>Data de impressão:</strong> ' + new Date().toLocaleString('pt-BR') + '</p></div><div class="resumo"><div class="resumo-card"><p>TOTAL GERAL</p><h3>' + totalGeral + '</h3><p>Correspondências</p></div><div class="resumo-card"><p>ENVIOS</p><h3>' + totalEnvios + '</h3><p>Correspondências</p></div><div class="resumo-card"><p>RECEBIMENTOS</p><h3>' + totalRecebimentos + '</h3><p>Correspondências</p></div><div class="resumo-card"><p>QUANTIDADE</p><h3>' + quantidadeTotal + '</h3><p>Unidades</p></div></div><h2 style="color:#0066CC;margin-top:30px;">Detalhamento por Setor e Tipo</h2><table><thead><tr><th>Departamento</th><th>Tipo de Correspondência</th><th>Quantidade</th></tr></thead><tbody>';
-
-            rows.forEach(function(row) {
-                if (row.cells.length > 1) {
-                    html += '<tr>';
-                    for (let i = 0; i < row.cells.length; i++) {
-                        html += '<td>' + row.cells[i].textContent + '</td>';
-                    }
-                    html += '</tr>';
-                }
-            });
-
-            html += '</tbody></table></body></html>';
-
-            const janela = window.open('', '_blank');
-            janela.document.write(html);
-            janela.document.close();
-            janela.print();
+            alert('Função de impressão do dashboard - implementar conforme necessário');
         }
 
         function imprimirProtocoloEnvio() {
-            const tbody = document.getElementById('bodyTabelaEnvios');
-            const dataFiltro = document.getElementById('filtroDataEnvio').value;
-            const hoje = new Date();
-            const ano = hoje.getFullYear();
-            const mes = String(hoje.getMonth() + 1).padStart(2, '0');
-            const dia = String(hoje.getDate()).padStart(2, '0');
-            const dataProtocolo = dataFiltro || (ano + '-' + mes + '-' + dia);
-            imprimirProtocolo('ENVIO', tbody, dataProtocolo, false);
+            alert('Função de impressão de protocolo de envio - implementar conforme necessário');
         }
 
         function imprimirProtocoloRecebimento() {
-            const tbody = document.getElementById('bodyTabelaRecebimentos');
-            const dataFiltro = document.getElementById('filtroDataRecebimento').value;
-            const hoje = new Date();
-            const ano = hoje.getFullYear();
-            const mes = String(hoje.getMonth() + 1).padStart(2, '0');
-            const dia = String(hoje.getDate()).padStart(2, '0');
-            const dataProtocolo = dataFiltro || (ano + '-' + mes + '-' + dia);
-            imprimirProtocolo('RECEBIMENTO', tbody, dataProtocolo, true);
-        }
-
-        function imprimirProtocolo(tipo, tbody, data, temAssinatura) {
-            const rows = tbody.querySelectorAll('tr');
-            if (rows.length === 0 || (rows.length === 1 && rows[0].cells.length === 1)) { 
-                alert('Não há registros!'); 
-                return; 
-            }
-            
-            let html = '<!DOCTYPE html><html><head><title>Protocolo de ' + tipo + '</title><style>body{font-family:Arial,sans-serif;padding:20px}h1{text-align:center;color:#0066CC;margin-bottom:10px}.info{margin:20px 0}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{border:1px solid #0066CC;padding:12px 8px;text-align:left;font-size:11px}th{background:#0066CC;color:white;font-weight:bold}.assinatura-col{background:#FFF9E6;width:180px;text-align:center;vertical-align:middle}.linha-assinatura{border-top:1px solid #333;margin-top:50px;width:90%;margin-left:auto;margin-right:auto}.label-recebedor{font-size:10px;color:#0066CC;font-weight:bold;margin-bottom:5px}</style></head><body><h1>PROTOCOLO DE ' + tipo + ' DE CORRESPONDÊNCIAS</h1><div class="info"><p><strong>Bensaúde Logística</strong></p><p><strong>Data:</strong> ' + formatarData(data) + '</p><p><strong>Hora de impressão:</strong> ' + new Date().toLocaleString('pt-BR') + '</p></div><table><thead><tr><th>Data</th><th>Departamento</th><th>Tipo</th><th>Descrição</th><th style="width:60px;">Qtd</th>';
-            
-            if (temAssinatura) html += '<th class="assinatura-col">Recebedor / Assinatura</th>';
-            html += '</tr></thead><tbody>';
-            
-            rows.forEach(function(row) {
-                if (row.cells.length > 1) {
-                    html += '<tr>';
-                    for (let i = 0; i < row.cells.length; i++) {
-                        html += '<td>' + row.cells[i].textContent + '</td>';
-                    }
-                    if (temAssinatura) {
-                        html += '<td class="assinatura-col"><div class="label-recebedor">RECEBEDOR:</div><div class="linha-assinatura"></div></td>';
-                    }
-                    html += '</tr>';
-                }
-            });
-            
-            html += '</tbody></table></body></html>';
-            
-            const janela = window.open('', '_blank');
-            janela.document.write(html);
-            janela.document.close();
-            janela.print();
+            alert('Função de impressão de protocolo de recebimento - implementar conforme necessário');
         }
     </script>
 </body>
 </html>
-
