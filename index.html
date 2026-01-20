@@ -42,7 +42,6 @@
             overflow: hidden;
         }
 
-        /* TELA DE LOGIN */
         .login-container {
             max-width: 450px;
             margin: 100px auto;
@@ -110,7 +109,6 @@
             margin-bottom: 25px;
         }
 
-        /* ÍCONES DISCRETOS NO CANTO SUPERIOR DIREITO */
         .header-icons {
             position: absolute;
             top: 20px;
@@ -798,7 +796,6 @@
     <div id="sistemaPrincipal" style="display: none;">
         <div class="container-custom">
             <div class="header">
-                <!-- ÍCONES DISCRETOS NO CANTO SUPERIOR DIREITO -->
                 <div class="header-icons">
                     <div class="user-info-text">
                         <i class="fas fa-user"></i>
@@ -834,7 +831,7 @@
                 </nav>
             </div>
 
-            <!-- TELA INICIAL (SEM DASHBOARD) -->
+            <!-- TELA INICIAL -->
             <div id="telaInicial" class="screen active">
                 <div class="menu-inicial">
                     <div class="menu-card" onclick="navegarPara('telaEnvio')">
@@ -853,10 +850,7 @@
             <!-- TELA DE CONFIGURAÇÕES -->
             <div id="telaConfiguracoes" class="screen">
                 <h2><i class="fas fa-cog"></i> Configurações do Sistema</h2>
-
-                <div class="alert-custom alert-success" id="alertSuccessConfig">
-                    ✅ Item salvo com sucesso!
-                </div>
+                <div class="alert-custom alert-success" id="alertSuccessConfig">✅ Item salvo com sucesso!</div>
 
                 <div class="config-tabs">
                     <button class="config-tab active" onclick="trocarAbaConfig('departamentos', event)">
@@ -870,7 +864,6 @@
                     </button>
                 </div>
 
-                <!-- CONFIG DEPARTAMENTOS -->
                 <div id="configDepartamentos" class="config-content active">
                     <h3>📋 Gerenciar Departamentos</h3>
                     <div class="row">
@@ -886,12 +879,10 @@
                             </button>
                         </div>
                     </div>
-
                     <h4 style="margin-top: 30px; color: var(--azul-bensaude);">Departamentos Cadastrados:</h4>
                     <div class="lista-itens" id="listaDepartamentos"></div>
                 </div>
 
-                <!-- CONFIG TIPOS ENVIO -->
                 <div id="configTiposEnvio" class="config-content">
                     <h3>📤 Gerenciar Tipos de Correspondência (Envio)</h3>
                     <div class="row">
@@ -907,12 +898,10 @@
                             </button>
                         </div>
                     </div>
-
                     <h4 style="margin-top: 30px; color: var(--azul-bensaude);">Tipos de Envio Cadastrados:</h4>
                     <div class="lista-itens" id="listaTiposEnvio"></div>
                 </div>
 
-                <!-- CONFIG TIPOS RECEBIMENTO -->
                 <div id="configTiposRecebimento" class="config-content">
                     <h3>📥 Gerenciar Tipos de Correspondência (Recebimento)</h3>
                     <div class="row">
@@ -928,16 +917,14 @@
                             </button>
                         </div>
                     </div>
-
                     <h4 style="margin-top: 30px; color: var(--azul-bensaude);">Tipos de Recebimento Cadastrados:</h4>
                     <div class="lista-itens" id="listaTiposRecebimento"></div>
                 </div>
             </div>
 
-            <!-- TELA DE GERENCIAMENTO DE USUÁRIOS (SÓ ADMIN) -->
+            <!-- TELA DE USUÁRIOS -->
             <div id="telaUsuarios" class="screen">
                 <h2><i class="fas fa-users-cog"></i> Gerenciamento de Usuários</h2>
-                
                 <div class="alert-custom alert-success" id="alertSuccessUsuario">✅ Operação realizada com sucesso!</div>
                 <div class="alert-custom alert-error" id="alertErrorUsuario">❌ Erro ao realizar operação</div>
 
@@ -990,7 +977,6 @@
             <!-- TELA DASHBOARD -->
             <div id="telaDashboard" class="screen">
                 <h2><i class="fas fa-chart-line"></i> Dashboard - Estatísticas de Correspondências</h2>
-                
                 <div class="loading" id="loadingDashboard">
                     <div class="spinner"></div>
                     <p>Carregando estatísticas...</p>
@@ -1085,9 +1071,7 @@
                             </tr>
                         </thead>
                         <tbody id="bodyTabelaDetalhada">
-                            <tr>
-                                <td colspan="3" style="text-align: center;">Selecione um período e clique em Atualizar</td>
-                            </tr>
+                            <tr><td colspan="3" style="text-align: center;">Selecione um período e clique em Atualizar</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -1143,9 +1127,9 @@
                     </div>
                     <div class="button-group">
                         <button type="submit" class="btn-custom btn-primary-custom"><i class="fas fa-plus-circle"></i> Inserir</button>
-                        <button type="button" class="btn-custom btn-success-custom" onclick="imprimirProtocoloEnvio()"><i class="fas fa-print"></i> Imprimir Protocolo</button>
                     </div>
                 </form>
+
                 <div class="filter-section">
                     <h4><i class="fas fa-search"></i> Buscar Correspondências por Data</h4>
                     <div class="row">
@@ -1161,10 +1145,12 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="loading" id="loadingEnvio">
                     <div class="spinner"></div>
                     <p>Buscando registros...</p>
                 </div>
+
                 <div class="table-container">
                     <h3 id="tituloTabelaEnvio">📋 Correspondências Registradas Hoje</h3>
                     <table id="tabelaEnvios">
@@ -1228,9 +1214,9 @@
                     </div>
                     <div class="button-group">
                         <button type="submit" class="btn-custom btn-primary-custom"><i class="fas fa-plus-circle"></i> Inserir</button>
-                        <button type="button" class="btn-custom btn-success-custom" onclick="imprimirProtocoloRecebimento()"><i class="fas fa-print"></i> Imprimir Protocolo</button>
                     </div>
                 </form>
+
                 <div class="filter-section">
                     <h4><i class="fas fa-search"></i> Buscar Correspondências por Data</h4>
                     <div class="row">
@@ -1246,10 +1232,12 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="loading" id="loadingRecebimento">
                     <div class="spinner"></div>
                     <p>Buscando registros...</p>
                 </div>
+
                 <div class="table-container">
                     <h3 id="tituloTabelaRecebimento">📋 Correspondências Registradas Hoje</h3>
                     <table id="tabelaRecebimentos">
@@ -1272,15 +1260,14 @@
     </div>
 
     <script>
-        // ⚠️ IMPORTANTE: COLOQUE AQUI A URL DO SEU GOOGLE APPS SCRIPT
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbzeQZZ9sWj61UPEn-Zpg5r7EIK6XP5ZFcp4ca5ReSP3xBCN6C8UtuNa-sbGfo2AbMHV/exec';
+        // ⚠️ CRÍTICO: SUBSTITUA PELA URL DO SEU GOOGLE APPS SCRIPT
+        const scriptURL = 'COLE_AQUI_A_URL_DO_SEU_APPS_SCRIPT';
         
         let chartTipo = null;
         let chartDepartamento = null;
         let dadosAtuaisDashboard = { envios: [], recebimentos: [], periodo: '', tipo: '' };
         let usuarioLogado = null;
 
-        // DADOS PADRÃO PARA CONFIGURAÇÕES
         const departamentosPadrao = ['ATENDIMENTO', 'CADASTRO', 'COMERCIAL', 'LOGISTICA', 'CONTAS MÉDICAS', 'CONTROLADORIA', 'QUALIDADE', 'GESTÃO DE REDE', 'JURÍDICO', 'R.H/D.P', 'AUDITORIA', 'SECRETARIA', 'MANUTENÇÃO DE CONTRATOS', 'OUTROS'];
         const tiposEnvioPadrao = ['PAC', 'REGISTRADA', 'REGISTRADA COM AR', 'SEDEX', 'SEDEX REVERSO', 'SIMPLES', 'OUTROS'];
         const tiposRecebimentoPadrao = ['BOLETOS', 'FATURAMENTO', 'NOTIFICAÇÃO EXTRA-JUDICIAL', 'NOTIFICAÇÃO JUDICIAL', 'REEMBOLSO', 'TELEGRAMA', 'OUTROS'];
@@ -1314,6 +1301,7 @@
                     localStorage.setItem('sessaoBensaude', JSON.stringify(usuarioLogado));
                     mostrarSistemaPrincipal();
                 } else {
+                    alertError.textContent = '❌ ' + (result.message || 'Usuário ou senha inválidos');
                     alertError.style.display = 'block';
                     setTimeout(function() { alertError.style.display = 'none'; }, 3000);
                 }
@@ -1335,9 +1323,7 @@
             }
             
             document.getElementById('navHome').classList.add('active');
-            
             inicializarDados();
-            
             setDataHoje('dataEnvio');
             setDataHoje('dataRecebimento');
             setDataHoje('filtroDataEnvio');
@@ -1349,7 +1335,6 @@
             location.reload();
         }
 
-        // GERENCIAMENTO DE CONFIGURAÇÕES
         function inicializarDados() {
             if (!localStorage.getItem('departamentos')) {
                 localStorage.setItem('departamentos', JSON.stringify(departamentosPadrao));
@@ -1569,7 +1554,6 @@
             }
         }
 
-        // GERENCIAMENTO DE USUÁRIOS
         async function carregarUsuarios() {
             const loading = document.getElementById('loadingUsuarios');
             const lista = document.getElementById('listaUsuarios');
@@ -1848,11 +1832,10 @@
                 const hoje = new Date();
                 const ano = hoje.getFullYear();
                 const mes = hoje.getMonth();
-                const dia = hoje.getDate();
                 
                 if (periodo === 'hoje') {
                     const mesStr = String(mes + 1).padStart(2, '0');
-                    const diaStr = String(dia).padStart(2, '0');
+                    const diaStr = String(hoje.getDate()).padStart(2, '0');
                     dataInicio = dataFim = ano + '-' + mesStr + '-' + diaStr;
                 } else if (periodo === 'mes') {
                     const mesStr = String(mes + 1).padStart(2, '0');
@@ -1872,8 +1855,6 @@
                     }
                 }
 
-                dadosAtuaisDashboard.periodo = periodo;
-                dadosAtuaisDashboard.tipo = tipo;
                 dadosAtuaisDashboard.dataInicio = dataInicio;
                 dadosAtuaisDashboard.dataFim = dataFim;
 
@@ -1892,10 +1873,7 @@
                     if (res.status === 'success' && res.data) dadosRecebimentos = res.data;
                 }
 
-                dadosAtuaisDashboard.envios = dadosEnvios;
-                dadosAtuaisDashboard.recebimentos = dadosRecebimentos;
-
-                processarEstatisticas(dadosEnvios, dadosRecebimentos, tipo);
+                processarEstatisticas(dadosEnvios, dadosRecebimentos);
                 
             } catch (error) { 
                 console.error('Erro:', error);
@@ -1905,53 +1883,33 @@
             }
         }
 
-        function processarEstatisticas(dadosEnvios, dadosRecebimentos, tipoFiltro) {
+        function processarEstatisticas(dadosEnvios, dadosRecebimentos) {
             const todosDados = [...dadosEnvios, ...dadosRecebimentos];
             const totalEnvios = dadosEnvios.length;
             const totalRecebimentos = dadosRecebimentos.length;
             const totalGeral = totalEnvios + totalRecebimentos;
-            const quantidadeEnvios = dadosEnvios.reduce(function(sum, row) { return sum + (parseInt(row[4]) || 0); }, 0);
-            const quantidadeRecebimentos = dadosRecebimentos.reduce(function(sum, row) { return sum + (parseInt(row[4]) || 0); }, 0);
-            const quantidadeTotal = quantidadeEnvios + quantidadeRecebimentos;
+            const quantidadeTotal = todosDados.reduce((sum, row) => sum + (parseInt(row[4]) || 0), 0);
             
-            atualizarCards({totalGeral, totalEnvios, totalRecebimentos, quantidadeTotal});
+            document.getElementById('statsCards').innerHTML = 
+                '<div class="stat-card"><h4>📦 TOTAL GERAL</h4><div class="number">' + totalGeral + '</div><div class="label">Correspondências</div></div>' +
+                '<div class="stat-card"><h4>📤 ENVIOS</h4><div class="number">' + totalEnvios + '</div><div class="label">Correspondências</div></div>' +
+                '<div class="stat-card"><h4>📥 RECEBIMENTOS</h4><div class="number">' + totalRecebimentos + '</div><div class="label">Correspondências</div></div>' +
+                '<div class="stat-card"><h4>📊 QUANTIDADE TOTAL</h4><div class="number">' + quantidadeTotal + '</div><div class="label">Unidades</div></div>';
             
             const porTipo = {};
-            todosDados.forEach(function(row) { 
+            todosDados.forEach(row => { 
                 const tipo = row[2]; 
                 const qtd = parseInt(row[4]) || 0; 
                 porTipo[tipo] = (porTipo[tipo] || 0) + qtd; 
             });
             
             const porDepartamento = {};
-            todosDados.forEach(function(row) { 
+            todosDados.forEach(row => { 
                 const depto = row[1]; 
                 const qtd = parseInt(row[4]) || 0; 
                 porDepartamento[depto] = (porDepartamento[depto] || 0) + qtd; 
             });
             
-            const detalhado = {};
-            todosDados.forEach(function(row) { 
-                const depto = row[1]; 
-                const tipo = row[2]; 
-                const qtd = parseInt(row[4]) || 0; 
-                const chave = depto + '|' + tipo; 
-                detalhado[chave] = (detalhado[chave] || 0) + qtd; 
-            });
-            
-            atualizarGraficos(porTipo, porDepartamento);
-            atualizarTabelaDetalhada(detalhado);
-        }
-
-        function atualizarCards(stats) {
-            document.getElementById('statsCards').innerHTML = 
-                '<div class="stat-card"><h4>📦 TOTAL GERAL</h4><div class="number">' + stats.totalGeral + '</div><div class="label">Correspondências</div></div>' +
-                '<div class="stat-card"><h4>📤 ENVIOS</h4><div class="number">' + stats.totalEnvios + '</div><div class="label">Correspondências</div></div>' +
-                '<div class="stat-card"><h4>📥 RECEBIMENTOS</h4><div class="number">' + stats.totalRecebimentos + '</div><div class="label">Correspondências</div></div>' +
-                '<div class="stat-card"><h4>📊 QUANTIDADE TOTAL</h4><div class="number">' + stats.quantidadeTotal + '</div><div class="label">Unidades</div></div>';
-        }
-
-        function atualizarGraficos(porTipo, porDepartamento) {
             if (chartTipo) chartTipo.destroy();
             const ctxTipo = document.getElementById('chartTipo').getContext('2d');
             chartTipo = new Chart(ctxTipo, {
@@ -1961,15 +1919,13 @@
                     datasets: [{ 
                         label: 'Quantidade', 
                         data: Object.values(porTipo), 
-                        backgroundColor: ['#0066CC', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4'], 
-                        borderWidth: 0 
+                        backgroundColor: ['#0066CC', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4']
                     }] 
                 },
                 options: { 
                     responsive: true, 
-                    maintainAspectRatio: true, 
                     plugins: { legend: { display: false } }, 
-                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } 
+                    scales: { y: { beginAtZero: true } } 
                 }
             });
             
@@ -1981,33 +1937,31 @@
                     labels: Object.keys(porDepartamento), 
                     datasets: [{ 
                         data: Object.values(porDepartamento), 
-                        backgroundColor: ['#0066CC', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4', '#EC4899'], 
-                        borderWidth: 2, 
-                        borderColor: '#FFFFFF' 
+                        backgroundColor: ['#0066CC', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4', '#EC4899']
                     }] 
                 },
                 options: { 
                     responsive: true, 
-                    maintainAspectRatio: true, 
                     plugins: { legend: { position: 'bottom' } } 
                 }
             });
-        }
 
-        function atualizarTabelaDetalhada(detalhado) {
+            const detalhado = {};
+            todosDados.forEach(row => { 
+                const chave = row[1] + '|' + row[2]; 
+                const qtd = parseInt(row[4]) || 0; 
+                detalhado[chave] = (detalhado[chave] || 0) + qtd; 
+            });
+            
             const tbody = document.getElementById('bodyTabelaDetalhada');
             if (Object.keys(detalhado).length === 0) { 
                 tbody.innerHTML = '<tr><td colspan="3" style="text-align: center;">Nenhum dado encontrado</td></tr>'; 
                 return; 
             }
             tbody.innerHTML = '';
-            const ordenado = Object.entries(detalhado).sort(function(a, b) { return a[0].localeCompare(b[0]); });
-            ordenado.forEach(function(item) {
-                const chave = item[0];
+            Object.entries(detalhado).sort().forEach(item => {
+                const [depto, tipo] = item[0].split('|');
                 const qtd = item[1];
-                const partes = chave.split('|');
-                const depto = partes[0];
-                const tipo = partes[1];
                 const tr = document.createElement('tr');
                 tr.innerHTML = '<td><strong>' + depto + '</strong></td><td>' + tipo + '</td><td><strong style="color: #0066CC;">' + qtd + '</strong></td>';
                 tbody.appendChild(tr);
@@ -2015,17 +1969,8 @@
         }
 
         function imprimirRelatorioDashboard() {
-            alert('Função de impressão do dashboard - implementar conforme necessário');
-        }
-
-        function imprimirProtocoloEnvio() {
-            alert('Função de impressão de protocolo de envio - implementar conforme necessário');
-        }
-
-        function imprimirProtocoloRecebimento() {
-            alert('Função de impressão de protocolo de recebimento - implementar conforme necessário');
+            window.print();
         }
     </script>
 </body>
 </html>
-
