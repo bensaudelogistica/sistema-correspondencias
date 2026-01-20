@@ -405,16 +405,6 @@
             box-shadow: 0 8px 25px rgba(0, 102, 204, 0.35);
         }
 
-        .btn-secondary-custom {
-            background: #64748B;
-            color: var(--branco);
-        }
-
-        .btn-secondary-custom:hover {
-            background: #475569;
-            transform: translateY(-2px);
-        }
-
         .btn-success-custom {
             background: #10B981;
             color: var(--branco);
@@ -1127,6 +1117,7 @@
                     </div>
                     <div class="button-group">
                         <button type="submit" class="btn-custom btn-primary-custom"><i class="fas fa-plus-circle"></i> Inserir</button>
+                        <button type="button" class="btn-custom btn-success-custom" onclick="imprimirProtocoloEnvio()"><i class="fas fa-print"></i> Imprimir Protocolo</button>
                     </div>
                 </form>
 
@@ -1214,6 +1205,7 @@
                     </div>
                     <div class="button-group">
                         <button type="submit" class="btn-custom btn-primary-custom"><i class="fas fa-plus-circle"></i> Inserir</button>
+                        <button type="button" class="btn-custom btn-success-custom" onclick="imprimirProtocoloRecebimento()"><i class="fas fa-print"></i> Imprimir Protocolo</button>
                     </div>
                 </form>
 
@@ -1971,7 +1963,79 @@
         function imprimirRelatorioDashboard() {
             window.print();
         }
+
+        function imprimirProtocoloEnvio() {
+            const tbody = document.getElementById('bodyTabelaEnvios');
+            const rows = tbody.querySelectorAll('tr');
+            
+            if (rows.length === 0 || (rows.length === 1 && rows[0].cells.length === 1)) { 
+                alert('Não há registros para imprimir!'); 
+                return; 
+            }
+            
+            const dataFiltro = document.getElementById('filtroDataEnvio').value;
+            const hoje = new Date();
+            const ano = hoje.getFullYear();
+            const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+            const dia = String(hoje.getDate()).padStart(2, '0');
+            const dataProtocolo = dataFiltro || (ano + '-' + mes + '-' + dia);
+            
+            let html = '<!DOCTYPE html><html><head><title>Protocolo de Envio</title><style>body{font-family:Arial,sans-serif;padding:20px}h1{text-align:center;color:#0066CC;margin-bottom:10px}.info{margin:20px 0}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{border:1px solid #0066CC;padding:12px 8px;text-align:left;font-size:11px}th{background:#0066CC;color:white;font-weight:bold}</style></head><body><h1>PROTOCOLO DE ENVIO DE CORRESPONDÊNCIAS</h1><div class="info"><p><strong>Bensaúde Logística</strong></p><p><strong>Data:</strong> ' + formatarData(dataProtocolo) + '</p><p><strong>Hora de impressão:</strong> ' + new Date().toLocaleString('pt-BR') + '</p></div><table><thead><tr><th>Data</th><th>Departamento</th><th>Tipo</th><th>Descrição</th><th style="width:60px;">Qtd</th></tr></thead><tbody>';
+            
+            rows.forEach(function(row) {
+                if (row.cells.length > 1) {
+                    html += '<tr>';
+                    for (let i = 0; i < row.cells.length; i++) {
+                        html += '<td>' + row.cells[i].textContent + '</td>';
+                    }
+                    html += '</tr>';
+                }
+            });
+            
+            html += '</tbody></table></body></html>';
+            
+            const janela = window.open('', '_blank');
+            janela.document.write(html);
+            janela.document.close();
+            janela.print();
+        }
+
+        function imprimirProtocoloRecebimento() {
+            const tbody = document.getElementById('bodyTabelaRecebimentos');
+            const rows = tbody.querySelectorAll('tr');
+            
+            if (rows.length === 0 || (rows.length === 1 && rows[0].cells.length === 1)) { 
+                alert('Não há registros para imprimir!'); 
+                return; 
+            }
+            
+            const dataFiltro = document.getElementById('filtroDataRecebimento').value;
+            const hoje = new Date();
+            const ano = hoje.getFullYear();
+            const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+            const dia = String(hoje.getDate()).padStart(2, '0');
+            const dataProtocolo = dataFiltro || (ano + '-' + mes + '-' + dia);
+            
+            let html = '<!DOCTYPE html><html><head><title>Protocolo de Recebimento</title><style>body{font-family:Arial,sans-serif;padding:20px}h1{text-align:center;color:#0066CC;margin-bottom:10px}.info{margin:20px 0}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{border:1px solid #0066CC;padding:12px 8px;text-align:left;font-size:11px}th{background:#0066CC;color:white;font-weight:bold}.assinatura-col{background:#FFFF00;width:180px;text-align:center;vertical-align:middle}.linha-assinatura{border-top:1px solid #333;margin-top:50px;width:90%;margin-left:auto;margin-right:auto}.label-recebedor{font-size:10px;color:#0066CC;font-weight:bold;margin-bottom:5px}</style></head><body><h1>PROTOCOLO DE RECEBIMENTO DE CORRESPONDÊNCIAS</h1><div class="info"><p><strong>Bensaúde Logística</strong></p><p><strong>Data:</strong> ' + formatarData(dataProtocolo) + '</p><p><strong>Hora de impressão:</strong> ' + new Date().toLocaleString('pt-BR') + '</p></div><table><thead><tr><th>Data</th><th>Departamento</th><th>Tipo</th><th>Descrição</th><th style="width:60px;">Qtd</th><th class="assinatura-col">Recebedor / Assinatura</th></tr></thead><tbody>';
+            
+            rows.forEach(function(row) {
+                if (row.cells.length > 1) {
+                    html += '<tr>';
+                    for (let i = 0; i < row.cells.length; i++) {
+                        html += '<td>' + row.cells[i].textContent + '</td>';
+                    }
+                    html += '<td class="assinatura-col"><div class="label-recebedor">RECEBEDOR:</div><div class="linha-assinatura"></div></td>';
+                    html += '</tr>';
+                }
+            });
+            
+            html += '</tbody></table></body></html>';
+            
+            const janela = window.open('', '_blank');
+            janela.document.write(html);
+            janela.document.close();
+            janela.print();
+        }
     </script>
 </body>
 </html>
-
