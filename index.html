@@ -8,44 +8,17 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --azul-bensaude: #0066CC;
-            --azul-escuro: #004C99;
-            --azul-claro: #E6F2FF;
-            --branco: #FFFFFF;
-            --cinza-tech: #F8FAFC;
-            --cinza-borda: #E2E8F0;
-            --texto-escuro: #1E293B;
-            --texto-secundario: #64748B;
-        }
-
         body {
-            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #E6F2FF 0%, #F8FAFC 100%);
             min-height: 100vh;
             padding: 20px;
-            color: var(--texto-escuro);
-        }
-
-        .container-custom {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: var(--branco);
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0, 102, 204, 0.12);
-            overflow: hidden;
         }
 
         .login-container {
             max-width: 450px;
             margin: 100px auto;
-            background: var(--branco);
+            background: white;
             border-radius: 24px;
             box-shadow: 0 20px 60px rgba(0, 102, 204, 0.15);
             padding: 50px 40px;
@@ -53,510 +26,73 @@
         }
 
         .login-container h1 {
-            color: var(--azul-bensaude);
+            color: #0066CC;
             margin-bottom: 10px;
             font-size: 2em;
         }
 
         .login-container p {
-            color: var(--texto-secundario);
+            color: #64748B;
             margin-bottom: 30px;
-        }
-
-        .login-form {
-            text-align: left;
-        }
-
-        .header {
-            background: linear-gradient(135deg, var(--azul-bensaude) 0%, var(--azul-escuro) 100%);
-            color: var(--branco);
-            padding: 40px 30px 30px 30px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: pulse 15s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 0.3; }
-        }
-
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            font-weight: 700;
-            position: relative;
-            z-index: 1;
-        }
-
-        .header p {
-            font-size: 1.1em;
-            opacity: 0.95;
-            font-weight: 300;
-            position: relative;
-            z-index: 1;
-            margin-bottom: 25px;
-        }
-
-        .header-icons {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 10;
-        }
-
-        .user-info-text {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-size: 0.85em;
-            margin-right: 5px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .icon-btn {
-            background: rgba(255, 255, 255, 0.15);
-            color: var(--branco);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.95em;
-        }
-
-        .icon-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-            border-color: rgba(255, 255, 255, 0.5);
-            transform: scale(1.1);
-        }
-
-        .icon-btn.logout {
-            background: rgba(239, 68, 68, 0.2);
-            border-color: rgba(239, 68, 68, 0.4);
-        }
-
-        .icon-btn.logout:hover {
-            background: rgba(239, 68, 68, 0.4);
-        }
-
-        .navbar-custom {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 15px 30px;
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-            border-top: 2px solid rgba(255, 255, 255, 0.2);
-            margin-top: 20px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .nav-btn {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--branco);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            padding: 12px 24px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            font-size: 0.95em;
-        }
-
-        .nav-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-            border-color: rgba(255, 255, 255, 0.6);
-            transform: translateY(-2px);
-        }
-
-        .nav-btn.active {
-            background: var(--branco);
-            color: var(--azul-bensaude);
-            border-color: var(--branco);
-        }
-
-        .nav-btn i {
-            font-size: 1.2em;
-        }
-
-        .screen {
-            display: none;
-            padding: 40px;
-            animation: fadeIn 0.3s ease-in;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .screen.active {
-            display: block;
-        }
-
-        .menu-inicial {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            padding: 20px;
-        }
-
-        .menu-card {
-            background: var(--branco);
-            border: 2px solid var(--cinza-borda);
-            border-radius: 20px;
-            padding: 50px 30px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            color: var(--azul-bensaude);
-            box-shadow: 0 4px 20px rgba(0, 102, 204, 0.08);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .menu-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--azul-bensaude) 0%, var(--azul-escuro) 100%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            z-index: 0;
-        }
-
-        .menu-card:hover {
-            transform: translateY(-12px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0, 102, 204, 0.25);
-            border-color: var(--azul-bensaude);
-        }
-
-        .menu-card:hover::before {
-            opacity: 1;
-        }
-
-        .menu-card:hover i,
-        .menu-card:hover h3,
-        .menu-card:hover p {
-            color: var(--branco);
-            position: relative;
-            z-index: 1;
-        }
-
-        .menu-card i {
-            font-size: 4em;
-            margin-bottom: 20px;
-            transition: all 0.4s ease;
-            position: relative;
-            z-index: 1;
-        }
-
-        .menu-card h3 {
-            font-size: 1.6em;
-            margin-bottom: 10px;
-            font-weight: 700;
-            transition: all 0.4s ease;
-            position: relative;
-            z-index: 1;
-        }
-
-        .menu-card p {
-            color: var(--texto-secundario);
-            font-size: 0.95em;
-            transition: all 0.4s ease;
-            position: relative;
-            z-index: 1;
-        }
-
-        .user-list {
-            background: var(--cinza-tech);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .user-item {
-            background: var(--branco);
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 8px rgba(0, 102, 204, 0.08);
-        }
-
-        .user-item strong {
-            color: var(--azul-bensaude);
-        }
-
-        .user-item .badge {
-            background: var(--azul-bensaude);
-            color: var(--branco);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.8em;
-            margin-left: 10px;
-        }
-
-        .user-item .badge.admin {
-            background: #F59E0B;
-        }
-
-        .btn-remove {
-            background: #EF4444;
-            color: var(--branco);
-            border: none;
-            padding: 8px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-remove:hover {
-            background: #DC2626;
-            transform: scale(1.05);
         }
 
         .form-group {
             margin-bottom: 24px;
+            text-align: left;
         }
 
         .form-group label {
             display: block;
             margin-bottom: 10px;
             font-weight: 600;
-            color: var(--texto-escuro);
-            font-size: 0.95em;
+            color: #1E293B;
         }
 
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
+        .form-group input {
             width: 100%;
             padding: 14px 16px;
-            border: 2px solid var(--cinza-borda);
+            border: 2px solid #E2E8F0;
             border-radius: 12px;
             font-size: 1em;
-            transition: all 0.3s ease;
-            background: var(--cinza-tech);
-            color: var(--texto-escuro);
+            background: #F8FAFC;
         }
 
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
+        .form-group input:focus {
             outline: none;
-            border-color: var(--azul-bensaude);
-            background: var(--branco);
+            border-color: #0066CC;
+            background: white;
             box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1);
         }
 
-        .btn-custom {
+        .btn-login {
+            width: 100%;
             padding: 14px 32px;
             border: none;
             border-radius: 12px;
             font-size: 1em;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 5px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+            background: linear-gradient(135deg, #0066CC 0%, #004C99 100%);
+            color: white;
         }
 
-        .btn-primary-custom {
-            background: linear-gradient(135deg, var(--azul-bensaude) 0%, var(--azul-escuro) 100%);
-            color: var(--branco);
-        }
-
-        .btn-primary-custom:hover {
+        .btn-login:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(0, 102, 204, 0.35);
         }
 
-        .btn-success-custom {
-            background: #10B981;
-            color: var(--branco);
-        }
-
-        .btn-success-custom:hover {
-            background: #059669;
-            transform: translateY(-2px);
-        }
-
-        .btn-info-custom {
-            background: var(--azul-bensaude);
-            color: var(--branco);
-        }
-
-        .btn-info-custom:hover {
-            background: var(--azul-escuro);
-            transform: translateY(-2px);
-        }
-
-        .btn-warning-custom {
-            background: #F59E0B;
-            color: var(--branco);
-        }
-
-        .btn-warning-custom:hover {
-            background: #D97706;
-            transform: translateY(-2px);
-        }
-
-        .btn-excluir {
-            background: #EF4444;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85em;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .btn-excluir:hover {
-            background: #DC2626;
-            transform: scale(1.05);
-        }
-
-        .btn-excluir:disabled {
-            background: #9CA3AF;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .button-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 24px;
-        }
-
-        .alert-custom {
+        .alert {
             padding: 16px 20px;
             border-radius: 12px;
             margin-bottom: 24px;
             display: none;
             font-weight: 500;
-            border-left: 4px solid;
-        }
-
-        .alert-success {
-            background: #D1FAE5;
-            color: #065F46;
-            border-color: #10B981;
         }
 
         .alert-error {
             background: #FEE2E2;
             color: #991B1B;
-            border-color: #EF4444;
-        }
-
-        .table-container {
-            margin-top: 30px;
-            overflow-x: auto;
-            background: var(--branco);
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 102, 204, 0.08);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table thead {
-            background: linear-gradient(135deg, var(--azul-bensaude) 0%, var(--azul-escuro) 100%);
-            color: var(--branco);
-        }
-
-        table th {
-            padding: 18px 20px;
-            text-align: left;
-            font-weight: 600;
-            font-size: 0.95em;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        table td {
-            padding: 16px 20px;
-            text-align: left;
-            border-bottom: 1px solid var(--cinza-borda);
-            color: var(--texto-escuro);
-        }
-
-        table td:last-child {
-            text-align: center;
-        }
-
-        table tbody tr {
-            transition: background 0.2s ease;
-        }
-
-        table tbody tr:hover {
-            background: var(--azul-claro);
-        }
-
-        table tbody tr:nth-child(even) {
-            background: var(--cinza-tech);
-        }
-
-        table tbody tr:nth-child(even):hover {
-            background: var(--azul-claro);
-        }
-
-        .filter-section {
-            background: linear-gradient(135deg, var(--azul-claro) 0%, var(--branco) 100%);
-            padding: 28px;
-            border-radius: 16px;
-            margin-top: 30px;
-            margin-bottom: 20px;
-            border: 2px solid var(--azul-bensaude);
-            box-shadow: 0 4px 20px rgba(0, 102, 204, 0.1);
-        }
-
-        .filter-section h4 {
-            color: var(--azul-bensaude);
-            margin-bottom: 20px;
-            font-weight: 700;
-            font-size: 1.2em;
+            border-left: 4px solid #EF4444;
         }
 
         .loading {
@@ -570,8 +106,8 @@
         }
 
         .spinner {
-            border: 4px solid var(--azul-claro);
-            border-top: 4px solid var(--azul-bensaude);
+            border: 4px solid #E6F2FF;
+            border-top: 4px solid #0066CC;
             border-radius: 50%;
             width: 50px;
             height: 50px;
@@ -584,205 +120,47 @@
             100% { transform: rotate(360deg); }
         }
 
-        .loading p {
-            color: var(--azul-bensaude);
-            font-weight: 600;
+        .sistema-principal {
+            display: none;
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 102, 204, 0.12);
         }
 
-        h2 {
-            color: var(--azul-bensaude);
-            font-weight: 700;
+        .header {
+            background: linear-gradient(135deg, #0066CC 0%, #004C99 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
             margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
             font-size: 2em;
         }
 
-        h3 {
-            color: var(--texto-escuro);
-            font-weight: 600;
-            margin-bottom: 20px;
-            font-size: 1.3em;
-        }
-
-        .stats-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, var(--azul-bensaude) 0%, var(--azul-escuro) 100%);
-            color: var(--branco);
-            padding: 25px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 102, 204, 0.2);
-            transition: transform 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .stat-card h4 {
-            font-size: 0.9em;
+        .user-info {
+            margin-top: 10px;
             opacity: 0.9;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: var(--branco);
         }
 
-        .stat-card .number {
-            font-size: 2.5em;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .stat-card .label {
-            font-size: 0.85em;
-            opacity: 0.8;
-        }
-
-        .chart-container {
-            background: var(--branco);
-            padding: 25px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 102, 204, 0.08);
-            margin-bottom: 25px;
-        }
-
-        .chart-container h3 {
-            color: var(--azul-bensaude);
-            margin-bottom: 20px;
-            font-size: 1.2em;
-        }
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
-        }
-
-        .config-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            border-bottom: 2px solid var(--cinza-borda);
-        }
-
-        .config-tab {
-            padding: 12px 24px;
-            background: transparent;
-            border: none;
-            border-bottom: 3px solid transparent;
-            color: var(--texto-secundario);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .config-tab:hover {
-            color: var(--azul-bensaude);
-        }
-
-        .config-tab.active {
-            color: var(--azul-bensaude);
-            border-bottom-color: var(--azul-bensaude);
-        }
-
-        .config-content {
-            display: none;
-        }
-
-        .config-content.active {
-            display: block;
-        }
-
-        .lista-itens {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .item-badge {
-            background: var(--azul-claro);
-            color: var(--azul-bensaude);
-            padding: 10px 18px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 500;
-            border: 2px solid var(--azul-bensaude);
-            font-size: 0.9em;
-        }
-
-        .item-badge .remove-btn {
-            background: #EF4444;
+        .btn-logout {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: rgba(239, 68, 68, 0.3);
+            border: 1px solid rgba(239, 68, 68, 0.5);
             color: white;
-            border: none;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
+            border-radius: 8px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.9em;
-            transition: all 0.2s ease;
-            font-weight: bold;
         }
 
-        .item-badge .remove-btn:hover {
-            background: #DC2626;
-            transform: scale(1.1);
-        }
-
-        @media (max-width: 768px) {
-            .navbar-custom {
-                padding: 10px 15px;
-                gap: 10px;
-            }
-            
-            .nav-btn {
-                flex: 1 1 45%;
-                justify-content: center;
-                padding: 10px 15px;
-                font-size: 0.85em;
-            }
-
-            .header h1 {
-                font-size: 1.8em;
-            }
-
-            .header-icons {
-                position: static;
-                justify-content: center;
-                margin-bottom: 15px;
-                flex-wrap: wrap;
-            }
-            
-            .menu-card {
-                padding: 30px 20px;
-            }
-            
-            .button-group {
-                flex-direction: column;
-            }
-            
-            .btn-custom {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .menu-inicial {
-                grid-template-columns: 1fr;
-            }
+        .btn-logout:hover {
+            background: rgba(239, 68, 68, 0.5);
         }
     </style>
 </head>
@@ -791,20 +169,25 @@
     <div id="telaLogin" class="login-container">
         <h1><i class="fas fa-lock"></i> Login</h1>
         <p>Sistema de Correspondências - Bensaúde</p>
-        <div class="alert-custom alert-error" id="alertLoginError" style="display: none;">❌ Usuário ou senha inválidos</div>
-        <form class="login-form" onsubmit="fazerLogin(event)">
+        
+        <div class="alert alert-error" id="alertLoginError">
+            ❌ Usuário ou senha inválidos
+        </div>
+        
+        <form id="formLogin" onsubmit="fazerLogin(event)">
             <div class="form-group">
                 <label><i class="fas fa-user"></i> Usuário:</label>
-                <input type="text" id="loginUsuario" required autocomplete="username">
+                <input type="text" id="loginUsuario" required autocomplete="username" placeholder="Digite seu usuário">
             </div>
             <div class="form-group">
                 <label><i class="fas fa-key"></i> Senha:</label>
-                <input type="password" id="loginSenha" required autocomplete="current-password">
+                <input type="password" id="loginSenha" required autocomplete="current-password" placeholder="Digite sua senha">
             </div>
-            <button type="submit" class="btn-custom btn-primary-custom" style="width: 100%; justify-content: center;">
+            <button type="submit" class="btn-login">
                 <i class="fas fa-sign-in-alt"></i> Entrar
             </button>
         </form>
+        
         <div class="loading" id="loadingLogin">
             <div class="spinner"></div>
             <p>Validando credenciais...</p>
@@ -812,544 +195,105 @@
     </div>
 
     <!-- SISTEMA PRINCIPAL -->
-    <div id="sistemaPrincipal" style="display: none;">
-        <div class="container-custom">
-            <div class="header">
-                <div class="header-icons">
-                    <div class="user-info-text">
-                        <i class="fas fa-user"></i>
-                        <span id="nomeUsuarioLogado"></span>
-                    </div>
-                    <button class="icon-btn" onclick="navegarPara('telaDashboard')" title="Dashboard">
-                        <i class="fas fa-chart-line"></i>
-                    </button>
-                    <button class="icon-btn" onclick="navegarPara('telaConfiguracoes')" title="Configurações" id="btnConfiguracoes">
-                        <i class="fas fa-cog"></i>
-                    </button>
-                    <button class="icon-btn" onclick="navegarPara('telaUsuarios')" title="Gerenciar Usuários" id="btnUsuarios" style="display: none;">
-                        <i class="fas fa-users-cog"></i>
-                    </button>
-                    <button class="icon-btn logout" onclick="fazerLogout()" title="Sair">
-                        <i class="fas fa-sign-out-alt"></i>
-                    </button>
-                </div>
-                
-                <h1><i class="fas fa-box"></i> Sistema de Correspondências</h1>
-                <p>Bensaúde Logística - Controle Inteligente</p>
-                
-                <nav class="navbar-custom">
-                    <button class="nav-btn" id="navHome" onclick="navegarPara('telaInicial')">
-                        <i class="fas fa-home"></i> HOME
-                    </button>
-                    <button class="nav-btn" id="navEnvio" onclick="navegarPara('telaEnvio')">
-                        <i class="fas fa-paper-plane"></i> ENVIO
-                    </button>
-                    <button class="nav-btn" id="navRecebimento" onclick="navegarPara('telaRecebimento')">
-                        <i class="fas fa-inbox"></i> RECEBIMENTO
-                    </button>
-                </nav>
+    <div id="sistemaPrincipal" class="sistema-principal">
+        <div class="header">
+            <h1><i class="fas fa-box"></i> Sistema de Correspondências</h1>
+            <div class="user-info">
+                Bem-vindo, <strong id="nomeUsuarioLogado"></strong>
             </div>
-
-            <!-- TELA INICIAL -->
-            <div id="telaInicial" class="screen active">
-                <div class="menu-inicial">
-                    <div class="menu-card" onclick="navegarPara('telaEnvio')">
-                        <i class="fas fa-paper-plane"></i>
-                        <h3>Envio</h3>
-                        <p>Registrar envios de correspondências</p>
-                    </div>
-                    <div class="menu-card" onclick="navegarPara('telaRecebimento')">
-                        <i class="fas fa-inbox"></i>
-                        <h3>Recebimento</h3>
-                        <p>Registrar recebimentos de correspondências</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TELA DE CONFIGURAÇÕES -->
-            <div id="telaConfiguracoes" class="screen">
-                <h2><i class="fas fa-cog"></i> Configurações do Sistema</h2>
-                <div class="alert-custom alert-success" id="alertSuccessConfig">✅ Item salvo com sucesso!</div>
-
-                <div class="config-tabs">
-                    <button class="config-tab active" onclick="trocarAbaConfig('departamentos', event)">
-                        <i class="fas fa-building"></i> Departamentos
-                    </button>
-                    <button class="config-tab" onclick="trocarAbaConfig('tiposEnvio', event)">
-                        <i class="fas fa-paper-plane"></i> Tipos de Envio
-                    </button>
-                    <button class="config-tab" onclick="trocarAbaConfig('tiposRecebimento', event)">
-                        <i class="fas fa-inbox"></i> Tipos de Recebimento
-                    </button>
-                </div>
-
-                <div id="configDepartamentos" class="config-content active">
-                    <h3>📋 Gerenciar Departamentos</h3>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="form-group">
-                                <label>Nome do Departamento:</label>
-                                <input type="text" id="novoDepartamento" placeholder="Digite o nome do novo departamento...">
-                            </div>
-                        </div>
-                        <div class="col-md-4" style="display: flex; align-items: flex-end;">
-                            <button class="btn-custom btn-primary-custom" onclick="adicionarDepartamento()">
-                                <i class="fas fa-plus"></i> Adicionar
-                            </button>
-                        </div>
-                    </div>
-                    <h4 style="margin-top: 30px; color: var(--azul-bensaude);">Departamentos Cadastrados:</h4>
-                    <div class="lista-itens" id="listaDepartamentos"></div>
-                </div>
-
-                <div id="configTiposEnvio" class="config-content">
-                    <h3>📤 Gerenciar Tipos de Correspondência (Envio)</h3>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="form-group">
-                                <label>Nome do Tipo de Envio:</label>
-                                <input type="text" id="novoTipoEnvio" placeholder="Digite o nome do novo tipo de envio...">
-                            </div>
-                        </div>
-                        <div class="col-md-4" style="display: flex; align-items: flex-end;">
-                            <button class="btn-custom btn-primary-custom" onclick="adicionarTipoEnvio()">
-                                <i class="fas fa-plus"></i> Adicionar
-                            </button>
-                        </div>
-                    </div>
-                    <h4 style="margin-top: 30px; color: var(--azul-bensaude);">Tipos de Envio Cadastrados:</h4>
-                    <div class="lista-itens" id="listaTiposEnvio"></div>
-                </div>
-
-                <div id="configTiposRecebimento" class="config-content">
-                    <h3>📥 Gerenciar Tipos de Correspondência (Recebimento)</h3>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="form-group">
-                                <label>Nome do Tipo de Recebimento:</label>
-                                <input type="text" id="novoTipoRecebimento" placeholder="Digite o nome do novo tipo de recebimento...">
-                            </div>
-                        </div>
-                        <div class="col-md-4" style="display: flex; align-items: flex-end;">
-                            <button class="btn-custom btn-primary-custom" onclick="adicionarTipoRecebimento()">
-                                <i class="fas fa-plus"></i> Adicionar
-                            </button>
-                        </div>
-                    </div>
-                    <h4 style="margin-top: 30px; color: var(--azul-bensaude);">Tipos de Recebimento Cadastrados:</h4>
-                    <div class="lista-itens" id="listaTiposRecebimento"></div>
-                </div>
-            </div>
-
-            <!-- TELA DE USUÁRIOS -->
-            <div id="telaUsuarios" class="screen">
-                <h2><i class="fas fa-users-cog"></i> Gerenciamento de Usuários</h2>
-                <div class="alert-custom alert-success" id="alertSuccessUsuario">✅ Operação realizada com sucesso!</div>
-                <div class="alert-custom alert-error" id="alertErrorUsuario">❌ Erro ao realizar operação</div>
-
-                <div class="filter-section">
-                    <h4><i class="fas fa-user-plus"></i> Adicionar Novo Usuário</h4>
-                    <form id="formNovoUsuario" onsubmit="adicionarUsuario(event)">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Nome Completo:</label>
-                                    <input type="text" id="novoNome" required>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Login:</label>
-                                    <input type="text" id="novoLogin" required>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Senha:</label>
-                                    <input type="password" id="novoSenha" required>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label>Tipo:</label>
-                                    <select id="novoTipo" required>
-                                        <option value="usuario">Usuário</option>
-                                        <option value="admin">Admin</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn-custom btn-primary-custom">
-                            <i class="fas fa-plus-circle"></i> Adicionar Usuário
-                        </button>
-                    </form>
-                </div>
-
-                <h3><i class="fas fa-users"></i> Usuários Cadastrados</h3>
-                <div class="loading" id="loadingUsuarios">
-                    <div class="spinner"></div>
-                    <p>Carregando usuários...</p>
-                </div>
-                <div class="user-list" id="listaUsuarios"></div>
-            </div>
-
-            <!-- TELA DASHBOARD -->
-            <div id="telaDashboard" class="screen">
-                <h2><i class="fas fa-chart-line"></i> Dashboard - Estatísticas de Correspondências</h2>
-                <div class="loading" id="loadingDashboard">
-                    <div class="spinner"></div>
-                    <p>Carregando estatísticas...</p>
-                </div>
-
-                <div class="filter-section">
-                    <h4><i class="fas fa-filter"></i> Filtros</h4>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Período:</label>
-                                <select id="filtroPeriodo" onchange="toggleDataPersonalizada()">
-                                    <option value="hoje">Hoje</option>
-                                    <option value="mes" selected>Este Mês</option>
-                                    <option value="ano">Este Ano</option>
-                                    <option value="personalizado">Personalizado</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3" id="dataInicioContainer" style="display: none;">
-                            <div class="form-group">
-                                <label>Data Início:</label>
-                                <input type="date" id="dataInicio">
-                            </div>
-                        </div>
-                        <div class="col-md-3" id="dataFimContainer" style="display: none;">
-                            <div class="form-group">
-                                <label>Data Fim:</label>
-                                <input type="date" id="dataFim">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Tipo:</label>
-                                <select id="filtroTipo">
-                                    <option value="ambos">Envios e Recebimentos</option>
-                                    <option value="envios">Apenas Envios</option>
-                                    <option value="recebimentos">Apenas Recebimentos</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3" style="display: flex; align-items: flex-end;">
-                            <button class="btn-custom btn-info-custom" onclick="atualizarDashboard()">
-                                <i class="fas fa-sync"></i> Atualizar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="stats-cards" id="statsCards">
-                    <div class="stat-card">
-                        <h4>📦 TOTAL GERAL</h4>
-                        <div class="number">0</div>
-                        <div class="label">Correspondências</div>
-                    </div>
-                    <div class="stat-card">
-                        <h4>📤 ENVIOS</h4>
-                        <div class="number">0</div>
-                        <div class="label">Correspondências</div>
-                    </div>
-                    <div class="stat-card">
-                        <h4>📥 RECEBIMENTOS</h4>
-                        <div class="number">0</div>
-                        <div class="label">Correspondências</div>
-                    </div>
-                    <div class="stat-card">
-                        <h4>📊 QUANTIDADE TOTAL</h4>
-                        <div class="number">0</div>
-                        <div class="label">Unidades</div>
-                    </div>
-                </div>
-
-                <div class="dashboard-grid">
-                    <div class="chart-container">
-                        <h3>📊 Por Tipo de Correspondência</h3>
-                        <canvas id="chartTipo"></canvas>
-                    </div>
-                    <div class="chart-container">
-                        <h3>🏢 Por Departamento</h3>
-                        <canvas id="chartDepartamento"></canvas>
-                    </div>
-                </div>
-
-                <div class="table-container" style="margin-top: 30px;">
-                    <h3 style="padding: 20px 20px 0;">📋 Detalhamento por Setor e Tipo</h3>
-                    <table id="tabelaDetalhada">
-                        <thead>
-                            <tr>
-                                <th>Departamento</th>
-                                <th>Tipo</th>
-                                <th>Quantidade</th>
-                            </tr>
-                        </thead>
-                        <tbody id="bodyTabelaDetalhada">
-                            <tr><td colspan="3" style="text-align: center;">Selecione um período e clique em Atualizar</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="button-group">
-                    <button type="button" class="btn-custom btn-success-custom" onclick="imprimirRelatorioDashboard()">
-                        <i class="fas fa-print"></i> Imprimir Relatório
-                    </button>
-                </div>
-            </div>
-
-            <!-- TELA DE ENVIO -->
-            <div id="telaEnvio" class="screen">
-                <h2><i class="fas fa-paper-plane"></i> Envio de Correspondências</h2>
-                <div class="alert-custom alert-success" id="alertSuccessEnvio">✅ Correspondência registrada com sucesso!</div>
-                <div class="alert-custom alert-error" id="alertErrorEnvio">❌ Erro ao registrar. Tente novamente.</div>
-                <form id="formEnvio" onsubmit="inserirEnvio(event)">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label><i class="fas fa-calendar"></i> Data do Envio:</label>
-                                <input type="date" id="dataEnvio" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label><i class="fas fa-building"></i> Departamento:</label>
-                                <select id="departamentoEnvio" required>
-                                    <option value="">Selecione...</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label><i class="fas fa-envelope"></i> Tipo de Correspondência:</label>
-                                <select id="tipoEnvio" required>
-                                    <option value="">Selecione...</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label><i class="fas fa-sort-numeric-up"></i> Quantidade:</label>
-                                <input type="number" id="quantidadeEnvio" min="1" value="1" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label><i class="fas fa-align-left"></i> Descrição da Correspondência:</label>
-                        <textarea id="descricaoEnvio" rows="3" placeholder="Digite detalhes sobre a correspondência..." required></textarea>
-                    </div>
-                    <div class="button-group">
-                        <button type="submit" class="btn-custom btn-primary-custom"><i class="fas fa-plus-circle"></i> Inserir</button>
-                        <button type="button" class="btn-custom btn-success-custom" onclick="imprimirProtocoloEnvio()"><i class="fas fa-print"></i> Imprimir Protocolo</button>
-                    </div>
-                </form>
-
-                <div class="filter-section">
-                    <h4><i class="fas fa-search"></i> Buscar Correspondências por Data</h4>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Selecione a Data:</label>
-                                <input type="date" id="filtroDataEnvio">
-                            </div>
-                        </div>
-                        <div class="col-md-6" style="display: flex; align-items: flex-end; gap: 10px;">
-                            <button class="btn-custom btn-info-custom" onclick="buscarEnviosPorData()"><i class="fas fa-search"></i> Buscar Data</button>
-                            <button class="btn-custom btn-warning-custom" onclick="limparBuscaEnvio()"><i class="fas fa-calendar-day"></i> Ver Hoje</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="loading" id="loadingEnvio">
-                    <div class="spinner"></div>
-                    <p>Buscando registros...</p>
-                </div>
-
-                <div class="table-container">
-                    <h3 id="tituloTabelaEnvio">📋 Correspondências Registradas Hoje</h3>
-                    <table id="tabelaEnvios">
-                        <thead>
-                            <tr>
-                                <th>Data</th>
-                                <th>Departamento</th>
-                                <th>Tipo</th>
-                                <th>Descrição</th>
-                                <th>Quantidade</th>
-                                <th style="width: 100px;">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="bodyTabelaEnvios">
-                            <tr><td colspan="6" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- TELA DE RECEBIMENTO -->
-            <div id="telaRecebimento" class="screen">
-                <h2><i class="fas fa-inbox"></i> Recebimento de Correspondências</h2>
-                <div class="alert-custom alert-success" id="alertSuccessRecebimento">✅ Correspondência registrada com sucesso!</div>
-                <div class="alert-custom alert-error" id="alertErrorRecebimento">❌ Erro ao registrar. Tente novamente.</div>
-                <form id="formRecebimento" onsubmit="inserirRecebimento(event)">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label><i class="fas fa-calendar"></i> Data do Recebimento:</label>
-                                <input type="date" id="dataRecebimento" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label><i class="fas fa-building"></i> Departamento:</label>
-                                <select id="departamentoRecebimento" required>
-                                    <option value="">Selecione...</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label><i class="fas fa-envelope"></i> Tipo de Correspondência:</label>
-                                <select id="tipoRecebimento" required>
-                                    <option value="">Selecione...</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label><i class="fas fa-sort-numeric-up"></i> Quantidade:</label>
-                                <input type="number" id="quantidadeRecebimento" min="1" value="1" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label><i class="fas fa-align-left"></i> Descrição da Correspondência:</label>
-                        <textarea id="descricaoRecebimento" rows="3" placeholder="Digite detalhes sobre a correspondência..." required></textarea>
-                    </div>
-                    <div class="button-group">
-                        <button type="submit" class="btn-custom btn-primary-custom"><i class="fas fa-plus-circle"></i> Inserir</button>
-                        <button type="button" class="btn-custom btn-success-custom" onclick="imprimirProtocoloRecebimento()"><i class="fas fa-print"></i> Imprimir Protocolo</button>
-                    </div>
-                </form>
-
-                <div class="filter-section">
-                    <h4><i class="fas fa-search"></i> Buscar Correspondências por Data</h4>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Selecione a Data:</label>
-                                <input type="date" id="filtroDataRecebimento">
-                            </div>
-                        </div>
-                        <div class="col-md-6" style="display: flex; align-items: flex-end; gap: 10px;">
-                            <button class="btn-custom btn-info-custom" onclick="buscarRecebimentosPorData()"><i class="fas fa-search"></i> Buscar Data</button>
-                            <button class="btn-custom btn-warning-custom" onclick="limparBuscaRecebimento()"><i class="fas fa-calendar-day"></i> Ver Hoje</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="loading" id="loadingRecebimento">
-                    <div class="spinner"></div>
-                    <p>Buscando registros...</p>
-                </div>
-
-                <div class="table-container">
-                    <h3 id="tituloTabelaRecebimento">📋 Correspondências Registradas Hoje</h3>
-                    <table id="tabelaRecebimentos">
-                        <thead>
-                            <tr>
-                                <th>Data</th>
-                                <th>Departamento</th>
-                                <th>Tipo</th>
-                                <th>Descrição</th>
-                                <th>Quantidade</th>
-                                <th style="width: 100px;">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="bodyTabelaRecebimentos">
-                            <tr><td colspan="6" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <button class="btn-logout" onclick="fazerLogout()">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </button>
+        </div>
+        
+        <div style="text-align: center; padding: 40px;">
+            <h2>✅ Sistema Funcionando!</h2>
+            <p>Login realizado com sucesso.</p>
+            <p>Para ver o sistema completo, precisamos adicionar as outras telas.</p>
         </div>
     </div>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbzeQZZ9sWj61UPEn-Zpg5r7EIK6XP5ZFcp4ca5ReSP3xBCN6C8UtuNa-sbGfo2AbMHV/exec';
+        // ⚠️ CRÍTICO: SUBSTITUA PELA URL DO SEU GOOGLE APPS SCRIPT
+        const scriptURL = 'COLE_AQUI_A_URL_DO_SEU_APPS_SCRIPT';
         
-        let chartTipo = null;
-        let chartDepartamento = null;
-        let dadosAtuaisDashboard = { envios: [], recebimentos: [], periodo: '', tipo: '' };
         let usuarioLogado = null;
 
-        const departamentosPadrao = ['ATENDIMENTO', 'CADASTRO', 'COMERCIAL', 'LOGISTICA', 'CONTAS MÉDICAS', 'CONTROLADORIA', 'QUALIDADE', 'GESTÃO DE REDE', 'JURÍDICO', 'R.H/D.P', 'AUDITORIA', 'SECRETARIA', 'MANUTENÇÃO DE CONTRATOS', 'OUTROS'];
-        const tiposEnvioPadrao = ['PAC', 'REGISTRADA', 'REGISTRADA COM AR', 'SEDEX', 'SEDEX REVERSO', 'SIMPLES', 'OUTROS'];
-        const tiposRecebimentoPadrao = ['BOLETOS', 'FATURAMENTO', 'NOTIFICAÇÃO EXTRA-JUDICIAL', 'NOTIFICAÇÃO JUDICIAL', 'REEMBOLSO', 'TELEGRAMA', 'OUTROS'];
-
+        // Verifica se já existe sessão ao carregar a página
         window.onload = function() {
+            console.log('Página carregada!');
+            console.log('scriptURL:', scriptURL);
+            
             const sessao = localStorage.getItem('sessaoBensaude');
             if (sessao) {
+                console.log('Sessão encontrada:', sessao);
                 usuarioLogado = JSON.parse(sessao);
                 mostrarSistemaPrincipal();
+            } else {
+                console.log('Nenhuma sessão encontrada, mostrando login');
             }
         };
 
         async function fazerLogin(e) {
             e.preventDefault();
+            
+            console.log('Tentando fazer login...');
+            
             const login = document.getElementById('loginUsuario').value;
             const senha = document.getElementById('loginSenha').value;
             const loading = document.getElementById('loadingLogin');
             const alertError = document.getElementById('alertLoginError');
             
+            console.log('Login:', login);
+            console.log('URL do script:', scriptURL);
+            
+            // Validação básica
+            if (scriptURL === 'https://script.google.com/macros/s/AKfycbzeQZZ9sWj61UPEn-Zpg5r7EIK6XP5ZFcp4ca5ReSP3xBCN6C8UtuNa-sbGfo2AbMHV/exec') {
+                alert('❌ ERRO: Você precisa substituir a URL do Apps Script no código HTML!\n\nProcure por "COLE_AQUI_A_URL_DO_SEU_APPS_SCRIPT" e substitua pela URL real.');
+                return;
+            }
+            
             loading.classList.add('active');
             alertError.style.display = 'none';
             
             try {
-                const response = await fetch(scriptURL + '?acao=login&login=' + encodeURIComponent(login) + '&senha=' + encodeURIComponent(senha));
+                const url = scriptURL + '?acao=login&login=' + encodeURIComponent(login) + '&senha=' + encodeURIComponent(senha);
+                console.log('URL da requisição:', url);
+                
+                const response = await fetch(url);
+                console.log('Resposta recebida:', response);
+                
                 const result = await response.json();
+                console.log('Resultado:', result);
                 
                 loading.classList.remove('active');
                 
                 if (result.status === 'success') {
+                    console.log('Login bem-sucedido!');
                     usuarioLogado = result.usuario;
                     localStorage.setItem('sessaoBensaude', JSON.stringify(usuarioLogado));
                     mostrarSistemaPrincipal();
                 } else {
+                    console.log('Erro no login:', result.message);
                     alertError.textContent = '❌ ' + (result.message || 'Usuário ou senha inválidos');
                     alertError.style.display = 'block';
-                    setTimeout(function() { alertError.style.display = 'none'; }, 3000);
+                    setTimeout(function() { 
+                        alertError.style.display = 'none'; 
+                    }, 5000);
                 }
             } catch (error) {
                 loading.classList.remove('active');
-                console.error('Erro:', error);
-                alertError.textContent = '❌ Erro ao conectar ao servidor';
+                console.error('Erro na requisição:', error);
+                alertError.textContent = '❌ Erro ao conectar ao servidor: ' + error.message;
                 alertError.style.display = 'block';
             }
         }
 
         function mostrarSistemaPrincipal() {
+            console.log('Mostrando sistema principal...');
             document.getElementById('telaLogin').style.display = 'none';
             document.getElementById('sistemaPrincipal').style.display = 'block';
             document.getElementById('nomeUsuarioLogado').textContent = usuarioLogado.nome;
-            
-            if (usuarioLogado.tipo === 'admin') {
-                document.getElementById('btnUsuarios').style.display = 'flex';
-            }
-            
-            document.getElementById('navHome').classList.add('active');
-            inicializarDados();
-            setDataHoje('dataEnvio');
-            setDataHoje('dataRecebimento');
-            setDataHoje('filtroDataEnvio');
-            setDataHoje('filtroDataRecebimento');
         }
 
         function fazerLogout() {
@@ -1357,784 +301,7 @@
             location.reload();
         }
 
-        function inicializarDados() {
-            if (!localStorage.getItem('departamentos')) {
-                localStorage.setItem('departamentos', JSON.stringify(departamentosPadrao));
-            }
-            if (!localStorage.getItem('tiposEnvio')) {
-                localStorage.setItem('tiposEnvio', JSON.stringify(tiposEnvioPadrao));
-            }
-            if (!localStorage.getItem('tiposRecebimento')) {
-                localStorage.setItem('tiposRecebimento', JSON.stringify(tiposRecebimentoPadrao));
-            }
-            atualizarSelects();
-            renderizarListas();
-        }
-
-        function atualizarSelects() {
-            const departamentos = JSON.parse(localStorage.getItem('departamentos')) || departamentosPadrao;
-            const tiposEnvio = JSON.parse(localStorage.getItem('tiposEnvio')) || tiposEnvioPadrao;
-            const tiposRecebimento = JSON.parse(localStorage.getItem('tiposRecebimento')) || tiposRecebimentoPadrao;
-
-            ['departamentoEnvio', 'departamentoRecebimento'].forEach(id => {
-                const select = document.getElementById(id);
-                const valorAtual = select.value;
-                select.innerHTML = '<option value="">Selecione...</option>';
-                departamentos.forEach(dept => {
-                    const option = document.createElement('option');
-                    option.value = dept;
-                    option.textContent = dept;
-                    select.appendChild(option);
-                });
-                if (valorAtual) select.value = valorAtual;
-            });
-
-            const selectEnvio = document.getElementById('tipoEnvio');
-            const valorEnvio = selectEnvio.value;
-            selectEnvio.innerHTML = '<option value="">Selecione...</option>';
-            tiposEnvio.forEach(tipo => {
-                const option = document.createElement('option');
-                option.value = tipo;
-                option.textContent = tipo;
-                selectEnvio.appendChild(option);
-            });
-            if (valorEnvio) selectEnvio.value = valorEnvio;
-
-            const selectReceb = document.getElementById('tipoRecebimento');
-            const valorReceb = selectReceb.value;
-            selectReceb.innerHTML = '<option value="">Selecione...</option>';
-            tiposRecebimento.forEach(tipo => {
-                const option = document.createElement('option');
-                option.value = tipo;
-                option.textContent = tipo;
-                selectReceb.appendChild(option);
-            });
-            if (valorReceb) selectReceb.value = valorReceb;
-        }
-
-        function renderizarListas() {
-            const departamentos = JSON.parse(localStorage.getItem('departamentos')) || [];
-            const tiposEnvio = JSON.parse(localStorage.getItem('tiposEnvio')) || [];
-            const tiposRecebimento = JSON.parse(localStorage.getItem('tiposRecebimento')) || [];
-
-            const listaDept = document.getElementById('listaDepartamentos');
-            listaDept.innerHTML = '';
-            departamentos.forEach(dept => {
-                const badge = criarBadge(dept, () => removerDepartamento(dept));
-                listaDept.appendChild(badge);
-            });
-
-            const listaEnvio = document.getElementById('listaTiposEnvio');
-            listaEnvio.innerHTML = '';
-            tiposEnvio.forEach(tipo => {
-                const badge = criarBadge(tipo, () => removerTipoEnvio(tipo));
-                listaEnvio.appendChild(badge);
-            });
-
-            const listaReceb = document.getElementById('listaTiposRecebimento');
-            listaReceb.innerHTML = '';
-            tiposRecebimento.forEach(tipo => {
-                const badge = criarBadge(tipo, () => removerTipoRecebimento(tipo));
-                listaReceb.appendChild(badge);
-            });
-        }
-
-        function criarBadge(texto, onRemove) {
-            const badge = document.createElement('div');
-            badge.className = 'item-badge';
-            badge.innerHTML = '<span>' + texto + '</span>';
-            
-            const btnRemover = document.createElement('button');
-            btnRemover.className = 'remove-btn';
-            btnRemover.innerHTML = '×';
-            btnRemover.onclick = onRemove;
-            
-            badge.appendChild(btnRemover);
-            return badge;
-        }
-
-        function adicionarDepartamento() {
-            const input = document.getElementById('novoDepartamento');
-            const valor = input.value.trim().toUpperCase();
-            
-            if (!valor) {
-                alert('Digite o nome do departamento!');
-                return;
-            }
-
-            const departamentos = JSON.parse(localStorage.getItem('departamentos')) || [];
-            
-            if (departamentos.includes(valor)) {
-                alert('Este departamento já existe!');
-                return;
-            }
-
-            departamentos.push(valor);
-            localStorage.setItem('departamentos', JSON.stringify(departamentos));
-            
-            input.value = '';
-            atualizarSelects();
-            renderizarListas();
-            mostrarAlerta('alertSuccessConfig', null);
-        }
-
-        function removerDepartamento(dept) {
-            if (!confirm('Deseja realmente remover "' + dept + '"?')) return;
-            
-            let departamentos = JSON.parse(localStorage.getItem('departamentos')) || [];
-            departamentos = departamentos.filter(d => d !== dept);
-            localStorage.setItem('departamentos', JSON.stringify(departamentos));
-            
-            atualizarSelects();
-            renderizarListas();
-        }
-
-        function adicionarTipoEnvio() {
-            const input = document.getElementById('novoTipoEnvio');
-            const valor = input.value.trim().toUpperCase();
-            
-            if (!valor) {
-                alert('Digite o nome do tipo de envio!');
-                return;
-            }
-
-            const tipos = JSON.parse(localStorage.getItem('tiposEnvio')) || [];
-            
-            if (tipos.includes(valor)) {
-                alert('Este tipo já existe!');
-                return;
-            }
-
-            tipos.push(valor);
-            localStorage.setItem('tiposEnvio', JSON.stringify(tipos));
-            
-            input.value = '';
-            atualizarSelects();
-            renderizarListas();
-            mostrarAlerta('alertSuccessConfig', null);
-        }
-
-        function removerTipoEnvio(tipo) {
-            if (!confirm('Deseja realmente remover "' + tipo + '"?')) return;
-            
-            let tipos = JSON.parse(localStorage.getItem('tiposEnvio')) || [];
-            tipos = tipos.filter(t => t !== tipo);
-            localStorage.setItem('tiposEnvio', JSON.stringify(tipos));
-            
-            atualizarSelects();
-            renderizarListas();
-        }
-
-        function adicionarTipoRecebimento() {
-            const input = document.getElementById('novoTipoRecebimento');
-            const valor = input.value.trim().toUpperCase();
-            
-            if (!valor) {
-                alert('Digite o nome do tipo de recebimento!');
-                return;
-            }
-
-            const tipos = JSON.parse(localStorage.getItem('tiposRecebimento')) || [];
-            
-            if (tipos.includes(valor)) {
-                alert('Este tipo já existe!');
-                return;
-            }
-
-            tipos.push(valor);
-            localStorage.setItem('tiposRecebimento', JSON.stringify(tipos));
-            
-            input.value = '';
-            atualizarSelects();
-            renderizarListas();
-            mostrarAlerta('alertSuccessConfig', null);
-        }
-
-        function removerTipoRecebimento(tipo) {
-            if (!confirm('Deseja realmente remover "' + tipo + '"?')) return;
-            
-            let tipos = JSON.parse(localStorage.getItem('tiposRecebimento')) || [];
-            tipos = tipos.filter(t => t !== tipo);
-            localStorage.setItem('tiposRecebimento', JSON.stringify(tipos));
-            
-            atualizarSelects();
-            renderizarListas();
-        }
-
-        function trocarAbaConfig(aba, event) {
-            document.querySelectorAll('.config-tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.config-content').forEach(content => content.classList.remove('active'));
-
-            event.target.classList.add('active');
-            
-            if (aba === 'departamentos') {
-                document.getElementById('configDepartamentos').classList.add('active');
-            } else if (aba === 'tiposEnvio') {
-                document.getElementById('configTiposEnvio').classList.add('active');
-            } else if (aba === 'tiposRecebimento') {
-                document.getElementById('configTiposRecebimento').classList.add('active');
-            }
-        }
-
-        async function carregarUsuarios() {
-            const loading = document.getElementById('loadingUsuarios');
-            const lista = document.getElementById('listaUsuarios');
-            
-            loading.classList.add('active');
-            
-            try {
-                const response = await fetch(scriptURL + '?acao=listarUsuarios');
-                const result = await response.json();
-                
-                loading.classList.remove('active');
-                
-                if (result.status === 'success') {
-                    lista.innerHTML = '';
-                    result.usuarios.forEach(function(usuario) {
-                        const userItem = document.createElement('div');
-                        userItem.className = 'user-item';
-                        userItem.innerHTML = 
-                            '<div><strong>' + usuario.nome + '</strong> <span class="badge ' + (usuario.tipo === 'admin' ? 'admin' : '') + '">' + 
-                            (usuario.tipo === 'admin' ? 'Administrador' : 'Usuário') + 
-                            '</span></div>' +
-                            '<div><span style="color: #64748B; margin-right: 15px;">Login: ' + usuario.login + '</span>' +
-                            (usuario.login !== 'admin' ? '<button class="btn-remove" onclick="removerUsuario(\'' + usuario.login + '\')"><i class="fas fa-trash"></i> Remover</button>' : '') +
-                            '</div>';
-                        lista.appendChild(userItem);
-                    });
-                }
-            } catch (error) {
-                loading.classList.remove('active');
-                console.error('Erro:', error);
-            }
-        }
-
-        async function adicionarUsuario(e) {
-            e.preventDefault();
-            
-            const dados = {
-                acao: 'adicionarUsuario',
-                nome: document.getElementById('novoNome').value,
-                login: document.getElementById('novoLogin').value,
-                senha: document.getElementById('novoSenha').value,
-                tipo: document.getElementById('novoTipo').value
-            };
-            
-            try {
-                const response = await fetch(scriptURL, {
-                    method: 'POST',
-                    body: JSON.stringify(dados)
-                });
-                const result = await response.json();
-                
-                if (result.status === 'success') {
-                    mostrarAlerta('alertSuccessUsuario', 'alertErrorUsuario');
-                    document.getElementById('formNovoUsuario').reset();
-                    carregarUsuarios();
-                } else {
-                    const alert = document.getElementById('alertErrorUsuario');
-                    alert.textContent = '❌ ' + result.message;
-                    mostrarAlerta('alertErrorUsuario', 'alertSuccessUsuario');
-                }
-            } catch (error) {
-                console.error('Erro:', error);
-                mostrarAlerta('alertErrorUsuario', 'alertSuccessUsuario');
-            }
-        }
-
-        async function removerUsuario(login) {
-            if (!confirm('Deseja realmente remover o usuário "' + login + '"?')) {
-                return;
-            }
-            
-            try {
-                const response = await fetch(scriptURL, {
-                    method: 'POST',
-                    body: JSON.stringify({ acao: 'removerUsuario', login: login })
-                });
-                const result = await response.json();
-                
-                if (result.status === 'success') {
-                    mostrarAlerta('alertSuccessUsuario', 'alertErrorUsuario');
-                    carregarUsuarios();
-                } else {
-                    mostrarAlerta('alertErrorUsuario', 'alertSuccessUsuario');
-                }
-            } catch (error) {
-                console.error('Erro:', error);
-                mostrarAlerta('alertErrorUsuario', 'alertSuccessUsuario');
-            }
-        }
-
-        function navegarPara(screenId) {
-            document.querySelectorAll('.nav-btn').forEach(function(btn) {
-                btn.classList.remove('active');
-            });
-            
-            if (screenId === 'telaInicial') {
-                document.getElementById('navHome').classList.add('active');
-            } else if (screenId === 'telaEnvio') {
-                document.getElementById('navEnvio').classList.add('active');
-            } else if (screenId === 'telaRecebimento') {
-                document.getElementById('navRecebimento').classList.add('active');
-            } else if (screenId === 'telaUsuarios') {
-                carregarUsuarios();
-            }
-            
-            showScreen(screenId);
-        }
-
-        function showScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(function(s) {
-                s.classList.remove('active');
-            });
-            document.getElementById(screenId).classList.add('active');
-            
-            if (screenId === 'telaEnvio') { 
-                setDataHoje('dataEnvio'); 
-                setDataHoje('filtroDataEnvio'); 
-            } else if (screenId === 'telaRecebimento') { 
-                setDataHoje('dataRecebimento'); 
-                setDataHoje('filtroDataRecebimento'); 
-            } else if (screenId === 'telaDashboard') { 
-                atualizarDashboard(); 
-            }
-        }
-
-        function setDataHoje(id) { 
-            const hoje = new Date();
-            const ano = hoje.getFullYear();
-            const mes = String(hoje.getMonth() + 1).padStart(2, '0');
-            const dia = String(hoje.getDate()).padStart(2, '0');
-            document.getElementById(id).value = ano + '-' + mes + '-' + dia;
-        }
-
-        function toggleDataPersonalizada() {
-            const p = document.getElementById('filtroPeriodo').value === 'personalizado';
-            document.getElementById('dataInicioContainer').style.display = p ? 'block' : 'none';
-            document.getElementById('dataFimContainer').style.display = p ? 'block' : 'none';
-        }
-
-        async function inserirEnvio(e) {
-            e.preventDefault();
-            const d = {
-                acao:'inserirEnvio', 
-                data:document.getElementById('dataEnvio').value, 
-                departamento:document.getElementById('departamentoEnvio').value, 
-                tipo:document.getElementById('tipoEnvio').value, 
-                descricao:document.getElementById('descricaoEnvio').value, 
-                quantidade:document.getElementById('quantidadeEnvio').value
-            };
-            try {
-                const r = await fetch(scriptURL, {method:'POST', body:JSON.stringify(d)});
-                const res = await r.json();
-                if (res.status === 'success') {
-                    mostrarAlerta('alertSuccessEnvio', 'alertErrorEnvio');
-                    adicionarLinhaTabela('bodyTabelaEnvios', [d.data, d.departamento, d.tipo, d.descricao, d.quantidade]);
-                    document.getElementById('formEnvio').reset();
-                    setDataHoje('dataEnvio');
-                } else {
-                    mostrarAlerta('alertErrorEnvio', 'alertSuccessEnvio');
-                }
-            } catch (error) { 
-                console.error('Erro:', error);
-                mostrarAlerta('alertErrorEnvio', 'alertSuccessEnvio'); 
-            }
-        }
-
-        async function inserirRecebimento(e) {
-            e.preventDefault();
-            const d = {
-                acao:'inserirRecebimento', 
-                data:document.getElementById('dataRecebimento').value, 
-                departamento:document.getElementById('departamentoRecebimento').value, 
-                tipo:document.getElementById('tipoRecebimento').value, 
-                descricao:document.getElementById('descricaoRecebimento').value, 
-                quantidade:document.getElementById('quantidadeRecebimento').value
-            };
-            try {
-                const r = await fetch(scriptURL, {method:'POST', body:JSON.stringify(d)});
-                const res = await r.json();
-                if (res.status === 'success') {
-                    mostrarAlerta('alertSuccessRecebimento', 'alertErrorRecebimento');
-                    adicionarLinhaTabela('bodyTabelaRecebimentos', [d.data, d.departamento, d.tipo, d.descricao, d.quantidade]);
-                    document.getElementById('formRecebimento').reset();
-                    setDataHoje('dataRecebimento');
-                } else {
-                    mostrarAlerta('alertErrorRecebimento', 'alertSuccessRecebimento');
-                }
-            } catch (error) { 
-                console.error('Erro:', error);
-                mostrarAlerta('alertErrorRecebimento', 'alertSuccessRecebimento'); 
-            }
-        }
-
-        async function buscarEnviosPorData() {
-            const d = document.getElementById('filtroDataEnvio').value;
-            if (!d) { alert('Selecione uma data!'); return; }
-            await buscarDadosPorData('Envios', d, 'bodyTabelaEnvios', 'loadingEnvio', 'tituloTabelaEnvio');
-        }
-
-        async function buscarRecebimentosPorData() {
-            const d = document.getElementById('filtroDataRecebimento').value;
-            if (!d) { alert('Selecione uma data!'); return; }
-            await buscarDadosPorData('Recebimentos', d, 'bodyTabelaRecebimentos', 'loadingRecebimento', 'tituloTabelaRecebimento');
-        }
-
-        async function buscarDadosPorData(tipo, data, tabelaId, loadingId, tituloId) {
-            const loading = document.getElementById(loadingId);
-            const tbody = document.getElementById(tabelaId);
-            const titulo = document.getElementById(tituloId);
-            loading.classList.add('active');
-            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Buscando...</td></tr>';
-            try {
-                const r = await fetch(scriptURL + '?acao=buscarPorData&tipo=' + tipo + '&data=' + data);
-                const res = await r.json();
-                loading.classList.remove('active');
-                if (res.status === 'success' && res.data && res.data.length > 0) {
-                    tbody.innerHTML = '';
-                    titulo.textContent = '📋 Correspondências de ' + formatarData(data) + ' (' + res.data.length + ' registro(s))';
-                    res.data.forEach(function(row, index) {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = '<td>' + formatarData(row[0]) + '</td><td>' + row[1] + '</td><td>' + row[2] + '</td><td>' + row[3] + '</td><td>' + row[4] + '</td><td><button class="btn-excluir" onclick="excluirRegistro(\'' + tipo + '\', ' + index + ', this)"><i class="fas fa-trash"></i> Excluir</button></td>';
-                        tbody.appendChild(tr);
-                    });
-                } else {
-                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhum registro encontrado</td></tr>';
-                    titulo.textContent = '📋 Correspondências de ' + formatarData(data);
-                }
-            } catch (error) {
-                console.error('Erro:', error);
-                loading.classList.remove('active');
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">Erro ao buscar dados</td></tr>';
-            }
-        }
-
-        function limparBuscaEnvio() {
-            document.getElementById('bodyTabelaEnvios').innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
-            document.getElementById('tituloTabelaEnvio').textContent = '📋 Correspondências Registradas Hoje';
-            setDataHoje('filtroDataEnvio');
-        }
-
-        function limparBuscaRecebimento() {
-            document.getElementById('bodyTabelaRecebimentos').innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
-            document.getElementById('tituloTabelaRecebimento').textContent = '📋 Correspondências Registradas Hoje';
-            setDataHoje('filtroDataRecebimento');
-        }
-
-        function adicionarLinhaTabela(tabelaId, dados) {
-            const tbody = document.getElementById(tabelaId);
-            if (tbody.rows.length === 1 && tbody.rows[0].cells.length === 1) tbody.innerHTML = '';
-            const tr = document.createElement('tr');
-            const tipo = tabelaId === 'bodyTabelaEnvios' ? 'Envios' : 'Recebimentos';
-            tr.innerHTML = '<td>' + formatarData(dados[0]) + '</td><td>' + dados[1] + '</td><td>' + dados[2] + '</td><td>' + dados[3] + '</td><td>' + dados[4] + '</td><td><button class="btn-excluir" onclick="excluirRegistro(\'' + tipo + '\', 0, this)"><i class="fas fa-trash"></i> Excluir</button></td>';
-            tbody.insertBefore(tr, tbody.firstChild);
-        }
-
-        function formatarData(data) {
-            if (!data) return '';
-            const p = data.split('-');
-            return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : data;
-        }
-
-        function mostrarAlerta(mostrarId, esconderId) {
-            if (esconderId) document.getElementById(esconderId).style.display = 'none';
-            const a = document.getElementById(mostrarId);
-            a.style.display = 'block';
-            setTimeout(function() { a.style.display = 'none'; }, 3000);
-        }
-
-        async function atualizarDashboard() {
-            const loading = document.getElementById('loadingDashboard');
-            loading.classList.add('active');
-
-            try {
-                const periodo = document.getElementById('filtroPeriodo').value;
-                const tipo = document.getElementById('filtroTipo').value;
-                let dataInicio, dataFim;
-                const hoje = new Date();
-                const ano = hoje.getFullYear();
-                const mes = hoje.getMonth();
-                
-                if (periodo === 'hoje') {
-                    const mesStr = String(mes + 1).padStart(2, '0');
-                    const diaStr = String(hoje.getDate()).padStart(2, '0');
-                    dataInicio = dataFim = ano + '-' + mesStr + '-' + diaStr;
-                } else if (periodo === 'mes') {
-                    const mesStr = String(mes + 1).padStart(2, '0');
-                    dataInicio = ano + '-' + mesStr + '-01';
-                    const ultimoDia = new Date(ano, mes + 1, 0).getDate();
-                    dataFim = ano + '-' + mesStr + '-' + String(ultimoDia).padStart(2, '0');
-                } else if (periodo === 'ano') {
-                    dataInicio = ano + '-01-01';
-                    dataFim = ano + '-12-31';
-                } else {
-                    dataInicio = document.getElementById('dataInicio').value;
-                    dataFim = document.getElementById('dataFim').value;
-                    if (!dataInicio || !dataFim) { 
-                        alert('Selecione as datas!'); 
-                        loading.classList.remove('active'); 
-                        return; 
-                    }
-                }
-
-                dadosAtuaisDashboard.dataInicio = dataInicio;
-                dadosAtuaisDashboard.dataFim = dataFim;
-
-                let dadosEnvios = [];
-                let dadosRecebimentos = [];
-
-                if (tipo === 'ambos' || tipo === 'envios') {
-                    const r = await fetch(scriptURL + '?acao=buscarEstatisticas&tipo=Envios&dataInicio=' + dataInicio + '&dataFim=' + dataFim);
-                    const res = await r.json();
-                    if (res.status === 'success' && res.data) dadosEnvios = res.data;
-                }
-
-                if (tipo === 'ambos' || tipo === 'recebimentos') {
-                    const r = await fetch(scriptURL + '?acao=buscarEstatisticas&tipo=Recebimentos&dataInicio=' + dataInicio + '&dataFim=' + dataFim);
-                    const res = await r.json();
-                    if (res.status === 'success' && res.data) dadosRecebimentos = res.data;
-                }
-
-                processarEstatisticas(dadosEnvios, dadosRecebimentos);
-                
-            } catch (error) { 
-                console.error('Erro:', error);
-                alert('Erro ao carregar estatísticas'); 
-            } finally { 
-                loading.classList.remove('active'); 
-            }
-        }
-
-        function processarEstatisticas(dadosEnvios, dadosRecebimentos) {
-            const todosDados = [...dadosEnvios, ...dadosRecebimentos];
-            const totalEnvios = dadosEnvios.length;
-            const totalRecebimentos = dadosRecebimentos.length;
-            const totalGeral = totalEnvios + totalRecebimentos;
-            const quantidadeTotal = todosDados.reduce((sum, row) => sum + (parseInt(row[4]) || 0), 0);
-            
-            document.getElementById('statsCards').innerHTML = 
-                '<div class="stat-card"><h4>📦 TOTAL GERAL</h4><div class="number">' + totalGeral + '</div><div class="label">Correspondências</div></div>' +
-                '<div class="stat-card"><h4>📤 ENVIOS</h4><div class="number">' + totalEnvios + '</div><div class="label">Correspondências</div></div>' +
-                '<div class="stat-card"><h4>📥 RECEBIMENTOS</h4><div class="number">' + totalRecebimentos + '</div><div class="label">Correspondências</div></div>' +
-                '<div class="stat-card"><h4>📊 QUANTIDADE TOTAL</h4><div class="number">' + quantidadeTotal + '</div><div class="label">Unidades</div></div>';
-            
-            const porTipo = {};
-            todosDados.forEach(row => { 
-                const tipo = row[2]; 
-                const qtd = parseInt(row[4]) || 0; 
-                porTipo[tipo] = (porTipo[tipo] || 0) + qtd; 
-            });
-            
-            const porDepartamento = {};
-            todosDados.forEach(row => { 
-                const depto = row[1]; 
-                const qtd = parseInt(row[4]) || 0; 
-                porDepartamento[depto] = (porDepartamento[depto] || 0) + qtd; 
-            });
-            
-            if (chartTipo) chartTipo.destroy();
-            const ctxTipo = document.getElementById('chartTipo').getContext('2d');
-            chartTipo = new Chart(ctxTipo, {
-                type: 'bar',
-                data: { 
-                    labels: Object.keys(porTipo), 
-                    datasets: [{ 
-                        label: 'Quantidade', 
-                        data: Object.values(porTipo), 
-                        backgroundColor: ['#0066CC', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4']
-                    }] 
-                },
-                options: { 
-                    responsive: true, 
-                    plugins: { legend: { display: false } }, 
-                    scales: { y: { beginAtZero: true } } 
-                }
-            });
-            
-            if (chartDepartamento) chartDepartamento.destroy();
-            const ctxDepto = document.getElementById('chartDepartamento').getContext('2d');
-            chartDepartamento = new Chart(ctxDepto, {
-                type: 'doughnut',
-                data: { 
-                    labels: Object.keys(porDepartamento), 
-                    datasets: [{ 
-                        data: Object.values(porDepartamento), 
-                        backgroundColor: ['#0066CC', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4', '#EC4899']
-                    }] 
-                },
-                options: { 
-                    responsive: true, 
-                    plugins: { legend: { position: 'bottom' } } 
-                }
-            });
-
-            const detalhado = {};
-            todosDados.forEach(row => { 
-                const chave = row[1] + '|' + row[2]; 
-                const qtd = parseInt(row[4]) || 0; 
-                detalhado[chave] = (detalhado[chave] || 0) + qtd; 
-            });
-            
-            const tbody = document.getElementById('bodyTabelaDetalhada');
-            if (Object.keys(detalhado).length === 0) { 
-                tbody.innerHTML = '<tr><td colspan="3" style="text-align: center;">Nenhum dado encontrado</td></tr>'; 
-                return; 
-            }
-            tbody.innerHTML = '';
-            Object.entries(detalhado).sort().forEach(item => {
-                const [depto, tipo] = item[0].split('|');
-                const qtd = item[1];
-                const tr = document.createElement('tr');
-                tr.innerHTML = '<td><strong>' + depto + '</strong></td><td>' + tipo + '</td><td><strong style="color: #0066CC;">' + qtd + '</strong></td>';
-                tbody.appendChild(tr);
-            });
-        }
-
-        function imprimirRelatorioDashboard() {
-            window.print();
-        }
-
-        function imprimirProtocoloEnvio() {
-            const tbody = document.getElementById('bodyTabelaEnvios');
-            const rows = tbody.querySelectorAll('tr');
-            
-            if (rows.length === 0 || (rows.length === 1 && rows[0].cells.length === 1)) { 
-                alert('Não há registros para imprimir!'); 
-                return; 
-            }
-            
-            const dataFiltro = document.getElementById('filtroDataEnvio').value;
-            const hoje = new Date();
-            const ano = hoje.getFullYear();
-            const mes = String(hoje.getMonth() + 1).padStart(2, '0');
-            const dia = String(hoje.getDate()).padStart(2, '0');
-            const dataProtocolo = dataFiltro || (ano + '-' + mes + '-' + dia);
-            
-            let html = '<!DOCTYPE html><html><head><title>Protocolo de Envio</title><style>body{font-family:Arial,sans-serif;padding:20px}h1{text-align:center;color:#0066CC;margin-bottom:10px}.info{margin:20px 0}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{border:1px solid #0066CC;padding:12px 8px;text-align:left;font-size:11px}th{background:#0066CC;color:white;font-weight:bold}</style></head><body><h1>PROTOCOLO DE ENVIO DE CORRESPONDÊNCIAS</h1><div class="info"><p><strong>Bensaúde Logística</strong></p><p><strong>Data:</strong> ' + formatarData(dataProtocolo) + '</p><p><strong>Hora de impressão:</strong> ' + new Date().toLocaleString('pt-BR') + '</p></div><table><thead><tr><th>Data</th><th>Departamento</th><th>Tipo</th><th>Descrição</th><th style="width:60px;">Qtd</th></tr></thead><tbody>';
-            
-            rows.forEach(function(row) {
-                if (row.cells.length > 1) {
-                    html += '<tr>';
-                    for (let i = 0; i < row.cells.length - 1; i++) {
-                        html += '<td>' + row.cells[i].textContent + '</td>';
-                    }
-                    html += '</tr>';
-                }
-            });
-            
-            html += '</tbody></table></body></html>';
-            
-            const janela = window.open('', '_blank');
-            janela.document.write(html);
-            janela.document.close();
-            janela.print();
-        }
-
-        function imprimirProtocoloRecebimento() {
-            const tbody = document.getElementById('bodyTabelaRecebimentos');
-            const rows = tbody.querySelectorAll('tr');
-            
-            if (rows.length === 0 || (rows.length === 1 && rows[0].cells.length === 1)) { 
-                alert('Não há registros para imprimir!'); 
-                return; 
-            }
-            
-            const dataFiltro = document.getElementById('filtroDataRecebimento').value;
-            const hoje = new Date();
-            const ano = hoje.getFullYear();
-            const mes = String(hoje.getMonth() + 1).padStart(2, '0');
-            const dia = String(hoje.getDate()).padStart(2, '0');
-            const dataProtocolo = dataFiltro || (ano + '-' + mes + '-' + dia);
-            
-            let html = '<!DOCTYPE html><html><head><title>Protocolo de Recebimento</title><style>body{font-family:Arial,sans-serif;padding:20px}h1{text-align:center;color:#0066CC;margin-bottom:10px}.info{margin:20px 0}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{border:1px solid #0066CC;padding:12px 8px;text-align:left;font-size:11px}th{background:#0066CC;color:white;font-weight:bold}.assinatura-col{background:#FFFF00;width:180px;text-align:center;vertical-align:middle}.linha-assinatura{border-top:1px solid #333;margin-top:50px;width:90%;margin-left:auto;margin-right:auto}.label-recebedor{font-size:10px;color:#0066CC;font-weight:bold;margin-bottom:5px}</style></head><body><h1>PROTOCOLO DE RECEBIMENTO DE CORRESPONDÊNCIAS</h1><div class="info"><p><strong>Bensaúde Logística</strong></p><p><strong>Data:</strong> ' + formatarData(dataProtocolo) + '</p><p><strong>Hora de impressão:</strong> ' + new Date().toLocaleString('pt-BR') + '</p></div><table><thead><tr><th>Data</th><th>Departamento</th><th>Tipo</th><th>Descrição</th><th style="width:60px;">Qtd</th><th class="assinatura-col">Recebedor / Assinatura</th></tr></thead><tbody>';
-            
-            rows.forEach(function(row) {
-                if (row.cells.length > 1) {
-                    html += '<tr>';
-                    for (let i = 0; i < row.cells.length - 1; i++) {
-                        html += '<td>' + row.cells[i].textContent + '</td>';
-                    }
-                    html += '<td class="assinatura-col"><div class="label-recebedor">RECEBEDOR:</div><div class="linha-assinatura"></div></td>';
-                    html += '</tr>';
-                }
-            });
-            
-            html += '</tbody></table></body></html>';
-            
-            const janela = window.open('', '_blank');
-            janela.document.write(html);
-            janela.document.close();
-            janela.print();
-        }
-
-        // ===== FUNÇÃO DE EXCLUSÃO COMPLETA =====
-        async function excluirRegistro(tipo, indice, botao) {
-            if (!confirm('Tem certeza que deseja excluir este registro?\n\nEsta ação não pode ser desfeita!')) {
-                return;
-            }
-            
-            botao.disabled = true;
-            botao.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Excluindo...';
-            
-            const linha = botao.closest('tr');
-            const cells = linha.cells;
-            
-            const data = cells[0].textContent.trim();
-            const departamento = cells[1].textContent.trim();
-            const tipoCorrespondencia = cells[2].textContent.trim();
-            const descricao = cells[3].textContent.trim();
-            const quantidade = cells[4].textContent.trim();
-            
-            const partesData = data.split('/');
-            const dataFormatada = partesData.length === 3 ? 
-                partesData[2] + '-' + partesData[1] + '-' + partesData[0] : data;
-            
-            console.log('Excluindo:', {
-                tipo: tipo,
-                data: dataFormatada,
-                departamento: departamento,
-                tipoCorrespondencia: tipoCorrespondencia,
-                descricao: descricao,
-                quantidade: quantidade
-            });
-            
-            try {
-                const url = scriptURL + 
-                    '?acao=excluir' +
-                    '&tipo=' + encodeURIComponent(tipo) +
-                    '&data=' + encodeURIComponent(dataFormatada) +
-                    '&departamento=' + encodeURIComponent(departamento) +
-                    '&tipoCorrespondencia=' + encodeURIComponent(tipoCorrespondencia) +
-                    '&descricao=' + encodeURIComponent(descricao) +
-                    '&quantidade=' + encodeURIComponent(quantidade);
-                
-                const response = await fetch(url);
-                const result = await response.json();
-                
-                console.log('Resposta:', result);
-                
-                if (result.status === 'success') {
-                    linha.remove();
-                    alert('✅ Registro excluído com sucesso!');
-                    
-                    if (tipo === 'Envios') {
-                        buscarEnviosPorData();
-                    } else {
-                        buscarRecebimentosPorData();
-                    }
-                } else {
-                    alert('❌ Erro ao excluir: ' + result.message);
-                    botao.disabled = false;
-                    botao.innerHTML = '<i class="fas fa-trash"></i> Excluir';
-                }
-            } catch (error) {
-                console.error('Erro:', error);
-                alert('❌ Erro ao conectar ao servidor');
-                botao.disabled = false;
-                botao.innerHTML = '<i class="fas fa-trash"></i> Excluir';
-            }
-        }
+        console.log('Script JavaScript carregado com sucesso!');
     </script>
 </body>
 </html>
