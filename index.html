@@ -435,6 +435,31 @@
             transform: translateY(-2px);
         }
 
+        .btn-excluir {
+            background: #EF4444;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-excluir:hover {
+            background: #DC2626;
+            transform: scale(1.05);
+        }
+
+        .btn-excluir:disabled {
+            background: #9CA3AF;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .button-group {
             display: flex;
             flex-wrap: wrap;
@@ -495,6 +520,10 @@
             text-align: left;
             border-bottom: 1px solid var(--cinza-borda);
             color: var(--texto-escuro);
+        }
+
+        table td:last-child {
+            text-align: center;
         }
 
         table tbody tr {
@@ -1152,10 +1181,11 @@
                                 <th>Tipo</th>
                                 <th>Descrição</th>
                                 <th>Quantidade</th>
+                                <th style="width: 100px;">Ações</th>
                             </tr>
                         </thead>
                         <tbody id="bodyTabelaEnvios">
-                            <tr><td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>
+                            <tr><td colspan="6" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -1240,10 +1270,11 @@
                                 <th>Tipo</th>
                                 <th>Descrição</th>
                                 <th>Quantidade</th>
+                                <th style="width: 100px;">Ações</th>
                             </tr>
                         </thead>
                         <tbody id="bodyTabelaRecebimentos">
-                            <tr><td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>
+                            <tr><td colspan="6" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -1756,7 +1787,7 @@
             const tbody = document.getElementById(tabelaId);
             const titulo = document.getElementById(tituloId);
             loading.classList.add('active');
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Buscando...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Buscando...</td></tr>';
             try {
                 const r = await fetch(scriptURL + '?acao=buscarPorData&tipo=' + tipo + '&data=' + data);
                 const res = await r.json();
@@ -1764,30 +1795,30 @@
                 if (res.status === 'success' && res.data && res.data.length > 0) {
                     tbody.innerHTML = '';
                     titulo.textContent = '📋 Correspondências de ' + formatarData(data) + ' (' + res.data.length + ' registro(s))';
-                    res.data.forEach(function(row) {
+                    res.data.forEach(function(row, index) {
                         const tr = document.createElement('tr');
-                        tr.innerHTML = '<td>' + formatarData(row[0]) + '</td><td>' + row[1] + '</td><td>' + row[2] + '</td><td>' + row[3] + '</td><td>' + row[4] + '</td>';
+                        tr.innerHTML = '<td>' + formatarData(row[0]) + '</td><td>' + row[1] + '</td><td>' + row[2] + '</td><td>' + row[3] + '</td><td>' + row[4] + '</td><td><button class="btn-excluir" onclick="excluirRegistro(\'' + tipo + '\', ' + index + ', this)"><i class="fas fa-trash"></i> Excluir</button></td>';
                         tbody.appendChild(tr);
                     });
                 } else {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum registro encontrado</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhum registro encontrado</td></tr>';
                     titulo.textContent = '📋 Correspondências de ' + formatarData(data);
                 }
             } catch (error) {
                 console.error('Erro:', error);
                 loading.classList.remove('active');
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: red;">Erro ao buscar dados</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">Erro ao buscar dados</td></tr>';
             }
         }
 
         function limparBuscaEnvio() {
-            document.getElementById('bodyTabelaEnvios').innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
+            document.getElementById('bodyTabelaEnvios').innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
             document.getElementById('tituloTabelaEnvio').textContent = '📋 Correspondências Registradas Hoje';
             setDataHoje('filtroDataEnvio');
         }
 
         function limparBuscaRecebimento() {
-            document.getElementById('bodyTabelaRecebimentos').innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
+            document.getElementById('bodyTabelaRecebimentos').innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
             document.getElementById('tituloTabelaRecebimento').textContent = '📋 Correspondências Registradas Hoje';
             setDataHoje('filtroDataRecebimento');
         }
@@ -1796,7 +1827,8 @@
             const tbody = document.getElementById(tabelaId);
             if (tbody.rows.length === 1 && tbody.rows[0].cells.length === 1) tbody.innerHTML = '';
             const tr = document.createElement('tr');
-            tr.innerHTML = '<td>' + formatarData(dados[0]) + '</td><td>' + dados[1] + '</td><td>' + dados[2] + '</td><td>' + dados[3] + '</td><td>' + dados[4] + '</td>';
+            const tipo = tabelaId === 'bodyTabelaEnvios' ? 'Envios' : 'Recebimentos';
+            tr.innerHTML = '<td>' + formatarData(dados[0]) + '</td><td>' + dados[1] + '</td><td>' + dados[2] + '</td><td>' + dados[3] + '</td><td>' + dados[4] + '</td><td><button class="btn-excluir" onclick="excluirRegistro(\'' + tipo + '\', 0, this)"><i class="fas fa-trash"></i> Excluir</button></td>';
             tbody.insertBefore(tr, tbody.firstChild);
         }
 
@@ -1985,7 +2017,7 @@
             rows.forEach(function(row) {
                 if (row.cells.length > 1) {
                     html += '<tr>';
-                    for (let i = 0; i < row.cells.length; i++) {
+                    for (let i = 0; i < row.cells.length - 1; i++) {
                         html += '<td>' + row.cells[i].textContent + '</td>';
                     }
                     html += '</tr>';
@@ -2021,7 +2053,7 @@
             rows.forEach(function(row) {
                 if (row.cells.length > 1) {
                     html += '<tr>';
-                    for (let i = 0; i < row.cells.length; i++) {
+                    for (let i = 0; i < row.cells.length - 1; i++) {
                         html += '<td>' + row.cells[i].textContent + '</td>';
                     }
                     html += '<td class="assinatura-col"><div class="label-recebedor">RECEBEDOR:</div><div class="linha-assinatura"></div></td>';
@@ -2035,6 +2067,43 @@
             janela.document.write(html);
             janela.document.close();
             janela.print();
+        }
+
+        // FUNÇÃO DE EXCLUSÃO DE REGISTROS
+        async function excluirRegistro(tipo, indice, botao) {
+            if (!confirm('Tem certeza que deseja excluir este registro?\n\nEsta ação não pode ser desfeita!')) {
+                return;
+            }
+            
+            botao.disabled = true;
+            botao.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Excluindo...';
+            
+            try {
+                const response = await fetch(scriptURL + '?acao=excluir&tipo=' + tipo + '&indice=' + indice);
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    const linha = botao.closest('tr');
+                    linha.remove();
+                    
+                    alert('✅ Registro excluído com sucesso!');
+                    
+                    if (tipo === 'Envios') {
+                        buscarEnviosPorData();
+                    } else {
+                        buscarRecebimentosPorData();
+                    }
+                } else {
+                    alert('❌ Erro ao excluir: ' + result.message);
+                    botao.disabled = false;
+                    botao.innerHTML = '<i class="fas fa-trash"></i> Excluir';
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('❌ Erro ao conectar ao servidor');
+                botao.disabled = false;
+                botao.innerHTML = '<i class="fas fa-trash"></i> Excluir';
+            }
         }
     </script>
 </body>
