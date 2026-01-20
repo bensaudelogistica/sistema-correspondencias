@@ -33,6 +33,108 @@
             color: var(--texto-escuro);
         }
 
+        /* TELA DE LOGIN */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: var(--branco);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 102, 204, 0.25);
+            padding: 50px;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .login-box .logo {
+            font-size: 4em;
+            color: var(--azul-bensaude);
+            margin-bottom: 20px;
+        }
+
+        .login-box h1 {
+            color: var(--azul-bensaude);
+            font-size: 2em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .login-box p {
+            color: var(--texto-secundario);
+            margin-bottom: 30px;
+        }
+
+        .login-form .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .login-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--texto-escuro);
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--cinza-borda);
+            border-radius: 12px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .login-form input:focus {
+            outline: none;
+            border-color: var(--azul-bensaude);
+            box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--azul-bensaude) 0%, var(--azul-escuro) 100%);
+            color: var(--branco);
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 102, 204, 0.35);
+        }
+
+        .alert-login {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 0.9em;
+        }
+
+        .alert-login.error {
+            background: #FEE2E2;
+            color: #991B1B;
+            border-left: 4px solid #EF4444;
+        }
+
+        /* SISTEMA PRINCIPAL */
+        .sistema-container {
+            display: none;
+        }
+
         .container-custom {
             max-width: 1400px;
             margin: 0 auto;
@@ -91,6 +193,19 @@
             display: flex;
             gap: 15px;
             z-index: 10;
+            align-items: center;
+        }
+
+        .user-info {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--branco);
+            font-weight: 600;
+            font-size: 0.9em;
         }
 
         .icon-btn {
@@ -112,6 +227,15 @@
             background: rgba(255, 255, 255, 0.35);
             border-color: rgba(255, 255, 255, 0.6);
             transform: scale(1.1);
+        }
+
+        .icon-btn.logout {
+            background: rgba(239, 68, 68, 0.3);
+            border-color: rgba(239, 68, 68, 0.5);
+        }
+
+        .icon-btn.logout:hover {
+            background: rgba(239, 68, 68, 0.5);
         }
 
         .navbar-custom {
@@ -679,6 +803,7 @@
             .header-icons {
                 top: 15px;
                 right: 15px;
+                flex-direction: column;
             }
 
             .icon-btn {
@@ -711,426 +836,505 @@
     </style>
 </head>
 <body>
-    <div class="container-custom">
-        <div class="header">
-            <div class="header-icons">
-                <button class="icon-btn" onclick="irParaTela('telaDashboard')" title="Dashboard">
-                    <i class="fas fa-chart-line"></i>
-                </button>
-                <button class="icon-btn" onclick="irParaTela('telaConfiguracoes')" title="Configurações">
-                    <i class="fas fa-cog"></i>
-                </button>
+    <!-- TELA DE LOGIN -->
+    <div id="loginContainer" class="login-container">
+        <div class="login-box">
+            <div class="logo">
+                <i class="fas fa-lock"></i>
             </div>
-
-            <h1><i class="fas fa-box"></i> Sistema de Correspondências</h1>
-            <p>Bensaúde Logística - Controle Inteligente</p>
+            <h1>Sistema de Correspondências</h1>
+            <p>Bensaúde Logística - Acesso Restrito</p>
             
-            <nav class="navbar-custom">
-                <button class="nav-btn" id="navHome" onclick="irParaTela('telaInicial')">
-                    <i class="fas fa-home"></i> HOME
-                </button>
-                <button class="nav-btn" id="navEnvio" onclick="irParaTela('telaEnvio')">
-                    <i class="fas fa-paper-plane"></i> ENVIO
-                </button>
-                <button class="nav-btn" id="navRecebimento" onclick="irParaTela('telaRecebimento')">
-                    <i class="fas fa-inbox"></i> RECEBIMENTO
-                </button>
-            </nav>
-        </div>
-
-        <div id="telaInicial" class="screen active">
-            <div class="menu-inicial">
-                <div class="menu-card" onclick="irParaTela('telaEnvio')">
-                    <i class="fas fa-paper-plane"></i>
-                    <h3>Envio</h3>
-                    <p>Registrar envios de correspondências</p>
-                </div>
-                <div class="menu-card" onclick="irParaTela('telaRecebimento')">
-                    <i class="fas fa-inbox"></i>
-                    <h3>Recebimento</h3>
-                    <p>Registrar recebimentos de correspondências</p>
-                </div>
+            <div class="alert-login error" id="alertLoginError">
+                ❌ Usuário ou senha incorretos!
             </div>
-        </div>
-
-        <div id="telaConfiguracoes" class="screen">
-            <h2><i class="fas fa-cog"></i> Configurações do Sistema</h2>
-
-            <div class="alert-custom alert-success" id="alertSuccessConfig">
-                ✅ Item salvo com sucesso!
-            </div>
-
-            <div class="config-tabs">
-                <button class="config-tab active" onclick="trocarAbaConfig('departamentos', event)">
-                    <i class="fas fa-building"></i> Departamentos
-                </button>
-                <button class="config-tab" onclick="trocarAbaConfig('tiposEnvio', event)">
-                    <i class="fas fa-paper-plane"></i> Tipos de Envio
-                </button>
-                <button class="config-tab" onclick="trocarAbaConfig('tiposRecebimento', event)">
-                    <i class="fas fa-inbox"></i> Tipos de Recebimento
-                </button>
-                <button class="config-tab" onclick="trocarAbaConfig('usuarios', event)">
-                    <i class="fas fa-users"></i> Usuários (Em breve)
-                </button>
-            </div>
-
-            <div id="configDepartamentos" class="config-content active">
-                <h3>📋 Gerenciar Departamentos</h3>
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="form-group">
-                            <label>Nome do Departamento:</label>
-                            <input type="text" id="novoDepartamento" placeholder="Digite o nome do novo departamento...">
-                        </div>
-                    </div>
-                    <div class="col-md-4" style="display: flex; align-items: flex-end;">
-                        <button class="btn-custom btn-primary-custom" onclick="adicionarDepartamento()">
-                            <i class="fas fa-plus"></i> Adicionar
-                        </button>
-                    </div>
-                </div>
-
-                <h4 style="margin-top: 30px; color: var(--azul-bensaude);">Departamentos Cadastrados:</h4>
-                <div class="lista-itens" id="listaDepartamentos"></div>
-            </div>
-
-            <div id="configTiposEnvio" class="config-content">
-                <h3>📤 Gerenciar Tipos de Correspondência (Envio)</h3>
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="form-group">
-                            <label>Nome do Tipo de Envio:</label>
-                            <input type="text" id="novoTipoEnvio" placeholder="Digite o nome do novo tipo de envio...">
-                        </div>
-                    </div>
-                    <div class="col-md-4" style="display: flex; align-items: flex-end;">
-                        <button class="btn-custom btn-primary-custom" onclick="adicionarTipoEnvio()">
-                            <i class="fas fa-plus"></i> Adicionar
-                        </button>
-                    </div>
-                </div>
-
-                <h4 style="margin-top: 30px; color: var(--azul-bensaude);">Tipos de Envio Cadastrados:</h4>
-                <div class="lista-itens" id="listaTiposEnvio"></div>
-            </div>
-
-            <div id="configTiposRecebimento" class="config-content">
-                <h3>📥 Gerenciar Tipos de Correspondência (Recebimento)</h3>
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="form-group">
-                            <label>Nome do Tipo de Recebimento:</label>
-                            <input type="text" id="novoTipoRecebimento" placeholder="Digite o nome do novo tipo de recebimento...">
-                        </div>
-                    </div>
-                    <div class="col-md-4" style="display: flex; align-items: flex-end;">
-                        <button class="btn-custom btn-primary-custom" onclick="adicionarTipoRecebimento()">
-                            <i class="fas fa-plus"></i> Adicionar
-                        </button>
-                    </div>
-                </div>
-
-                <h4 style="margin-top: 30px; color: var(--azul-bensaude);">Tipos de Recebimento Cadastrados:</h4>
-                <div class="lista-itens" id="listaTiposRecebimento"></div>
-            </div>
-
-            <div id="configUsuarios" class="config-content">
-                <h3>👥 Gerenciar Usuários</h3>
-                <div style="padding: 40px; text-align: center; background: var(--cinza-tech); border-radius: 12px;">
-                    <i class="fas fa-users" style="font-size: 4em; color: var(--azul-bensaude); margin-bottom: 20px;"></i>
-                    <h4 style="color: var(--azul-bensaude);">Funcionalidade em Desenvolvimento</h4>
-                    <p style="color: var(--texto-secundario); margin-top: 10px;">
-                        A gestão de usuários estará disponível em breve. Esta funcionalidade permitirá cadastrar e gerenciar usuários com diferentes níveis de acesso ao sistema.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <div id="telaDashboard" class="screen">
-            <h2><i class="fas fa-chart-line"></i> Dashboard - Estatísticas de Correspondências</h2>
             
-            <div class="loading" id="loadingDashboard">
-                <div class="spinner"></div>
-                <p>Carregando estatísticas...</p>
-            </div>
-
-            <div class="filter-section">
-                <h4><i class="fas fa-filter"></i> Filtros</h4>
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>Período:</label>
-                            <select id="filtroPeriodo" onchange="toggleDataPersonalizada()">
-                                <option value="hoje">Hoje</option>
-                                <option value="mes" selected>Este Mês</option>
-                                <option value="ano">Este Ano</option>
-                                <option value="personalizado">Personalizado</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-3" id="dataInicioContainer" style="display: none;">
-                        <div class="form-group">
-                            <label>Data Início:</label>
-                            <input type="date" id="dataInicio">
-                        </div>
-                    </div>
-                    <div class="col-md-3" id="dataFimContainer" style="display: none;">
-                        <div class="form-group">
-                            <label>Data Fim:</label>
-                            <input type="date" id="dataFim">
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>Tipo:</label>
-                            <select id="filtroTipo">
-                                <option value="ambos">Envios e Recebimentos</option>
-                                <option value="envios">Apenas Envios</option>
-                                <option value="recebimentos">Apenas Recebimentos</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-3" style="display: flex; align-items: flex-end;">
-                        <button class="btn-custom btn-info-custom" onclick="atualizarDashboard()">
-                            <i class="fas fa-sync"></i> Atualizar
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="stats-cards" id="statsCards">
-                <div class="stat-card">
-                    <h4>📦 TOTAL GERAL</h4>
-                    <div class="number">0</div>
-                    <div class="label">Correspondências</div>
-                </div>
-                <div class="stat-card">
-                    <h4>📤 ENVIOS</h4>
-                    <div class="number">0</div>
-                    <div class="label">Correspondências</div>
-                </div>
-                <div class="stat-card">
-                    <h4>📥 RECEBIMENTOS</h4>
-                    <div class="number">0</div>
-                    <div class="label">Correspondências</div>
-                </div>
-                <div class="stat-card">
-                    <h4>📊 QUANTIDADE TOTAL</h4>
-                    <div class="number">0</div>
-                    <div class="label">Unidades</div>
-                </div>
-            </div>
-
-            <div class="dashboard-grid">
-                <div class="chart-container">
-                    <h3>📊 Por Tipo de Correspondência</h3>
-                    <canvas id="chartTipo"></canvas>
-                </div>
-                <div class="chart-container">
-                    <h3>🏢 Por Departamento</h3>
-                    <canvas id="chartDepartamento"></canvas>
-                </div>
-            </div>
-
-            <div class="table-container" style="margin-top: 30px;">
-                <h3 style="padding: 20px 20px 0;">📋 Detalhamento por Setor e Tipo</h3>
-                <table id="tabelaDetalhada">
-                    <thead>
-                        <tr>
-                            <th>Departamento</th>
-                            <th>Tipo</th>
-                            <th>Quantidade</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bodyTabelaDetalhada">
-                        <tr>
-                            <td colspan="3" style="text-align: center;">Selecione um período e clique em Atualizar</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="button-group">
-                <button type="button" class="btn-custom btn-success-custom" onclick="imprimirRelatorioDashboard()">
-                    <i class="fas fa-print"></i> Imprimir Relatório
-                </button>
-            </div>
-        </div>
-
-        <div id="telaEnvio" class="screen">
-            <h2><i class="fas fa-paper-plane"></i> Envio de Correspondências</h2>
-            <div class="alert-custom alert-success" id="alertSuccessEnvio">✅ Correspondência registrada com sucesso!</div>
-            <div class="alert-custom alert-error" id="alertErrorEnvio">❌ Erro ao registrar. Tente novamente.</div>
-            <form id="formEnvio" onsubmit="inserirEnvio(event)">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label><i class="fas fa-calendar"></i> Data do Envio:</label>
-                            <input type="date" id="dataEnvio" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label><i class="fas fa-building"></i> Departamento:</label>
-                            <select id="departamentoEnvio" required>
-                                <option value="">Selecione...</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label><i class="fas fa-envelope"></i> Tipo de Correspondência:</label>
-                            <select id="tipoEnvio" required>
-                                <option value="">Selecione...</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label><i class="fas fa-sort-numeric-up"></i> Quantidade:</label>
-                            <input type="number" id="quantidadeEnvio" min="1" value="1" required>
-                        </div>
-                    </div>
+            <form class="login-form" onsubmit="fazerLogin(event)">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Usuário:</label>
+                    <input type="text" id="loginUsuario" placeholder="Digite seu usuário" required autofocus>
                 </div>
                 <div class="form-group">
-                    <label><i class="fas fa-align-left"></i> Descrição da Correspondência:</label>
-                    <textarea id="descricaoEnvio" rows="3" placeholder="Digite detalhes sobre a correspondência..." required></textarea>
+                    <label><i class="fas fa-key"></i> Senha:</label>
+                    <input type="password" id="loginSenha" placeholder="Digite sua senha" required>
                 </div>
-                <div class="button-group">
-                    <button type="submit" class="btn-custom btn-primary-custom"><i class="fas fa-plus-circle"></i> Inserir</button>
-                    <button type="button" class="btn-custom btn-success-custom" onclick="imprimirProtocoloEnvio()"><i class="fas fa-print"></i> Imprimir Protocolo</button>
-                </div>
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> ENTRAR
+                </button>
             </form>
-            <div class="filter-section">
-                <h4><i class="fas fa-search"></i> Buscar Correspondências por Data</h4>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Selecione a Data:</label>
-                            <input type="date" id="filtroDataEnvio">
-                        </div>
-                    </div>
-                    <div class="col-md-6" style="display: flex; align-items: flex-end; gap: 10px;">
-                        <button class="btn-custom btn-info-custom" onclick="buscarEnviosPorData()"><i class="fas fa-search"></i> Buscar Data</button>
-                        <button class="btn-custom btn-warning-custom" onclick="limparBuscaEnvio()"><i class="fas fa-calendar-day"></i> Ver Hoje</button>
-                    </div>
-                </div>
-            </div>
-            <div class="loading" id="loadingEnvio">
-                <div class="spinner"></div>
-                <p>Buscando registros...</p>
-            </div>
-            <div class="table-container">
-                <h3 id="tituloTabelaEnvio">📋 Correspondências Registradas Hoje</h3>
-                <table id="tabelaEnvios">
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Departamento</th>
-                            <th>Tipo</th>
-                            <th>Descrição</th>
-                            <th>Quantidade</th>
-                            <th class="acao-col">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bodyTabelaEnvios">
-                        <tr><td colspan="6" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>
-                    </tbody>
-                </table>
+            
+            <div style="margin-top: 30px; padding: 15px; background: var(--azul-claro); border-radius: 12px; font-size: 0.85em; color: var(--texto-secundario);">
+                <strong>👤 Usuários de teste:</strong><br>
+                admin / admin123<br>
+                logistica / log123<br>
+                recepcao / rec123
             </div>
         </div>
+    </div>
 
-        <div id="telaRecebimento" class="screen">
-            <h2><i class="fas fa-inbox"></i> Recebimento de Correspondências</h2>
-            <div class="alert-custom alert-success" id="alertSuccessRecebimento">✅ Correspondência registrada com sucesso!</div>
-            <div class="alert-custom alert-error" id="alertErrorRecebimento">❌ Erro ao registrar. Tente novamente.</div>
-            <form id="formRecebimento" onsubmit="inserirRecebimento(event)">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label><i class="fas fa-calendar"></i> Data do Recebimento:</label>
-                            <input type="date" id="dataRecebimento" required>
+    <!-- SISTEMA PRINCIPAL -->
+    <div id="sistemaContainer" class="sistema-container">
+        <div class="container-custom">
+            <div class="header">
+                <div class="header-icons">
+                    <div class="user-info">
+                        <i class="fas fa-user-circle"></i>
+                        <span id="nomeUsuarioLogado">Usuário</span>
+                    </div>
+                    <button class="icon-btn" onclick="irParaTela('telaDashboard')" title="Dashboard">
+                        <i class="fas fa-chart-line"></i>
+                    </button>
+                    <button class="icon-btn" onclick="irParaTela('telaConfiguracoes')" title="Configurações">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <button class="icon-btn logout" onclick="fazerLogout()" title="Sair">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+
+                <h1><i class="fas fa-box"></i> Sistema de Correspondências</h1>
+                <p>Bensaúde Logística - Controle Inteligente</p>
+                
+                <nav class="navbar-custom">
+                    <button class="nav-btn" id="navHome" onclick="irParaTela('telaInicial')">
+                        <i class="fas fa-home"></i> HOME
+                    </button>
+                    <button class="nav-btn" id="navEnvio" onclick="irParaTela('telaEnvio')">
+                        <i class="fas fa-paper-plane"></i> ENVIO
+                    </button>
+                    <button class="nav-btn" id="navRecebimento" onclick="irParaTela('telaRecebimento')">
+                        <i class="fas fa-inbox"></i> RECEBIMENTO
+                    </button>
+                </nav>
+            </div>
+
+            <div id="telaInicial" class="screen active">
+                <div class="menu-inicial">
+                    <div class="menu-card" onclick="irParaTela('telaEnvio')">
+                        <i class="fas fa-paper-plane"></i>
+                        <h3>Envio</h3>
+                        <p>Registrar envios de correspondências</p>
+                    </div>
+                    <div class="menu-card" onclick="irParaTela('telaRecebimento')">
+                        <i class="fas fa-inbox"></i>
+                        <h3>Recebimento</h3>
+                        <p>Registrar recebimentos de correspondências</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="telaConfiguracoes" class="screen">
+                <h2><i class="fas fa-cog"></i> Configurações do Sistema</h2>
+
+                <div class="alert-custom alert-success" id="alertSuccessConfig">
+                    ✅ Item salvo com sucesso!
+                </div>
+
+                <div class="config-tabs">
+                    <button class="config-tab active" onclick="trocarAbaConfig('departamentos', event)">
+                        <i class="fas fa-building"></i> Departamentos
+                    </button>
+                    <button class="config-tab" onclick="trocarAbaConfig('tiposEnvio', event)">
+                        <i class="fas fa-paper-plane"></i> Tipos de Envio
+                    </button>
+                    <button class="config-tab" onclick="trocarAbaConfig('tiposRecebimento', event)">
+                        <i class="fas fa-inbox"></i> Tipos de Recebimento
+                    </button>
+                    <button class="config-tab" onclick="trocarAbaConfig('usuarios', event)">
+                        <i class="fas fa-users"></i> Usuários
+                    </button>
+                </div>
+
+                <div id="configDepartamentos" class="config-content active">
+                    <h3>📋 Gerenciar Departamentos</h3>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>Nome do Departamento:</label>
+                                <input type="text" id="novoDepartamento" placeholder="Digite o nome do novo departamento...">
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="display: flex; align-items: flex-end;">
+                            <button class="btn-custom btn-primary-custom" onclick="adicionarDepartamento()">
+                                <i class="fas fa-plus"></i> Adicionar
+                            </button>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label><i class="fas fa-building"></i> Departamento:</label>
-                            <select id="departamentoRecebimento" required>
-                                <option value="">Selecione...</option>
-                            </select>
+
+                    <h4 style="margin-top: 30px; color: var(--azul-bensaude);">Departamentos Cadastrados:</h4>
+                    <div class="lista-itens" id="listaDepartamentos"></div>
+                </div>
+
+                <div id="configTiposEnvio" class="config-content">
+                    <h3>📤 Gerenciar Tipos de Correspondência (Envio)</h3>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>Nome do Tipo de Envio:</label>
+                                <input type="text" id="novoTipoEnvio" placeholder="Digite o nome do novo tipo de envio...">
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="display: flex; align-items: flex-end;">
+                            <button class="btn-custom btn-primary-custom" onclick="adicionarTipoEnvio()">
+                                <i class="fas fa-plus"></i> Adicionar
+                            </button>
+                        </div>
+                    </div>
+
+                    <h4 style="margin-top: 30px; color: var(--azul-bensaude);">Tipos de Envio Cadastrados:</h4>
+                    <div class="lista-itens" id="listaTiposEnvio"></div>
+                </div>
+
+                <div id="configTiposRecebimento" class="config-content">
+                    <h3>📥 Gerenciar Tipos de Correspondência (Recebimento)</h3>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>Nome do Tipo de Recebimento:</label>
+                                <input type="text" id="novoTipoRecebimento" placeholder="Digite o nome do novo tipo de recebimento...">
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="display: flex; align-items: flex-end;">
+                            <button class="btn-custom btn-primary-custom" onclick="adicionarTipoRecebimento()">
+                                <i class="fas fa-plus"></i> Adicionar
+                            </button>
+                        </div>
+                    </div>
+
+                    <h4 style="margin-top: 30px; color: var(--azul-bensaude);">Tipos de Recebimento Cadastrados:</h4>
+                    <div class="lista-itens" id="listaTiposRecebimento"></div>
+                </div>
+
+                <div id="configUsuarios" class="config-content">
+                    <h3>👥 Gerenciar Usuários</h3>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Usuário</th>
+                                    <th>Senha</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>admin</strong></td>
+                                    <td>admin123</td>
+                                    <td><span style="color: #10B981;">✅ Ativo</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>logistica</strong></td>
+                                    <td>log123</td>
+                                    <td><span style="color: #10B981;">✅ Ativo</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>recepcao</strong></td>
+                                    <td>rec123</td>
+                                    <td><span style="color: #10B981;">✅ Ativo</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div style="margin-top: 20px; padding: 20px; background: var(--azul-claro); border-radius: 12px; border-left: 4px solid var(--azul-bensaude);">
+                        <p style="color: var(--azul-bensaude); margin: 0;">
+                            <strong><i class="fas fa-info-circle"></i> Informação:</strong><br>
+                            Os usuários são configurados diretamente no código HTML. Para adicionar ou remover usuários, edite a lista na função <code>fazerLogin()</code>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="telaDashboard" class="screen">
+                <h2><i class="fas fa-chart-line"></i> Dashboard - Estatísticas de Correspondências</h2>
+                
+                <div class="loading" id="loadingDashboard">
+                    <div class="spinner"></div>
+                    <p>Carregando estatísticas...</p>
+                </div>
+
+                <div class="filter-section">
+                    <h4><i class="fas fa-filter"></i> Filtros</h4>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Período:</label>
+                                <select id="filtroPeriodo" onchange="toggleDataPersonalizada()">
+                                    <option value="hoje">Hoje</option>
+                                    <option value="mes" selected>Este Mês</option>
+                                    <option value="ano">Este Ano</option>
+                                    <option value="personalizado">Personalizado</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3" id="dataInicioContainer" style="display: none;">
+                            <div class="form-group">
+                                <label>Data Início:</label>
+                                <input type="date" id="dataInicio">
+                            </div>
+                        </div>
+                        <div class="col-md-3" id="dataFimContainer" style="display: none;">
+                            <div class="form-group">
+                                <label>Data Fim:</label>
+                                <input type="date" id="dataFim">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Tipo:</label>
+                                <select id="filtroTipo">
+                                    <option value="ambos">Envios e Recebimentos</option>
+                                    <option value="envios">Apenas Envios</option>
+                                    <option value="recebimentos">Apenas Recebimentos</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3" style="display: flex; align-items: flex-end;">
+                            <button class="btn-custom btn-info-custom" onclick="atualizarDashboard()">
+                                <i class="fas fa-sync"></i> Atualizar
+                            </button>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label><i class="fas fa-envelope"></i> Tipo de Correspondência:</label>
-                            <select id="tipoRecebimento" required>
-                                <option value="">Selecione...</option>
-                            </select>
-                        </div>
+
+                <div class="stats-cards" id="statsCards">
+                    <div class="stat-card">
+                        <h4>📦 TOTAL GERAL</h4>
+                        <div class="number">0</div>
+                        <div class="label">Correspondências</div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label><i class="fas fa-sort-numeric-up"></i> Quantidade:</label>
-                            <input type="number" id="quantidadeRecebimento" min="1" value="1" required>
-                        </div>
+                    <div class="stat-card">
+                        <h4>📤 ENVIOS</h4>
+                        <div class="number">0</div>
+                        <div class="label">Correspondências</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>📥 RECEBIMENTOS</h4>
+                        <div class="number">0</div>
+                        <div class="label">Correspondências</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>📊 QUANTIDADE TOTAL</h4>
+                        <div class="number">0</div>
+                        <div class="label">Unidades</div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label><i class="fas fa-align-left"></i> Descrição da Correspondência:</label>
-                    <textarea id="descricaoRecebimento" rows="3" placeholder="Digite detalhes sobre a correspondência..." required></textarea>
+
+                <div class="dashboard-grid">
+                    <div class="chart-container">
+                        <h3>📊 Por Tipo de Correspondência</h3>
+                        <canvas id="chartTipo"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>🏢 Por Departamento</h3>
+                        <canvas id="chartDepartamento"></canvas>
+                    </div>
                 </div>
+
+                <div class="table-container" style="margin-top: 30px;">
+                    <h3 style="padding: 20px 20px 0;">📋 Detalhamento por Setor e Tipo</h3>
+                    <table id="tabelaDetalhada">
+                        <thead>
+                            <tr>
+                                <th>Departamento</th>
+                                <th>Tipo</th>
+                                <th>Quantidade</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodyTabelaDetalhada">
+                            <tr>
+                                <td colspan="3" style="text-align: center;">Selecione um período e clique em Atualizar</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
                 <div class="button-group">
-                    <button type="submit" class="btn-custom btn-primary-custom"><i class="fas fa-plus-circle"></i> Inserir</button>
-                    <button type="button" class="btn-custom btn-success-custom" onclick="imprimirProtocoloRecebimento()"><i class="fas fa-print"></i> Imprimir Protocolo</button>
+                    <button type="button" class="btn-custom btn-success-custom" onclick="imprimirRelatorioDashboard()">
+                        <i class="fas fa-print"></i> Imprimir Relatório
+                    </button>
                 </div>
-            </form>
-            <div class="filter-section">
-                <h4><i class="fas fa-search"></i> Buscar Correspondências por Data</h4>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Selecione a Data:</label>
-                            <input type="date" id="filtroDataRecebimento">
+            </div>
+
+            <div id="telaEnvio" class="screen">
+                <h2><i class="fas fa-paper-plane"></i> Envio de Correspondências</h2>
+                <div class="alert-custom alert-success" id="alertSuccessEnvio">✅ Correspondência registrada com sucesso!</div>
+                <div class="alert-custom alert-error" id="alertErrorEnvio">❌ Erro ao registrar. Tente novamente.</div>
+                <form id="formEnvio" onsubmit="inserirEnvio(event)">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label><i class="fas fa-calendar"></i> Data do Envio:</label>
+                                <input type="date" id="dataEnvio" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label><i class="fas fa-building"></i> Departamento:</label>
+                                <select id="departamentoEnvio" required>
+                                    <option value="">Selecione...</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-6" style="display: flex; align-items: flex-end; gap: 10px;">
-                        <button class="btn-custom btn-info-custom" onclick="buscarRecebimentosPorData()"><i class="fas fa-search"></i> Buscar Data</button>
-                        <button class="btn-custom btn-warning-custom" onclick="limparBuscaRecebimento()"><i class="fas fa-calendar-day"></i> Ver Hoje</button>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label><i class="fas fa-envelope"></i> Tipo de Correspondência:</label>
+                                <select id="tipoEnvio" required>
+                                    <option value="">Selecione...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label><i class="fas fa-sort-numeric-up"></i> Quantidade:</label>
+                                <input type="number" id="quantidadeEnvio" min="1" value="1" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-align-left"></i> Descrição da Correspondência:</label>
+                        <textarea id="descricaoEnvio" rows="3" placeholder="Digite detalhes sobre a correspondência..." required></textarea>
+                    </div>
+                    <div class="button-group">
+                        <button type="submit" class="btn-custom btn-primary-custom"><i class="fas fa-plus-circle"></i> Inserir</button>
+                        <button type="button" class="btn-custom btn-success-custom" onclick="imprimirProtocoloEnvio()"><i class="fas fa-print"></i> Imprimir Protocolo</button>
+                    </div>
+                </form>
+                <div class="filter-section">
+                    <h4><i class="fas fa-search"></i> Buscar Correspondências por Data</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Selecione a Data:</label>
+                                <input type="date" id="filtroDataEnvio">
+                            </div>
+                        </div>
+                        <div class="col-md-6" style="display: flex; align-items: flex-end; gap: 10px;">
+                            <button class="btn-custom btn-info-custom" onclick="buscarEnviosPorData()"><i class="fas fa-search"></i> Buscar Data</button>
+                            <button class="btn-custom btn-warning-custom" onclick="limparBuscaEnvio()"><i class="fas fa-calendar-day"></i> Ver Hoje</button>
+                        </div>
                     </div>
                 </div>
+                <div class="loading" id="loadingEnvio">
+                    <div class="spinner"></div>
+                    <p>Buscando registros...</p>
+                </div>
+                <div class="table-container">
+                    <h3 id="tituloTabelaEnvio">📋 Correspondências Registradas Hoje</h3>
+                    <table id="tabelaEnvios">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Departamento</th>
+                                <th>Tipo</th>
+                                <th>Descrição</th>
+                                <th>Quantidade</th>
+                                <th>Usuário</th>
+                                <th>Data/Hora Inserção</th>
+                                <th class="acao-col">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodyTabelaEnvios">
+                            <tr><td colspan="8" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="loading" id="loadingRecebimento">
-                <div class="spinner"></div>
-                <p>Buscando registros...</p>
-            </div>
-            <div class="table-container">
-                <h3 id="tituloTabelaRecebimento">📋 Correspondências Registradas Hoje</h3>
-                <table id="tabelaRecebimentos">
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Departamento</th>
-                            <th>Tipo</th>
-                            <th>Descrição</th>
-                            <th>Quantidade</th>
-                            <th class="acao-col">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bodyTabelaRecebimentos">
-                        <tr><td colspan="6" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>
-                    </tbody>
-                </table>
+
+            <div id="telaRecebimento" class="screen">
+                <h2><i class="fas fa-inbox"></i> Recebimento de Correspondências</h2>
+                <div class="alert-custom alert-success" id="alertSuccessRecebimento">✅ Correspondência registrada com sucesso!</div>
+                <div class="alert-custom alert-error" id="alertErrorRecebimento">❌ Erro ao registrar. Tente novamente.</div>
+                <form id="formRecebimento" onsubmit="inserirRecebimento(event)">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label><i class="fas fa-calendar"></i> Data do Recebimento:</label>
+                                <input type="date" id="dataRecebimento" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label><i class="fas fa-building"></i> Departamento:</label>
+                                <select id="departamentoRecebimento" required>
+                                    <option value="">Selecione...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label><i class="fas fa-envelope"></i> Tipo de Correspondência:</label>
+                                <select id="tipoRecebimento" required>
+                                    <option value="">Selecione...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label><i class="fas fa-sort-numeric-up"></i> Quantidade:</label>
+                                <input type="number" id="quantidadeRecebimento" min="1" value="1" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-align-left"></i> Descrição da Correspondência:</label>
+                        <textarea id="descricaoRecebimento" rows="3" placeholder="Digite detalhes sobre a correspondência..." required></textarea>
+                    </div>
+                    <div class="button-group">
+                        <button type="submit" class="btn-custom btn-primary-custom"><i class="fas fa-plus-circle"></i> Inserir</button>
+                        <button type="button" class="btn-custom btn-success-custom" onclick="imprimirProtocoloRecebimento()"><i class="fas fa-print"></i> Imprimir Protocolo</button>
+                    </div>
+                </form>
+                <div class="filter-section">
+                    <h4><i class="fas fa-search"></i> Buscar Correspondências por Data</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Selecione a Data:</label>
+                                <input type="date" id="filtroDataRecebimento">
+                            </div>
+                        </div>
+                        <div class="col-md-6" style="display: flex; align-items: flex-end; gap: 10px;">
+                            <button class="btn-custom btn-info-custom" onclick="buscarRecebimentosPorData()"><i class="fas fa-search"></i> Buscar Data</button>
+                            <button class="btn-custom btn-warning-custom" onclick="limparBuscaRecebimento()"><i class="fas fa-calendar-day"></i> Ver Hoje</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="loading" id="loadingRecebimento">
+                    <div class="spinner"></div>
+                    <p>Buscando registros...</p>
+                </div>
+                <div class="table-container">
+                    <h3 id="tituloTabelaRecebimento">📋 Correspondências Registradas Hoje</h3>
+                    <table id="tabelaRecebimentos">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Departamento</th>
+                                <th>Tipo</th>
+                                <th>Descrição</th>
+                                <th>Quantidade</th>
+                                <th>Usuário</th>
+                                <th>Data/Hora Inserção</th>
+                                <th class="acao-col">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodyTabelaRecebimentos">
+                            <tr><td colspan="8" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbzeQZZ9sWj61UPEn-Zpg5r7EIK6XP5ZFcp4ca5ReSP3xBCN6C8UtuNa-sbGfo2AbMHV/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyzAYgPkNNXRURK-kpGDMkvMKbpYFod2MmAd5VqctRdVWyxzWBsW6FfPUsw2s6OUynG/exec';
         let chartTipo = null;
         let chartDepartamento = null;
         let dadosAtuaisDashboard = { envios: [], recebimentos: [], periodo: '', tipo: '' };
@@ -1139,7 +1343,97 @@
         const tiposEnvioPadrao = ['PAC', 'REGISTRADA', 'REGISTRADA COM AR', 'SEDEX', 'SEDEX REVERSO', 'SIMPLES', 'OUTROS'];
         const tiposRecebimentoPadrao = ['BOLETOS', 'FATURAMENTO', 'NOTIFICAÇÃO EXTRA-JUDICIAL', 'NOTIFICAÇÃO JUDICIAL', 'REEMBOLSO', 'TELEGRAMA', 'OUTROS'];
 
-        // FUNÇÃO DE EXCLUIR REGISTRO - CORRIGIDA
+        // SISTEMA DE LOGIN
+        const usuarios = [
+            { usuario: 'admin', senha: 'admin123', nome: 'Administrador' },
+            { usuario: 'logistica', senha: 'log123', nome: 'Logística' },
+            { usuario: 'recepcao', senha: 'rec123', nome: 'Recepção' }
+        ];
+
+        function fazerLogin(event) {
+            event.preventDefault();
+            
+            const usuario = document.getElementById('loginUsuario').value.trim();
+            const senha = document.getElementById('loginSenha').value;
+            
+            const usuarioEncontrado = usuarios.find(u => u.usuario === usuario && u.senha === senha);
+            
+            if (usuarioEncontrado) {
+                // Salvar no localStorage
+                localStorage.setItem('usuarioLogado', JSON.stringify({
+                    usuario: usuarioEncontrado.usuario,
+                    nome: usuarioEncontrado.nome
+                }));
+                
+                mostrarSistema();
+            } else {
+                const alert = document.getElementById('alertLoginError');
+                alert.style.display = 'block';
+                setTimeout(() => { alert.style.display = 'none'; }, 3000);
+            }
+        }
+
+        function fazerLogout() {
+            if (confirm('Deseja realmente sair do sistema?')) {
+                localStorage.removeItem('usuarioLogado');
+                mostrarLogin();
+            }
+        }
+
+        function mostrarLogin() {
+            document.getElementById('loginContainer').style.display = 'flex';
+            document.getElementById('sistemaContainer').style.display = 'none';
+            document.getElementById('loginUsuario').value = '';
+            document.getElementById('loginSenha').value = '';
+        }
+
+        function mostrarSistema() {
+            const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+            
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('sistemaContainer').style.display = 'block';
+            document.getElementById('nomeUsuarioLogado').textContent = usuarioLogado.nome;
+            
+            inicializarDados();
+            setDataHoje('dataEnvio');
+            setDataHoje('dataRecebimento');
+            setDataHoje('filtroDataEnvio');
+            setDataHoje('filtroDataRecebimento');
+        }
+
+        function verificarSessao() {
+            const usuarioLogado = localStorage.getItem('usuarioLogado');
+            
+            if (usuarioLogado) {
+                mostrarSistema();
+            } else {
+                mostrarLogin();
+            }
+        }
+
+        function getUsuarioLogado() {
+            const usuarioData = localStorage.getItem('usuarioLogado');
+            if (usuarioData) {
+                return JSON.parse(usuarioData).usuario;
+            }
+            return 'Desconhecido';
+        }
+
+        function getDataHoraAtual() {
+            const agora = new Date();
+            const dia = String(agora.getDate()).padStart(2, '0');
+            const mes = String(agora.getMonth() + 1).padStart(2, '0');
+            const ano = agora.getFullYear();
+            const hora = String(agora.getHours()).padStart(2, '0');
+            const minuto = String(agora.getMinutes()).padStart(2, '0');
+            
+            return dia + '/' + mes + '/' + ano + ' ' + hora + ':' + minuto;
+        }
+
+        // CONTINUAÇÃO NO PRÓXIMO BLOCO...
+    </script>
+        // CONTINUAÇÃO DO JAVASCRIPT...
+
         function excluirRegistro(botao, tabelaId) {
             if (!confirm('Tem certeza que deseja excluir este registro?')) {
                 return;
@@ -1147,19 +1441,11 @@
 
             const linha = botao.closest('tr');
             
-            // Pegar dados dos atributos data-*
             const data = linha.getAttribute('data-date');
             const departamento = linha.getAttribute('data-dept');
             const tipo = linha.getAttribute('data-type');
             const descricao = linha.getAttribute('data-desc');
             const quantidade = linha.getAttribute('data-qty');
-            
-            console.log('=== DADOS PARA EXCLUSÃO ===');
-            console.log('Data:', data);
-            console.log('Departamento:', departamento);
-            console.log('Tipo:', tipo);
-            console.log('Descrição:', descricao);
-            console.log('Quantidade:', quantidade);
             
             const tipoOperacao = tabelaId === 'bodyTabelaEnvios' ? 'Envios' : 'Recebimentos';
             
@@ -1173,44 +1459,33 @@
                 quantidade: quantidade
             };
             
-            console.log('Payload enviado:', JSON.stringify(dadosExclusao, null, 2));
-            
             fetch(scriptURL, {
                 method: 'POST',
                 body: JSON.stringify(dadosExclusao)
             })
-            .then(function(response) { 
-                console.log('Status da resposta:', response.status);
-                return response.json(); 
-            })
-            .then(function(resultado) {
-                console.log('Resposta do servidor:', resultado);
+            .then(response => response.json())
+            .then(resultado => {
                 if (resultado.status === 'success') {
                     linha.remove();
                     
                     const tbody = document.getElementById(tabelaId);
                     if (tbody.rows.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
                     }
                     
                     alert('✅ ' + resultado.message);
                 } else {
-                    console.error('Erro retornado:', resultado);
                     alert('❌ ' + resultado.message);
                 }
             })
-            .catch(function(error) {
-                console.error('Erro na requisição:', error);
-                alert('❌ Erro ao excluir. Verifique o console (F12) para mais detalhes.');
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('❌ Erro ao excluir.');
             });
         }
 
         function irParaTela(telaId) {
-            console.log('Navegando para:', telaId);
-            
-            document.querySelectorAll('.nav-btn').forEach(function(btn) {
-                btn.classList.remove('active');
-            });
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
             
             if (telaId === 'telaInicial') {
                 document.getElementById('navHome').classList.add('active');
@@ -1220,9 +1495,7 @@
                 document.getElementById('navRecebimento').classList.add('active');
             }
             
-            document.querySelectorAll('.screen').forEach(function(screen) {
-                screen.classList.remove('active');
-            });
+            document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
             
             const telaDestino = document.getElementById(telaId);
             if (telaDestino) {
@@ -1259,11 +1532,11 @@
             const tiposEnvio = JSON.parse(localStorage.getItem('tiposEnvio')) || tiposEnvioPadrao;
             const tiposRecebimento = JSON.parse(localStorage.getItem('tiposRecebimento')) || tiposRecebimentoPadrao;
 
-            ['departamentoEnvio', 'departamentoRecebimento'].forEach(function(id) {
+            ['departamentoEnvio', 'departamentoRecebimento'].forEach(id => {
                 const select = document.getElementById(id);
                 const valorAtual = select.value;
                 select.innerHTML = '<option value="">Selecione...</option>';
-                departamentos.forEach(function(dept) {
+                departamentos.forEach(dept => {
                     const option = document.createElement('option');
                     option.value = dept;
                     option.textContent = dept;
@@ -1275,7 +1548,7 @@
             const selectEnvio = document.getElementById('tipoEnvio');
             const valorEnvio = selectEnvio.value;
             selectEnvio.innerHTML = '<option value="">Selecione...</option>';
-            tiposEnvio.forEach(function(tipo) {
+            tiposEnvio.forEach(tipo => {
                 const option = document.createElement('option');
                 option.value = tipo;
                 option.textContent = tipo;
@@ -1286,7 +1559,7 @@
             const selectReceb = document.getElementById('tipoRecebimento');
             const valorReceb = selectReceb.value;
             selectReceb.innerHTML = '<option value="">Selecione...</option>';
-            tiposRecebimento.forEach(function(tipo) {
+            tiposRecebimento.forEach(tipo => {
                 const option = document.createElement('option');
                 option.value = tipo;
                 option.textContent = tipo;
@@ -1302,22 +1575,22 @@
 
             const listaDept = document.getElementById('listaDepartamentos');
             listaDept.innerHTML = '';
-            departamentos.forEach(function(dept) {
-                const badge = criarBadge(dept, function() { removerDepartamento(dept); });
+            departamentos.forEach(dept => {
+                const badge = criarBadge(dept, () => removerDepartamento(dept));
                 listaDept.appendChild(badge);
             });
 
             const listaEnvio = document.getElementById('listaTiposEnvio');
             listaEnvio.innerHTML = '';
-            tiposEnvio.forEach(function(tipo) {
-                const badge = criarBadge(tipo, function() { removerTipoEnvio(tipo); });
+            tiposEnvio.forEach(tipo => {
+                const badge = criarBadge(tipo, () => removerTipoEnvio(tipo));
                 listaEnvio.appendChild(badge);
             });
 
             const listaReceb = document.getElementById('listaTiposRecebimento');
             listaReceb.innerHTML = '';
-            tiposRecebimento.forEach(function(tipo) {
-                const badge = criarBadge(tipo, function() { removerTipoRecebimento(tipo); });
+            tiposRecebimento.forEach(tipo => {
+                const badge = criarBadge(tipo, () => removerTipoRecebimento(tipo));
                 listaReceb.appendChild(badge);
             });
         }
@@ -1365,7 +1638,7 @@
             if (!confirm('Deseja realmente remover "' + dept + '"?')) return;
             
             let departamentos = JSON.parse(localStorage.getItem('departamentos')) || [];
-            departamentos = departamentos.filter(function(d) { return d !== dept; });
+            departamentos = departamentos.filter(d => d !== dept);
             localStorage.setItem('departamentos', JSON.stringify(departamentos));
             
             atualizarSelects();
@@ -1401,7 +1674,7 @@
             if (!confirm('Deseja realmente remover "' + tipo + '"?')) return;
             
             let tipos = JSON.parse(localStorage.getItem('tiposEnvio')) || [];
-            tipos = tipos.filter(function(t) { return t !== tipo; });
+            tipos = tipos.filter(t => t !== tipo);
             localStorage.setItem('tiposEnvio', JSON.stringify(tipos));
             
             atualizarSelects();
@@ -1437,7 +1710,7 @@
             if (!confirm('Deseja realmente remover "' + tipo + '"?')) return;
             
             let tipos = JSON.parse(localStorage.getItem('tiposRecebimento')) || [];
-            tipos = tipos.filter(function(t) { return t !== tipo; });
+            tipos = tipos.filter(t => t !== tipo);
             localStorage.setItem('tiposRecebimento', JSON.stringify(tipos));
             
             atualizarSelects();
@@ -1445,12 +1718,8 @@
         }
 
         function trocarAbaConfig(aba, event) {
-            document.querySelectorAll('.config-tab').forEach(function(tab) {
-                tab.classList.remove('active');
-            });
-            document.querySelectorAll('.config-content').forEach(function(content) {
-                content.classList.remove('active');
-            });
+            document.querySelectorAll('.config-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.config-content').forEach(content => content.classList.remove('active'));
 
             event.target.classList.add('active');
             
@@ -1487,14 +1756,16 @@
                 departamento:document.getElementById('departamentoEnvio').value, 
                 tipo:document.getElementById('tipoEnvio').value, 
                 descricao:document.getElementById('descricaoEnvio').value, 
-                quantidade:document.getElementById('quantidadeEnvio').value
+                quantidade:document.getElementById('quantidadeEnvio').value,
+                usuario: getUsuarioLogado(),
+                dataHora: getDataHoraAtual()
             };
             try {
                 const r = await fetch(scriptURL, {method:'POST', body:JSON.stringify(d)});
                 const res = await r.json();
                 if (res.status === 'success') {
                     mostrarAlerta('alertSuccessEnvio', 'alertErrorEnvio');
-                    adicionarLinhaTabela('bodyTabelaEnvios', [d.data, d.departamento, d.tipo, d.descricao, d.quantidade]);
+                    adicionarLinhaTabela('bodyTabelaEnvios', [d.data, d.departamento, d.tipo, d.descricao, d.quantidade, d.usuario, d.dataHora]);
                     document.getElementById('formEnvio').reset();
                     setDataHoje('dataEnvio');
                 } else {
@@ -1514,14 +1785,16 @@
                 departamento:document.getElementById('departamentoRecebimento').value, 
                 tipo:document.getElementById('tipoRecebimento').value, 
                 descricao:document.getElementById('descricaoRecebimento').value, 
-                quantidade:document.getElementById('quantidadeRecebimento').value
+                quantidade:document.getElementById('quantidadeRecebimento').value,
+                usuario: getUsuarioLogado(),
+                dataHora: getDataHoraAtual()
             };
             try {
                 const r = await fetch(scriptURL, {method:'POST', body:JSON.stringify(d)});
                 const res = await r.json();
                 if (res.status === 'success') {
                     mostrarAlerta('alertSuccessRecebimento', 'alertErrorRecebimento');
-                    adicionarLinhaTabela('bodyTabelaRecebimentos', [d.data, d.departamento, d.tipo, d.descricao, d.quantidade]);
+                    adicionarLinhaTabela('bodyTabelaRecebimentos', [d.data, d.departamento, d.tipo, d.descricao, d.quantidade, d.usuario, d.dataHora]);
                     document.getElementById('formRecebimento').reset();
                     setDataHoje('dataRecebimento');
                 } else {
@@ -1545,13 +1818,12 @@
             await buscarDadosPorData('Recebimentos', d, 'bodyTabelaRecebimentos', 'loadingRecebimento', 'tituloTabelaRecebimento');
         }
 
-        // FUNÇÃO CORRIGIDA - buscarDadosPorData com atributos data-*
         async function buscarDadosPorData(tipo, data, tabelaId, loadingId, tituloId) {
             const loading = document.getElementById(loadingId);
             const tbody = document.getElementById(tabelaId);
             const titulo = document.getElementById(tituloId);
             loading.classList.add('active');
-            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Buscando...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">Buscando...</td></tr>';
             try {
                 const r = await fetch(scriptURL + '?acao=buscarPorData&tipo=' + tipo + '&data=' + data);
                 const res = await r.json();
@@ -1560,10 +1832,9 @@
                     tbody.innerHTML = '';
                     titulo.textContent = '📋 Correspondências de ' + formatarData(data) + ' (' + res.data.length + ' registro(s))';
                     
-                    res.data.forEach(function(row) {
+                    res.data.forEach(row => {
                         const tr = document.createElement('tr');
                         
-                        // CRÍTICO: Guardar os dados ORIGINAIS como atributos
                         tr.setAttribute('data-date', row[0]);
                         tr.setAttribute('data-dept', row[1]);
                         tr.setAttribute('data-type', row[2]);
@@ -1576,6 +1847,8 @@
                             '<td>' + row[2] + '</td>' +
                             '<td>' + row[3] + '</td>' +
                             '<td>' + row[4] + '</td>' +
+                            '<td>' + (row[5] || '-') + '</td>' +
+                            '<td>' + (row[6] || '-') + '</td>' +
                             '<td class="acao-col">' +
                                 '<button class="btn-delete" onclick="excluirRegistro(this, \'' + tabelaId + '\')" title="Excluir">' +
                                     '×' +
@@ -1584,36 +1857,34 @@
                         tbody.appendChild(tr);
                     });
                 } else {
-                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhum registro encontrado</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">Nenhum registro encontrado</td></tr>';
                     titulo.textContent = '📋 Correspondências de ' + formatarData(data);
                 }
             } catch (error) {
                 console.error('Erro:', error);
                 loading.classList.remove('active');
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">Erro ao buscar dados</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: red;">Erro ao buscar dados</td></tr>';
             }
         }
 
         function limparBuscaEnvio() {
-            document.getElementById('bodyTabelaEnvios').innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
+            document.getElementById('bodyTabelaEnvios').innerHTML = '<tr><td colspan="8" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
             document.getElementById('tituloTabelaEnvio').textContent = '📋 Correspondências Registradas Hoje';
             setDataHoje('filtroDataEnvio');
         }
 
         function limparBuscaRecebimento() {
-            document.getElementById('bodyTabelaRecebimentos').innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
+            document.getElementById('bodyTabelaRecebimentos').innerHTML = '<tr><td colspan="8" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
             document.getElementById('tituloTabelaRecebimento').textContent = '📋 Correspondências Registradas Hoje';
             setDataHoje('filtroDataRecebimento');
         }
 
-        // FUNÇÃO CORRIGIDA - adicionarLinhaTabela com atributos data-*
-        function adicionarLinhaTabela(tabelaId, dados, idRegistro) {
+        function adicionarLinhaTabela(tabelaId, dados) {
             const tbody = document.getElementById(tabelaId);
             if (tbody.rows.length === 1 && tbody.rows[0].cells.length === 1) tbody.innerHTML = '';
             
             const tr = document.createElement('tr');
             
-            // CRÍTICO: Guardar os dados ORIGINAIS como atributos
             tr.setAttribute('data-date', dados[0]);
             tr.setAttribute('data-dept', dados[1]);
             tr.setAttribute('data-type', dados[2]);
@@ -1626,6 +1897,8 @@
                 '<td>' + dados[2] + '</td>' +
                 '<td>' + dados[3] + '</td>' +
                 '<td>' + dados[4] + '</td>' +
+                '<td>' + dados[5] + '</td>' +
+                '<td>' + dados[6] + '</td>' +
                 '<td class="acao-col">' +
                     '<button class="btn-delete" onclick="excluirRegistro(this, \'' + tabelaId + '\')" title="Excluir">' +
                         '×' +
@@ -1645,7 +1918,7 @@
             if (esconderId) document.getElementById(esconderId).style.display = 'none';
             const a = document.getElementById(mostrarId);
             a.style.display = 'block';
-            setTimeout(function() { a.style.display = 'none'; }, 3000);
+            setTimeout(() => { a.style.display = 'none'; }, 3000);
         }
 
         async function atualizarDashboard() {
@@ -1721,28 +1994,28 @@
             const totalEnvios = dadosEnvios.length;
             const totalRecebimentos = dadosRecebimentos.length;
             const totalGeral = totalEnvios + totalRecebimentos;
-            const quantidadeEnvios = dadosEnvios.reduce(function(sum, row) { return sum + (parseInt(row[4]) || 0); }, 0);
-            const quantidadeRecebimentos = dadosRecebimentos.reduce(function(sum, row) { return sum + (parseInt(row[4]) || 0); }, 0);
+            const quantidadeEnvios = dadosEnvios.reduce((sum, row) => sum + (parseInt(row[4]) || 0), 0);
+            const quantidadeRecebimentos = dadosRecebimentos.reduce((sum, row) => sum + (parseInt(row[4]) || 0), 0);
             const quantidadeTotal = quantidadeEnvios + quantidadeRecebimentos;
             
             atualizarCards({totalGeral, totalEnvios, totalRecebimentos, quantidadeTotal});
             
             const porTipo = {};
-            todosDados.forEach(function(row) { 
+            todosDados.forEach(row => { 
                 const tipo = row[2]; 
                 const qtd = parseInt(row[4]) || 0; 
                 porTipo[tipo] = (porTipo[tipo] || 0) + qtd; 
             });
             
             const porDepartamento = {};
-            todosDados.forEach(function(row) { 
+            todosDados.forEach(row => { 
                 const depto = row[1]; 
                 const qtd = parseInt(row[4]) || 0; 
                 porDepartamento[depto] = (porDepartamento[depto] || 0) + qtd; 
             });
             
             const detalhado = {};
-            todosDados.forEach(function(row) { 
+            todosDados.forEach(row => { 
                 const depto = row[1]; 
                 const tipo = row[2]; 
                 const qtd = parseInt(row[4]) || 0; 
@@ -1812,8 +2085,8 @@
                 return; 
             }
             tbody.innerHTML = '';
-            const ordenado = Object.entries(detalhado).sort(function(a, b) { return a[0].localeCompare(b[0]); });
-            ordenado.forEach(function(item) {
+            const ordenado = Object.entries(detalhado).sort((a, b) => a[0].localeCompare(b[0]));
+            ordenado.forEach(item => {
                 const chave = item[0];
                 const qtd = item[1];
                 const partes = chave.split('|');
@@ -1853,7 +2126,7 @@
 
             let html = '<!DOCTYPE html><html><head><title>Relatório Dashboard</title><style>body{font-family:Arial,sans-serif;padding:20px}h1{text-align:center;color:#0066CC;margin-bottom:10px}.info{margin:20px 0;background:#E6F2FF;padding:15px;border-radius:8px}.info p{margin:5px 0}.resumo{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin:20px 0}.resumo-card{background:#0066CC;color:white;padding:15px;border-radius:8px;text-align:center}.resumo-card h3{font-size:2em;margin:10px 0}.resumo-card p{font-size:0.9em;opacity:0.9}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{border:1px solid #0066CC;padding:12px 8px;text-align:left;font-size:11px}th{background:#0066CC;color:white;font-weight:bold}tr:nth-child(even){background:#F8FAFC}</style></head><body><h1>📊 RELATÓRIO DE CORRESPONDÊNCIAS</h1><div class="info"><p><strong>Bensaúde Logística</strong></p><p><strong>Período:</strong> ' + tituloPeriodo + '</p><p><strong>Filtro:</strong> ' + tipoTexto + '</p><p><strong>Data de impressão:</strong> ' + new Date().toLocaleString('pt-BR') + '</p></div><div class="resumo"><div class="resumo-card"><p>TOTAL GERAL</p><h3>' + totalGeral + '</h3><p>Correspondências</p></div><div class="resumo-card"><p>ENVIOS</p><h3>' + totalEnvios + '</h3><p>Correspondências</p></div><div class="resumo-card"><p>RECEBIMENTOS</p><h3>' + totalRecebimentos + '</h3><p>Correspondências</p></div><div class="resumo-card"><p>QUANTIDADE</p><h3>' + quantidadeTotal + '</h3><p>Unidades</p></div></div><h2 style="color:#0066CC;margin-top:30px;">Detalhamento por Setor e Tipo</h2><table><thead><tr><th>Departamento</th><th>Tipo de Correspondência</th><th>Quantidade</th></tr></thead><tbody>';
 
-            rows.forEach(function(row) {
+            rows.forEach(row => {
                 if (row.cells.length > 1) {
                     html += '<tr>';
                     for (let i = 0; i < row.cells.length; i++) {
@@ -1905,10 +2178,11 @@
             if (temAssinatura) html += '<th class="assinatura-col">Recebedor / Assinatura</th>';
             html += '</tr></thead><tbody>';
             
-            rows.forEach(function(row) {
+            rows.forEach(row => {
                 if (row.cells.length > 1) {
                     html += '<tr>';
-                    for (let i = 0; i < row.cells.length - 1; i++) {
+                    // Pegar apenas as 5 primeiras colunas (data, dept, tipo, desc, qtd)
+                    for (let i = 0; i < 5; i++) {
                         html += '<td>' + row.cells[i].textContent + '</td>';
                     }
                     if (temAssinatura) {
@@ -1928,14 +2202,12 @@
 
         window.onload = function() {
             console.log('Sistema iniciado!');
-            inicializarDados();
-            setDataHoje('dataEnvio');
-            setDataHoje('dataRecebimento');
-            setDataHoje('filtroDataEnvio');
-            setDataHoje('filtroDataRecebimento');
-            document.getElementById('navHome').classList.add('active');
+            verificarSessao();
         };
     </script>
 </body>
 </html>
 
+    
+</body>
+</html>
