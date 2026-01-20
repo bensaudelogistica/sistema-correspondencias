@@ -866,7 +866,79 @@
                 </div>
             </div>
 
-            <!-- Restante do código continua na próxima mensagem... -->
+           <!-- Continuação do HTML - Cole DEPOIS da Tela Inicial -->
+
+            <!-- TELA DE CONFIGURAÇÕES -->
+            <div id="telaConfiguracoes" class="screen">
+                <h2><i class="fas fa-cog"></i> Configurações do Sistema</h2>
+                <div class="alert-custom alert-success" id="alertSuccessConfig">✅ Item salvo com sucesso!</div>
+
+                <div class="config-tabs">
+                    <button class="config-tab active" onclick="trocarAbaConfig('departamentos', event)">
+                        <i class="fas fa-building"></i> Departamentos
+                    </button>
+                    <button class="config-tab" onclick="trocarAbaConfig('tiposEnvio', event)">
+                        <i class="fas fa-paper-plane"></i> Tipos de Envio
+                    </button>
+                    <button class="config-tab" onclick="trocarAbaConfig('tiposRecebimento', event)">
+                        <i class="fas fa-inbox"></i> Tipos de Recebimento
+                    </button>
+                </div>
+
+                <div id="configDepartamentos" class="config-content active">
+                    <h3>📋 Gerenciar Departamentos</h3>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>Nome do Departamento:</label>
+                                <input type="text" id="novoDepartamento" placeholder="Digite o nome do novo departamento...">
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="display: flex; align-items: flex-end;">
+                            <button class="btn-custom btn-primary-custom" onclick="adicionarDepartamento()">
+                                <i class="fas fa-plus"></i> Adicionar
+                            </button>
+                        </div>
+                    </div>
+                    <h4 style="margin-top: 30px; color: var(--azul-bensaude);">Departamentos Cadastrados:</h4>
+                    <div class="lista-itens" id="listaDepartamentos"></div>
+                </div>
+
+                <div id="configTiposEnvio" class="config-content">
+                    <h3>📤 Gerenciar Tipos de Correspondência (Envio)</h3>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>Nome do Tipo de Envio:</label>
+                                <input type="text" id="novoTipoEnvio" placeholder="Digite o nome do novo tipo de envio...">
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="display: flex; align-items: flex-end;">
+                            <button class="btn-custom btn-primary-custom" onclick="adicionarTipoEnvio()">
+                                <i class="fas fa-plus"></i> Adicionar
+                            </button>
+                        </div>
+                    </div>
+                    <h4 style="margin-top: 30px; color: var(--azul-bensaude);">Tipos de Envio Cadastrados:</h4>
+                    <div class="lista-itens" id="listaTiposEnvio"></div>
+                </div>
+
+                <div id="configTiposRecebimento" class="config-content">
+                    <h3>📥 Gerenciar Tipos de Correspondência (Recebimento)</h3>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>Nome do Tipo de Recebimento:</label>
+                                <input type="text" id="novoTipoRecebimento" placeholder="Digite o nome do novo tipo de recebimento...">
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="display: flex; align-items: flex-end;">
+                            <button class="btn-custom btn-primary-custom" onclick="adicionarTipoRecebimento()">
+                                <i class="fas fa-plus"></i> Adicionar
+                            </button>
+                        </div>
+                    </div>
+                    <h4 
 
     <script>
         // ⚠️ CRÍTICO: SUBSTITUA PELA URL DO SEU GOOGLE APPS SCRIPT
