@@ -2070,41 +2070,74 @@
         }
 
         // FUNÇÃO DE EXCLUSÃO DE REGISTROS
-        async function excluirRegistro(tipo, indice, botao) {
-            if (!confirm('Tem certeza que deseja excluir este registro?\n\nEsta ação não pode ser desfeita!')) {
-                return;
-            }
+       async function excluirRegistro(tipo, indice, botao) {
+    if (!confirm('Tem certeza que deseja excluir este registro?\n\nEsta ação não pode ser desfeita!')) {
+        return;
+    }
+    
+    botao.disabled = true;
+    botao.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Excluindo...';
+    
+    // Pega os dados da linha
+    const linha = botao.closest('tr');
+    const cells = linha.cells;
+    
+    // ✅ CORREÇÃO: Captura TODOS os campos, incluindo quantidade
+    const data = cells[0].textContent.trim();
+    const departamento = cells[1].textContent.trim();
+    const tipoCorrespondencia = cells[2].textContent.trim();
+    const descricao = cells[3].textContent.trim();
+    const quantidade = cells[4].textContent.trim(); // ✅ ADICIONADO!
+    
+    // Converte data de DD/MM/YYYY para YYYY-MM-DD
+    const partesData = data.split('/');
+    const dataFormatada = partesData.length === 3 ? 
+        partesData[2] + '-' + partesData[1] + '-' + partesData[0] : data;
+    
+    console.log('Excluindo:', {
+        tipo: tipo,
+        data: dataFormatada,
+        departamento: departamento,
+        tipoCorrespondencia: tipoCorrespondencia,
+        descricao: descricao,
+        quantidade: quantidade // ✅ ADICIONADO!
+    });
+    
+    try {
+        const url = scriptURL + 
+            '?acao=excluir' +
+            '&tipo=' + encodeURIComponent(tipo) +
+            '&data=' + encodeURIComponent(dataFormatada) +
+            '&departamento=' + encodeURIComponent(departamento) +
+            '&tipoCorrespondencia=' + encodeURIComponent(tipoCorrespondencia) +
+            '&descricao=' + encodeURIComponent(descricao) +
+            '&quantidade=' + encodeURIComponent(quantidade); // ✅ ADICIONADO!
+        
+        const response = await fetch(url);
+        const result = await response.json();
+        
+        console.log('Resposta:', result);
+        
+        if (result.status === 'success') {
+            linha.remove();
+            alert('✅ Registro excluído com sucesso!');
             
-            botao.disabled = true;
-            botao.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Excluindo...';
-            
-            try {
-                const response = await fetch(scriptURL + '?acao=excluir&tipo=' + tipo + '&indice=' + indice);
-                const result = await response.json();
-                
-                if (result.status === 'success') {
-                    const linha = botao.closest('tr');
-                    linha.remove();
-                    
-                    alert('✅ Registro excluído com sucesso!');
-                    
-                    if (tipo === 'Envios') {
-                        buscarEnviosPorData();
-                    } else {
-                        buscarRecebimentosPorData();
-                    }
-                } else {
-                    alert('❌ Erro ao excluir: ' + result.message);
-                    botao.disabled = false;
-                    botao.innerHTML = '<i class="fas fa-trash"></i> Excluir';
-                }
-            } catch (error) {
-                console.error('Erro:', error);
-                alert('❌ Erro ao conectar ao servidor');
-                botao.disabled = false;
-                botao.innerHTML = '<i class="fas fa-trash"></i> Excluir';
+            // Atualiza a busca para recarregar os dados
+            if (tipo === 'Envios') {
+                buscarEnviosPorData();
+            } else {
+                buscarRecebimentosPorData();
             }
+        } else {
+            alert('❌ Erro ao excluir: ' + result.message);
+            botao.disabled = false;
+            botao.innerHTML = '<i class="fas fa-trash"></i> Excluir';
         }
-    </script>
-</body>
-</html>
+    } catch (error) {
+        console.error('Erro:', error);
+        alert('❌ Erro ao conectar ao servidor');
+        botao.disabled = false;
+        botao.innerHTML = '<i class="fas fa-trash"></i> Excluir';
+    }
+}
+
