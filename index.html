@@ -1334,7 +1334,9 @@
     </div>
 
     <script>
+        // SUBSTITUIR PELA SUA URL DO GOOGLE APPS SCRIPT
         const scriptURL = 'https://script.google.com/macros/s/AKfycbyzAYgPkNNXRURK-kpGDMkvMKbpYFod2MmAd5VqctRdVWyxzWBsW6FfPUsw2s6OUynG/exec';
+        
         let chartTipo = null;
         let chartDepartamento = null;
         let dadosAtuaisDashboard = { envios: [], recebimentos: [], periodo: '', tipo: '' };
@@ -1359,7 +1361,6 @@
             const usuarioEncontrado = usuarios.find(u => u.usuario === usuario && u.senha === senha);
             
             if (usuarioEncontrado) {
-                // Salvar no localStorage
                 localStorage.setItem('usuarioLogado', JSON.stringify({
                     usuario: usuarioEncontrado.usuario,
                     nome: usuarioEncontrado.nome
@@ -1427,86 +1428,7 @@
             const hora = String(agora.getHours()).padStart(2, '0');
             const minuto = String(agora.getMinutes()).padStart(2, '0');
             
-            return dia + '/' + mes + '/' + ano + ' ' + hora + ':' + minuto;
-        }
-    </script>
-        function excluirRegistro(botao, tabelaId) {
-            if (!confirm('Tem certeza que deseja excluir este registro?')) {
-                return;
-            }
-
-            const linha = botao.closest('tr');
-            
-            const data = linha.getAttribute('data-date');
-            const departamento = linha.getAttribute('data-dept');
-            const tipo = linha.getAttribute('data-type');
-            const descricao = linha.getAttribute('data-desc');
-            const quantidade = linha.getAttribute('data-qty');
-            
-            const tipoOperacao = tabelaId === 'bodyTabelaEnvios' ? 'Envios' : 'Recebimentos';
-            
-            const dadosExclusao = {
-                acao: 'excluirRegistro',
-                tipo: tipoOperacao,
-                data: data,
-                departamento: departamento,
-                tipoCorrespondencia: tipo,
-                descricao: descricao,
-                quantidade: quantidade
-            };
-            
-            fetch(scriptURL, {
-                method: 'POST',
-                body: JSON.stringify(dadosExclusao)
-            })
-            .then(response => response.json())
-            .then(resultado => {
-                if (resultado.status === 'success') {
-                    linha.remove();
-                    
-                    const tbody = document.getElementById(tabelaId);
-                    if (tbody.rows.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
-                    }
-                    
-                    alert('✅ ' + resultado.message);
-                } else {
-                    alert('❌ ' + resultado.message);
-                }
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                alert('❌ Erro ao excluir.');
-            });
-        }
-
-        function irParaTela(telaId) {
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            
-            if (telaId === 'telaInicial') {
-                document.getElementById('navHome').classList.add('active');
-            } else if (telaId === 'telaEnvio') {
-                document.getElementById('navEnvio').classList.add('active');
-            } else if (telaId === 'telaRecebimento') {
-                document.getElementById('navRecebimento').classList.add('active');
-            }
-            
-            document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
-            
-            const telaDestino = document.getElementById(telaId);
-            if (telaDestino) {
-                telaDestino.classList.add('active');
-            }
-            
-            if (telaId === 'telaEnvio') {
-                setDataHoje('dataEnvio');
-                setDataHoje('filtroDataEnvio');
-            } else if (telaId === 'telaRecebimento') {
-                setDataHoje('dataRecebimento');
-                setDataHoje('filtroDataRecebimento');
-            } else if (telaId === 'telaDashboard') {
-                atualizarDashboard();
-            }
+            return `${dia}/${mes}/${ano} ${hora}:${minuto}`;
         }
 
         function inicializarDados() {
@@ -1594,7 +1516,7 @@
         function criarBadge(texto, onRemove) {
             const badge = document.createElement('div');
             badge.className = 'item-badge';
-            badge.innerHTML = '<span>' + texto + '</span>';
+            badge.innerHTML = `<span>${texto}</span>`;
             
             const btnRemover = document.createElement('button');
             btnRemover.className = 'remove-btn';
@@ -1631,7 +1553,7 @@
         }
 
         function removerDepartamento(dept) {
-            if (!confirm('Deseja realmente remover "' + dept + '"?')) return;
+            if (!confirm(`Deseja realmente remover "${dept}"?`)) return;
             
             let departamentos = JSON.parse(localStorage.getItem('departamentos')) || [];
             departamentos = departamentos.filter(d => d !== dept);
@@ -1667,7 +1589,7 @@
         }
 
         function removerTipoEnvio(tipo) {
-            if (!confirm('Deseja realmente remover "' + tipo + '"?')) return;
+            if (!confirm(`Deseja realmente remover "${tipo}"?`)) return;
             
             let tipos = JSON.parse(localStorage.getItem('tiposEnvio')) || [];
             tipos = tipos.filter(t => t !== tipo);
@@ -1703,7 +1625,7 @@
         }
 
         function removerTipoRecebimento(tipo) {
-            if (!confirm('Deseja realmente remover "' + tipo + '"?')) return;
+            if (!confirm(`Deseja realmente remover "${tipo}"?`)) return;
             
             let tipos = JSON.parse(localStorage.getItem('tiposRecebimento')) || [];
             tipos = tipos.filter(t => t !== tipo);
@@ -1735,7 +1657,7 @@
             const ano = hoje.getFullYear();
             const mes = String(hoje.getMonth() + 1).padStart(2, '0');
             const dia = String(hoje.getDate()).padStart(2, '0');
-            document.getElementById(id).value = ano + '-' + mes + '-' + dia;
+            document.getElementById(id).value = `${ano}-${mes}-${dia}`;
         }
 
         function toggleDataPersonalizada() {
@@ -1821,12 +1743,12 @@
             loading.classList.add('active');
             tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">Buscando...</td></tr>';
             try {
-                const r = await fetch(scriptURL + '?acao=buscarPorData&tipo=' + tipo + '&data=' + data);
+                const r = await fetch(`${scriptURL}?acao=buscarPorData&tipo=${tipo}&data=${data}`);
                 const res = await r.json();
                 loading.classList.remove('active');
                 if (res.status === 'success' && res.data && res.data.length > 0) {
                     tbody.innerHTML = '';
-                    titulo.textContent = '📋 Correspondências de ' + formatarData(data) + ' (' + res.data.length + ' registro(s))';
+                    titulo.textContent = `📋 Correspondências de ${formatarData(data)} (${res.data.length} registro(s))`;
                     
                     res.data.forEach(row => {
                         const tr = document.createElement('tr');
@@ -1837,24 +1759,22 @@
                         tr.setAttribute('data-desc', row[3]);
                         tr.setAttribute('data-qty', row[4]);
                         
-                        tr.innerHTML = 
-                            '<td>' + formatarData(row[0]) + '</td>' +
-                            '<td>' + row[1] + '</td>' +
-                            '<td>' + row[2] + '</td>' +
-                            '<td>' + row[3] + '</td>' +
-                            '<td>' + row[4] + '</td>' +
-                            '<td>' + (row[5] || '-') + '</td>' +
-                            '<td>' + (row[6] || '-') + '</td>' +
-                            '<td class="acao-col">' +
-                                '<button class="btn-delete" onclick="excluirRegistro(this, \'' + tabelaId + '\')" title="Excluir">' +
-                                    '×' +
-                                '</button>' +
-                            '</td>';
+                        tr.innerHTML = `
+                            <td>${formatarData(row[0])}</td>
+                            <td>${row[1]}</td>
+                            <td>${row[2]}</td>
+                            <td>${row[3]}</td>
+                            <td>${row[4]}</td>
+                            <td>${row[5] || '-'}</td>
+                            <td>${row[6] || '-'}</td>
+                            <td class="acao-col">
+                                <button class="btn-delete" onclick="excluirRegistro(this, '${tabelaId}')" title="Excluir">×</button>
+                            </td>`;
                         tbody.appendChild(tr);
                     });
                 } else {
                     tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">Nenhum registro encontrado</td></tr>';
-                    titulo.textContent = '📋 Correspondências de ' + formatarData(data);
+                    titulo.textContent = `📋 Correspondências de ${formatarData(data)}`;
                 }
             } catch (error) {
                 console.error('Erro:', error);
@@ -1887,27 +1807,75 @@
             tr.setAttribute('data-desc', dados[3]);
             tr.setAttribute('data-qty', dados[4]);
             
-            tr.innerHTML = 
-                '<td>' + formatarData(dados[0]) + '</td>' +
-                '<td>' + dados[1] + '</td>' +
-                '<td>' + dados[2] + '</td>' +
-                '<td>' + dados[3] + '</td>' +
-                '<td>' + dados[4] + '</td>' +
-                '<td>' + dados[5] + '</td>' +
-                '<td>' + dados[6] + '</td>' +
-                '<td class="acao-col">' +
-                    '<button class="btn-delete" onclick="excluirRegistro(this, \'' + tabelaId + '\')" title="Excluir">' +
-                        '×' +
-                    '</button>' +
-                '</td>';
+            tr.innerHTML = `
+                <td>${formatarData(dados[0])}</td>
+                <td>${dados[1]}</td>
+                <td>${dados[2]}</td>
+                <td>${dados[3]}</td>
+                <td>${dados[4]}</td>
+                <td>${dados[5]}</td>
+                <td>${dados[6]}</td>
+                <td class="acao-col">
+                    <button class="btn-delete" onclick="excluirRegistro(this, '${tabelaId}')" title="Excluir">×</button>
+                </td>`;
             
             tbody.insertBefore(tr, tbody.firstChild);
+        }
+
+        function excluirRegistro(botao, tabelaId) {
+            if (!confirm('Tem certeza que deseja excluir este registro?')) {
+                return;
+            }
+
+            const linha = botao.closest('tr');
+            
+            const data = linha.getAttribute('data-date');
+            const departamento = linha.getAttribute('data-dept');
+            const tipo = linha.getAttribute('data-type');
+            const descricao = linha.getAttribute('data-desc');
+            const quantidade = linha.getAttribute('data-qty');
+            
+            const tipoOperacao = tabelaId === 'bodyTabelaEnvios' ? 'Envios' : 'Recebimentos';
+            
+            const dadosExclusao = {
+                acao: 'excluirRegistro',
+                tipo: tipoOperacao,
+                data: data,
+                departamento: departamento,
+                tipoCorrespondencia: tipo,
+                descricao: descricao,
+                quantidade: quantidade
+            };
+            
+            fetch(scriptURL, {
+                method: 'POST',
+                body: JSON.stringify(dadosExclusao)
+            })
+            .then(response => response.json())
+            .then(resultado => {
+                if (resultado.status === 'success') {
+                    linha.remove();
+                    
+                    const tbody = document.getElementById(tabelaId);
+                    if (tbody.rows.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">Nenhum registro inserido ainda hoje</td></tr>';
+                    }
+                    
+                    alert('✅ ' + resultado.message);
+                } else {
+                    alert('❌ ' + resultado.message);
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('❌ Erro ao excluir.');
+            });
         }
 
         function formatarData(data) {
             if (!data) return '';
             const p = data.split('-');
-            return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : data;
+            return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : data;
         }
 
         function mostrarAlerta(mostrarId, esconderId) {
@@ -1915,6 +1883,35 @@
             const a = document.getElementById(mostrarId);
             a.style.display = 'block';
             setTimeout(() => { a.style.display = 'none'; }, 3000);
+        }
+
+        function irParaTela(telaId) {
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            
+            if (telaId === 'telaInicial') {
+                document.getElementById('navHome').classList.add('active');
+            } else if (telaId === 'telaEnvio') {
+                document.getElementById('navEnvio').classList.add('active');
+            } else if (telaId === 'telaRecebimento') {
+                document.getElementById('navRecebimento').classList.add('active');
+            }
+            
+            document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
+            
+            const telaDestino = document.getElementById(telaId);
+            if (telaDestino) {
+                telaDestino.classList.add('active');
+            }
+            
+            if (telaId === 'telaEnvio') {
+                setDataHoje('dataEnvio');
+                setDataHoje('filtroDataEnvio');
+            } else if (telaId === 'telaRecebimento') {
+                setDataHoje('dataRecebimento');
+                setDataHoje('filtroDataRecebimento');
+            } else if (telaId === 'telaDashboard') {
+                atualizarDashboard();
+            }
         }
 
         async function atualizarDashboard() {
@@ -1933,15 +1930,15 @@
                 if (periodo === 'hoje') {
                     const mesStr = String(mes + 1).padStart(2, '0');
                     const diaStr = String(dia).padStart(2, '0');
-                    dataInicio = dataFim = ano + '-' + mesStr + '-' + diaStr;
+                    dataInicio = dataFim = `${ano}-${mesStr}-${diaStr}`;
                 } else if (periodo === 'mes') {
                     const mesStr = String(mes + 1).padStart(2, '0');
-                    dataInicio = ano + '-' + mesStr + '-01';
+                    dataInicio = `${ano}-${mesStr}-01`;
                     const ultimoDia = new Date(ano, mes + 1, 0).getDate();
-                    dataFim = ano + '-' + mesStr + '-' + String(ultimoDia).padStart(2, '0');
+                    dataFim = `${ano}-${mesStr}-${String(ultimoDia).padStart(2, '0')}`;
                 } else if (periodo === 'ano') {
-                    dataInicio = ano + '-01-01';
-                    dataFim = ano + '-12-31';
+                    dataInicio = `${ano}-01-01`;
+                    dataFim = `${ano}-12-31`;
                 } else {
                     dataInicio = document.getElementById('dataInicio').value;
                     dataFim = document.getElementById('dataFim').value;
@@ -1961,13 +1958,13 @@
                 let dadosRecebimentos = [];
 
                 if (tipo === 'ambos' || tipo === 'envios') {
-                    const r = await fetch(scriptURL + '?acao=buscarEstatisticas&tipo=Envios&dataInicio=' + dataInicio + '&dataFim=' + dataFim);
+                    const r = await fetch(`${scriptURL}?acao=buscarEstatisticas&tipo=Envios&dataInicio=${dataInicio}&dataFim=${dataFim}`);
                     const res = await r.json();
                     if (res.status === 'success' && res.data) dadosEnvios = res.data;
                 }
 
                 if (tipo === 'ambos' || tipo === 'recebimentos') {
-                    const r = await fetch(scriptURL + '?acao=buscarEstatisticas&tipo=Recebimentos&dataInicio=' + dataInicio + '&dataFim=' + dataFim);
+                    const r = await fetch(`${scriptURL}?acao=buscarEstatisticas&tipo=Recebimentos&dataInicio=${dataInicio}&dataFim=${dataFim}`);
                     const res = await r.json();
                     if (res.status === 'success' && res.data) dadosRecebimentos = res.data;
                 }
@@ -2015,7 +2012,7 @@
                 const depto = row[1]; 
                 const tipo = row[2]; 
                 const qtd = parseInt(row[4]) || 0; 
-                const chave = depto + '|' + tipo; 
+                const chave = `${depto}|${tipo}`; 
                 detalhado[chave] = (detalhado[chave] || 0) + qtd; 
             });
             
@@ -2024,11 +2021,11 @@
         }
 
         function atualizarCards(stats) {
-            document.getElementById('statsCards').innerHTML = 
-                '<div class="stat-card"><h4>📦 TOTAL GERAL</h4><div class="number">' + stats.totalGeral + '</div><div class="label">Correspondências</div></div>' +
-                '<div class="stat-card"><h4>📤 ENVIOS</h4><div class="number">' + stats.totalEnvios + '</div><div class="label">Correspondências</div></div>' +
-                '<div class="stat-card"><h4>📥 RECEBIMENTOS</h4><div class="number">' + stats.totalRecebimentos + '</div><div class="label">Correspondências</div></div>' +
-                '<div class="stat-card"><h4>📊 QUANTIDADE TOTAL</h4><div class="number">' + stats.quantidadeTotal + '</div><div class="label">Unidades</div></div>';
+            document.getElementById('statsCards').innerHTML = `
+                <div class="stat-card"><h4>📦 TOTAL GERAL</h4><div class="number">${stats.totalGeral}</div><div class="label">Correspondências</div></div>
+                <div class="stat-card"><h4>📤 ENVIOS</h4><div class="number">${stats.totalEnvios}</div><div class="label">Correspondências</div></div>
+                <div class="stat-card"><h4>📥 RECEBIMENTOS</h4><div class="number">${stats.totalRecebimentos}</div><div class="label">Correspondências</div></div>
+                <div class="stat-card"><h4>📊 QUANTIDADE TOTAL</h4><div class="number">${stats.quantidadeTotal}</div><div class="label">Unidades</div></div>`;
         }
 
         function atualizarGraficos(porTipo, porDepartamento) {
@@ -2089,7 +2086,7 @@
                 const depto = partes[0];
                 const tipo = partes[1];
                 const tr = document.createElement('tr');
-                tr.innerHTML = '<td><strong>' + depto + '</strong></td><td>' + tipo + '</td><td><strong style="color: #0066CC;">' + qtd + '</strong></td>';
+                tr.innerHTML = `<td><strong>${depto}</strong></td><td>${tipo}</td><td><strong style="color: #0066CC;">${qtd}</strong></td>`;
                 tbody.appendChild(tr);
             });
         }
@@ -2107,10 +2104,10 @@
             const tipo = document.getElementById('filtroTipo').value;
             let tituloPeriodo = '';
             
-            if (periodo === 'hoje') tituloPeriodo = 'HOJE - ' + formatarData(dadosAtuaisDashboard.dataInicio);
+            if (periodo === 'hoje') tituloPeriodo = `HOJE - ${formatarData(dadosAtuaisDashboard.dataInicio)}`;
             else if (periodo === 'mes') tituloPeriodo = 'MÊS ATUAL';
             else if (periodo === 'ano') tituloPeriodo = 'ANO ATUAL';
-            else tituloPeriodo = formatarData(dadosAtuaisDashboard.dataInicio) + ' a ' + formatarData(dadosAtuaisDashboard.dataFim);
+            else tituloPeriodo = `${formatarData(dadosAtuaisDashboard.dataInicio)} a ${formatarData(dadosAtuaisDashboard.dataFim)}`;
 
             const tipoTexto = tipo === 'ambos' ? 'ENVIOS E RECEBIMENTOS' : tipo === 'envios' ? 'APENAS ENVIOS' : 'APENAS RECEBIMENTOS';
 
@@ -2120,13 +2117,13 @@
             const totalRecebimentos = cards[2].textContent;
             const quantidadeTotal = cards[3].textContent;
 
-            let html = '<!DOCTYPE html><html><head><title>Relatório Dashboard</title><style>body{font-family:Arial,sans-serif;padding:20px}h1{text-align:center;color:#0066CC;margin-bottom:10px}.info{margin:20px 0;background:#E6F2FF;padding:15px;border-radius:8px}.info p{margin:5px 0}.resumo{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin:20px 0}.resumo-card{background:#0066CC;color:white;padding:15px;border-radius:8px;text-align:center}.resumo-card h3{font-size:2em;margin:10px 0}.resumo-card p{font-size:0.9em;opacity:0.9}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{border:1px solid #0066CC;padding:12px 8px;text-align:left;font-size:11px}th{background:#0066CC;color:white;font-weight:bold}tr:nth-child(even){background:#F8FAFC}</style></head><body><h1>📊 RELATÓRIO DE CORRESPONDÊNCIAS</h1><div class="info"><p><strong>Bensaúde Logística</strong></p><p><strong>Período:</strong> ' + tituloPeriodo + '</p><p><strong>Filtro:</strong> ' + tipoTexto + '</p><p><strong>Data de impressão:</strong> ' + new Date().toLocaleString('pt-BR') + '</p></div><div class="resumo"><div class="resumo-card"><p>TOTAL GERAL</p><h3>' + totalGeral + '</h3><p>Correspondências</p></div><div class="resumo-card"><p>ENVIOS</p><h3>' + totalEnvios + '</h3><p>Correspondências</p></div><div class="resumo-card"><p>RECEBIMENTOS</p><h3>' + totalRecebimentos + '</h3><p>Correspondências</p></div><div class="resumo-card"><p>QUANTIDADE</p><h3>' + quantidadeTotal + '</h3><p>Unidades</p></div></div><h2 style="color:#0066CC;margin-top:30px;">Detalhamento por Setor e Tipo</h2><table><thead><tr><th>Departamento</th><th>Tipo de Correspondência</th><th>Quantidade</th></tr></thead><tbody>';
+            let html = `<!DOCTYPE html><html><head><title>Relatório Dashboard</title><style>body{font-family:Arial,sans-serif;padding:20px}h1{text-align:center;color:#0066CC;margin-bottom:10px}.info{margin:20px 0;background:#E6F2FF;padding:15px;border-radius:8px}.info p{margin:5px 0}.resumo{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin:20px 0}.resumo-card{background:#0066CC;color:white;padding:15px;border-radius:8px;text-align:center}.resumo-card h3{font-size:2em;margin:10px 0}.resumo-card p{font-size:0.9em;opacity:0.9}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{border:1px solid #0066CC;padding:12px 8px;text-align:left;font-size:11px}th{background:#0066CC;color:white;font-weight:bold}tr:nth-child(even){background:#F8FAFC}</style></head><body><h1>📊 RELATÓRIO DE CORRESPONDÊNCIAS</h1><div class="info"><p><strong>Bensaúde Logística</strong></p><p><strong>Período:</strong> ${tituloPeriodo}</p><p><strong>Filtro:</strong> ${tipoTexto}</p><p><strong>Data de impressão:</strong> ${new Date().toLocaleString('pt-BR')}</p></div><div class="resumo"><div class="resumo-card"><p>TOTAL GERAL</p><h3>${totalGeral}</h3><p>Correspondências</p></div><div class="resumo-card"><p>ENVIOS</p><h3>${totalEnvios}</h3><p>Correspondências</p></div><div class="resumo-card"><p>RECEBIMENTOS</p><h3>${totalRecebimentos}</h3><p>Correspondências</p></div><div class="resumo-card"><p>QUANTIDADE</p><h3>${quantidadeTotal}</h3><p>Unidades</p></div></div><h2 style="color:#0066CC;margin-top:30px;">Detalhamento por Setor e Tipo</h2><table><thead><tr><th>Departamento</th><th>Tipo de Correspondência</th><th>Quantidade</th></tr></thead><tbody>`;
 
             rows.forEach(row => {
                 if (row.cells.length > 1) {
                     html += '<tr>';
                     for (let i = 0; i < row.cells.length; i++) {
-                        html += '<td>' + row.cells[i].textContent + '</td>';
+                        html += `<td>${row.cells[i].textContent}</td>`;
                     }
                     html += '</tr>';
                 }
@@ -2147,7 +2144,7 @@
             const ano = hoje.getFullYear();
             const mes = String(hoje.getMonth() + 1).padStart(2, '0');
             const dia = String(hoje.getDate()).padStart(2, '0');
-            const dataProtocolo = dataFiltro || (ano + '-' + mes + '-' + dia);
+            const dataProtocolo = dataFiltro || `${ano}-${mes}-${dia}`;
             imprimirProtocolo('ENVIO', tbody, dataProtocolo, false);
         }
 
@@ -2158,7 +2155,7 @@
             const ano = hoje.getFullYear();
             const mes = String(hoje.getMonth() + 1).padStart(2, '0');
             const dia = String(hoje.getDate()).padStart(2, '0');
-            const dataProtocolo = dataFiltro || (ano + '-' + mes + '-' + dia);
+            const dataProtocolo = dataFiltro || `${ano}-${mes}-${dia}`;
             imprimirProtocolo('RECEBIMENTO', tbody, dataProtocolo, true);
         }
 
@@ -2169,7 +2166,7 @@
                 return; 
             }
             
-            let html = '<!DOCTYPE html><html><head><title>Protocolo de ' + tipo + '</title><style>body{font-family:Arial,sans-serif;padding:20px}h1{text-align:center;color:#0066CC;margin-bottom:10px}.info{margin:20px 0}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{border:1px solid #0066CC;padding:12px 8px;text-align:left;font-size:11px}th{background:#0066CC;color:white;font-weight:bold}.assinatura-col{background:#FFF9E6;width:180px;text-align:center;vertical-align:middle}.linha-assinatura{border-top:1px solid #333;margin-top:50px;width:90%;margin-left:auto;margin-right:auto}.label-recebedor{font-size:10px;color:#0066CC;font-weight:bold;margin-bottom:5px}</style></head><body><h1>PROTOCOLO DE ' + tipo + ' DE CORRESPONDÊNCIAS</h1><div class="info"><p><strong>Bensaúde Logística</strong></p><p><strong>Data:</strong> ' + formatarData(data) + '</p><p><strong>Hora de impressão:</strong> ' + new Date().toLocaleString('pt-BR') + '</p></div><table><thead><tr><th>Data</th><th>Departamento</th><th>Tipo</th><th>Descrição</th><th style="width:60px;">Qtd</th>';
+            let html = `<!DOCTYPE html><html><head><title>Protocolo de ${tipo}</title><style>body{font-family:Arial,sans-serif;padding:20px}h1{text-align:center;color:#0066CC;margin-bottom:10px}.info{margin:20px 0}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{border:1px solid #0066CC;padding:12px 8px;text-align:left;font-size:11px}th{background:#0066CC;color:white;font-weight:bold}.assinatura-col{background:#FFF9E6;width:180px;text-align:center;vertical-align:middle}.linha-assinatura{border-top:1px solid #333;margin-top:50px;width:90%;margin-left:auto;margin-right:auto}.label-recebedor{font-size:10px;color:#0066CC;font-weight:bold;margin-bottom:5px}</style></head><body><h1>PROTOCOLO DE ${tipo} DE CORRESPONDÊNCIAS</h1><div class="info"><p><strong>Bensaúde Logística</strong></p><p><strong>Data:</strong> ${formatarData(data)}</p><p><strong>Hora de impressão:</strong> ${new Date().toLocaleString('pt-BR')}</p></div><table><thead><tr><th>Data</th><th>Departamento</th><th>Tipo</th><th>Descrição</th><th style="width:60px;">Qtd</th>`;
             
             if (temAssinatura) html += '<th class="assinatura-col">Recebedor / Assinatura</th>';
             html += '</tr></thead><tbody>';
@@ -2177,9 +2174,8 @@
             rows.forEach(row => {
                 if (row.cells.length > 1) {
                     html += '<tr>';
-                    // Pegar apenas as 5 primeiras colunas (data, dept, tipo, desc, qtd)
                     for (let i = 0; i < 5; i++) {
-                        html += '<td>' + row.cells[i].textContent + '</td>';
+                        html += `<td>${row.cells[i].textContent}</td>`;
                     }
                     if (temAssinatura) {
                         html += '<td class="assinatura-col"><div class="label-recebedor">RECEBEDOR:</div><div class="linha-assinatura"></div></td>';
@@ -2203,9 +2199,3 @@
     </script>
 </body>
 </html>
-
-    
-</body>
-</html>
-
-
